@@ -1,0 +1,38 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="drawer_logo">50dp</dimen>
+
+    // List item, view
+    <dimen name="item_card_container">104dp</dimen>
+    <dimen name="img_person_parameter">80dp</dimen>
+    <dimen name="edge_margins">16dp</dimen>
+    <dimen name="arrow_size">32dp</dimen>
+    <dimen name="height_advert">80dp</dimen>
+    <dimen name="margin_from_advert">79dp</dimen>
+
+    // text size
+    <dimen name="text_size_condition_item">10sp</dimen>
+    <dimen name="text_size_condition_value">@dimen/text_size</dimen>
+    <dimen name="text_size_admob_dialog">14sp</dimen>
+    <dimen name="text_size">16sp</dimen>
+    <dimen name="text_size_title_explanation">20sp</dimen>
+    <dimen name="text_size_age">22sp</dimen>
+    <dimen name="text_size_name">22sp</dimen>
+
+    // person card
+    <dimen name="age_width">40dp</dimen>
+    <dimen name="age_height">40dp</dimen>
+
+    // contact
+    <dimen name="item_height">26dp</dimen>
+
+    // fab
+    <dimen name="first_fab">75dp</dimen>
+    <dimen name="second_fab">130dp</dimen>
+</resources>
