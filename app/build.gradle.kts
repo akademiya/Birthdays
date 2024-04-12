@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+//    id("com.android.application")
+//    id("com.google.gms.google-services")
 }
 
 android {
@@ -48,6 +50,15 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+
+    // DAGGER
+    implementation (platform("com.google.dagger:dagger:2.35.1"))
+    implementation (platform("com.google.dagger:dagger-android:2.35.1"))
+    implementation (platform("com.google.dagger:dagger-android-support:2.15"))
+    annotationProcessor (platform("com.google.dagger:dagger-compiler:2.24"))
 
     // GLIDE
 //    implementation (com.github.bumptech.glide)
