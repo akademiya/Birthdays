@@ -1,4 +1,4 @@
-package com.example.birthday
+package com.vadym.birthday
 
 import org.junit.Test
 

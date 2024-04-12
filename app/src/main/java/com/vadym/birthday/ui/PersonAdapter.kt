@@ -1,4 +1,4 @@
-package com.example.birthday.ui
+package com.vadym.birthday.ui
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,9 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.birthday.R
+import com.vadym.birthday.R
 
 class PersonAdapter(
     private val context: Context,

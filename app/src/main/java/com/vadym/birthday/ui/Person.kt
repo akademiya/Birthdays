@@ -1,4 +1,4 @@
-package com.example.birthday.ui
+package com.vadym.birthday.ui
 
 class Person {
     var personId: Int = 0
