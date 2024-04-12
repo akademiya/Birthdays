@@ -9,7 +9,7 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:selectableItemBackground"
-    tools:background="@color/bg_girl">
+    tools:background="@color/white">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_person_img"
@@ -92,7 +92,7 @@
         android:layout_marginEnd="36dp"
         android:layout_centerVertical="true"
         android:gravity="center"
-        tools:text="10" />
+        tools:text="3" />
 
 
     <View
