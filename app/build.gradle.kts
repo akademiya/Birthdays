@@ -1,8 +1,8 @@
 plugins {
+    kotlin("kapt") version "1.9.0"
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-//    id("com.android.application")
-//    id("com.google.gms.google-services")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -30,10 +30,16 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
     buildFeatures {
         viewBinding = true
+    }
+    kapt {
+        generateStubs = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.2.0"
     }
 }
 
@@ -55,12 +61,17 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
 
     // DAGGER
-    implementation (platform("com.google.dagger:dagger:2.35.1"))
-    implementation (platform("com.google.dagger:dagger-android:2.35.1"))
-    implementation (platform("com.google.dagger:dagger-android-support:2.15"))
-    annotationProcessor (platform("com.google.dagger:dagger-compiler:2.24"))
+    implementation ("com.google.dagger:dagger:2.35.1")
+    implementation ("com.google.dagger:dagger-android:2.35.1")
+    implementation ("com.google.dagger:dagger-android-support:2.15")
+    implementation("javax.inject:javax.inject:1")
+    ksp("androidx.room:room-compiler:2.5.2")
+    ksp("com.google.dagger:dagger-compiler:2.15")
+    ksp("com.google.dagger:dagger-android-processor:2.24")
+
+
+
 
     // GLIDE
-//    implementation (com.github.bumptech.glide)
-//    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
 }

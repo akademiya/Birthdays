@@ -1,7 +1,10 @@
 package com.vadym.birthday
+
+import dagger.Component
+
 //import dagger.Component
 
-//@Component(modules = [AppModule::class])
+@Component(modules = [AppModule::class])
 interface ApplicationComponent {
     fun inject(modApplication: AndroidApplication)
 
