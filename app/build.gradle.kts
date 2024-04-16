@@ -61,13 +61,13 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
 
     // DAGGER
-    implementation ("com.google.dagger:dagger:2.35.1")
-    implementation ("com.google.dagger:dagger-android:2.35.1")
-    implementation ("com.google.dagger:dagger-android-support:2.15")
-    implementation("javax.inject:javax.inject:1")
-    ksp("androidx.room:room-compiler:2.5.2")
-    ksp("com.google.dagger:dagger-compiler:2.15")
-    ksp("com.google.dagger:dagger-android-processor:2.24")
+//    implementation ("com.google.dagger:dagger:2.35.1")
+//    implementation ("com.google.dagger:dagger-android:2.35.1")
+//    implementation ("com.google.dagger:dagger-android-support:2.15")
+//    implementation("javax.inject:javax.inject:1")
+//    ksp("androidx.room:room-compiler:2.5.2")
+//    ksp("com.google.dagger:dagger-compiler:2.15")
+//    ksp("com.google.dagger:dagger-android-processor:2.24")
 
 
 
