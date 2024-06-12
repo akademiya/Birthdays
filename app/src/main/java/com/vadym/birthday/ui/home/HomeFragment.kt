@@ -1,12 +1,15 @@
 package com.vadym.birthday.ui.home
 
 import android.os.Bundle
+import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.vadym.birthday.MainActivity
+import com.vadym.birthday.R
 import com.vadym.birthday.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {

@@ -9,13 +9,13 @@
             android:icon="@drawable/home"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_fb"
-            android:icon="@drawable/fb"
-            android:title="@string/menu_fb" />
+            android:id="@+id/nav_tl"
+            android:icon="@drawable/tl"
+            android:title="@string/menu_tel_group" />
         <item
-            android:id="@+id/nav_ins"
-            android:icon="@drawable/ins"
-            android:title="@string/menu_ins" />
+            android:id="@+id/nav_info"
+            android:icon="@drawable/ic_info"
+            android:title="@string/menu_info" />
     </group>
 
     <item android:title="@string/communicate">

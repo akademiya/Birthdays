@@ -35,4 +35,10 @@
     // fab
     <dimen name="first_fab">75dp</dimen>
     <dimen name="second_fab">130dp</dimen>
+
+
+    // Toolbar
+    <dimen name="toolbar_title_margin">72dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="menu_icon_margin">8dp</dimen>
 </resources>
