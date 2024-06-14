@@ -77,7 +77,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     }
 
     private fun openTelegram(context: Context): Intent? {
-        val url = "https://t.me/k/#-282423726"
+        val url = "https://t.me/+ojQ6VT3l-4g1NTdi"
         return try {
             context.packageManager.getPackageInfo("org.telegram.messenger", 0)
             Intent(Intent.ACTION_VIEW, Uri.parse(url))
