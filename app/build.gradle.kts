@@ -1,3 +1,5 @@
+val koin_version = "3.2.0"
+
 plugins {
     kotlin("kapt") version "1.9.0"
     alias(libs.plugins.androidApplication)
@@ -49,8 +51,6 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     testImplementation(libs.junit)
@@ -61,23 +61,16 @@ dependencies {
     implementation(project(":domain"))
 
     // View Model Life Cycle
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.2")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.2")
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    // Koin DI
+    implementation("io.insert-koin:koin-android:$koin_version")
+    implementation("io.insert-koin:koin-core:$koin_version")
+    testImplementation("io.insert-koin:koin-test-junit4:$koin_version")
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
-
-    // DAGGER
-//    implementation ("com.google.dagger:dagger:2.35.1")
-//    implementation ("com.google.dagger:dagger-android:2.35.1")
-//    implementation ("com.google.dagger:dagger-android-support:2.15")
-//    implementation("javax.inject:javax.inject:1")
-//    ksp("androidx.room:room-compiler:2.5.2")
-//    ksp("com.google.dagger:dagger-compiler:2.15")
-//    ksp("com.google.dagger:dagger-android-processor:2.24")
-
-
-
 
     // GLIDE
     implementation ("com.github.bumptech.glide:glide:4.12.0")

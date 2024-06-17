@@ -1,4 +1,6 @@
 package com.vadym.birthday.data.storage.sharedprefs
 
-class SharedPrefsPersonStorage {
+import android.content.Context
+
+class SharedPrefsPersonStorage(context: Context) {
 }

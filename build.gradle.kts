@@ -15,6 +15,7 @@ buildscript {
     val kotlin_version by extra("1.9.0")
     val google_services by extra("4.4.1")
     val gradle by extra("8.4.1")
+//    val koin_version by extra("3.2.0")
     //        val okhttpVersion = "3.10.0"
 
 
@@ -26,6 +27,7 @@ buildscript {
         classpath ("com.android.tools.build:gradle:$gradle")
         classpath ("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
         classpath ("com.google.gms:google-services:$google_services")
+//        classpath ("io.insert-koin:koin-android:$koin_version")
     }
 }
 

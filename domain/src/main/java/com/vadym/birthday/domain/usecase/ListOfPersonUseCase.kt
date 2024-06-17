@@ -1,4 +1,6 @@
 package com.vadym.birthday.domain.usecase
 
-class ListOfPersonUseCase {
+import com.vadym.birthday.domain.repository.PersonRepository
+
+class ListOfPersonUseCase(private val personRepository: PersonRepository) {
 }

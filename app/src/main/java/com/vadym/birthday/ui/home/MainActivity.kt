@@ -2,16 +2,16 @@ package com.vadym.birthday.ui.home
 
 import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.ViewModelProvider
 import com.vadym.birthday.R
 import com.vadym.birthday.ui.BaseActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity() {
     private lateinit var adapter: PersonAdapter
     private lateinit var petList: ArrayList<com.vadym.birthday.domain.model.Person>
 
 
-    private lateinit var vm: MainVM
+    private val vm by viewModel<MainVM>()
 
 
 
@@ -28,7 +28,6 @@ class MainActivity : BaseActivity() {
         }
 
         Log.e("aaa", "Activity created")
-        vm = ViewModelProvider(this, MainVMFactory(this)).get(MainVM::class.java)
 
         vm.resultLive.observe(this, {})
         vm.load()
