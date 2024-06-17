@@ -1,4 +1,4 @@
-package com.vadym.birthday
+package com.vadym.birthday.ui
 
 import android.content.Context
 import android.content.Intent
@@ -13,6 +13,9 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import com.vadym.birthday.R
+import com.vadym.birthday.domain.noAnimation
+import com.vadym.birthday.ui.home.MainActivity
 import com.vadym.birthday.ui.info.InfoActivity
 import java.net.URL
 
@@ -34,7 +37,10 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         toolbar = findViewById<View>(R.id.toolbar) as Toolbar
 
         drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
-        toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close)
+        toggle = ActionBarDrawerToggle(this, drawer, toolbar,
+            R.string.drawer_open,
+            R.string.drawer_close
+        )
         drawer.addDrawerListener(toggle)
         toggle.drawerArrowDrawable.color = resources.getColor(R.color.white)
         toggle.syncState()

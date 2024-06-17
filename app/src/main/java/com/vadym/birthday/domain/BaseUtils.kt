@@ -1,4 +1,4 @@
-package com.vadym.birthday
+package com.vadym.birthday.domain
 
 import android.app.Activity
 import android.content.Context

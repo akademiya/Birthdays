@@ -1,4 +1,4 @@
-package com.vadym.birthday.ui
+package com.vadym.birthday.ui.home
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vadym.birthday.R
+import com.vadym.birthday.domain.model.Person
 
 class PersonAdapter(
     private val context: Context,

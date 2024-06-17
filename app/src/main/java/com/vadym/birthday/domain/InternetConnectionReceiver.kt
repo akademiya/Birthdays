@@ -1,4 +1,4 @@
-package com.vadym.birthday
+package com.vadym.birthday.domain
 
 import android.content.BroadcastReceiver
 import android.content.Context

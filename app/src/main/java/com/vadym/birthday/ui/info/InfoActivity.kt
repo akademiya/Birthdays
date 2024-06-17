@@ -1,8 +1,8 @@
 package com.vadym.birthday.ui.info
 
 import android.os.Bundle
-import com.vadym.birthday.BaseActivity
 import com.vadym.birthday.R
+import com.vadym.birthday.ui.BaseActivity
 
 class InfoActivity : BaseActivity() {
     override fun init(savedInstanceState: Bundle?) {
