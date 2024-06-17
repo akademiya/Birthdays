@@ -1,6 +1,8 @@
 package com.vadym.birthday.ui.home
 
 import android.os.Bundle
+import android.util.Log
+import androidx.lifecycle.ViewModelProvider
 import com.vadym.birthday.R
 import com.vadym.birthday.ui.BaseActivity
 
@@ -8,12 +10,8 @@ class MainActivity : BaseActivity() {
     private lateinit var adapter: PersonAdapter
     private lateinit var petList: ArrayList<com.vadym.birthday.domain.model.Person>
 
-    private val personRepository by lazy(LazyThreadSafetyMode.NONE) {
-        com.vadym.birthday.data.repository.PersonRepository(
-            applicationContext
-        )
-    }
-    private val listPerson by lazy(LazyThreadSafetyMode.NONE) { com.vadym.birthday.domain.usecase.ListOfPersonUseCase() }
+
+    private lateinit var vm: MainVM
 
 
 
@@ -28,6 +26,12 @@ class MainActivity : BaseActivity() {
             clickByToolbar7(counter = counter)
             visibilityFabButton(counter.equals(7F))
         }
+
+        Log.e("aaa", "Activity created")
+        vm = ViewModelProvider(this, MainVMFactory(this)).get(MainVM::class.java)
+
+        vm.resultLive.observe(this, {})
+        vm.load()
     }
 
     fun clickByToolbar7(counter: Float) {

@@ -60,6 +60,10 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
 
+    // View Model Life Cycle
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.2")
+
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
 
