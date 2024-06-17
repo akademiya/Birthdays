@@ -2,17 +2,21 @@ package com.vadym.birthday.ui.home
 
 import android.os.Bundle
 import com.vadym.birthday.R
-import com.vadym.birthday.data.repository.PersonRepository
-import com.vadym.birthday.domain.model.Person
-import com.vadym.birthday.domain.usecase.ListOfPersonUseCase
+import com.vadym.data.data.repository.PersonRepository
+import com.vadym.domain.domain.model.Person
+import com.vadym.domain.domain.usecase.ListOfPersonUseCase
 import com.vadym.birthday.ui.BaseActivity
 
 class MainActivity : BaseActivity() {
     private lateinit var adapter: PersonAdapter
-    private lateinit var petList: ArrayList<Person>
+    private lateinit var petList: ArrayList<com.vadym.domain.domain.model.Person>
 
-    private val personRepository by lazy(LazyThreadSafetyMode.NONE) { PersonRepository(applicationContext) }
-    private val listPerson by lazy(LazyThreadSafetyMode.NONE) { ListOfPersonUseCase() }
+    private val personRepository by lazy(LazyThreadSafetyMode.NONE) {
+        com.vadym.data.data.repository.PersonRepository(
+            applicationContext
+        )
+    }
+    private val listPerson by lazy(LazyThreadSafetyMode.NONE) { com.vadym.domain.domain.usecase.ListOfPersonUseCase() }
 
 
 

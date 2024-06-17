@@ -4,15 +4,17 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("kapt") version "1.9.0"
     id("com.google.gms.google-services") version "4.4.1" apply false
-    id("com.android.application") version "8.3.2" apply false
+    id("com.android.application") version "8.4.1" apply false
     id("org.jetbrains.kotlin.android") version "1.9.0" apply false
     id("com.google.devtools.ksp") version "1.9.23-1.0.20" apply false
+    alias(libs.plugins.androidLibrary) apply false
+    alias(libs.plugins.jetbrainsKotlinJvm) apply false
 }
 buildscript {
 
     val kotlin_version by extra("1.9.0")
     val google_services by extra("4.4.1")
-    val gradle by extra("8.3.1")
+    val gradle by extra("8.4.1")
     //        val okhttpVersion = "3.10.0"
 
 

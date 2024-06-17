@@ -14,7 +14,6 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.vadym.birthday.R
-import com.vadym.birthday.domain.noAnimation
 import com.vadym.birthday.ui.home.MainActivity
 import com.vadym.birthday.ui.info.InfoActivity
 import java.net.URL
@@ -60,7 +59,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
                 val sharingIntent = Intent(Intent.ACTION_SEND)
                 val shareBody = getString(R.string.share_body)
                 sharingIntent.apply {
-                    noAnimation()
+//                    noAnimation()
                     type = "text/plain"
                     putExtra(Intent.EXTRA_SUBJECT, "Birthday")
                     putExtra(Intent.EXTRA_TEXT, shareBody + URL("https", "play.google.com", "store/apps/details?id=me.vadym.adv.tfprayer"))
@@ -72,7 +71,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
                 val uri = Uri.parse("mailto:vadym.adv@gmail.com")
                 val sendIntent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"))
                 sendIntent.data = uri
-                sendIntent.noAnimation()
+//                sendIntent.noAnimation()
                 startActivity(Intent.createChooser(sendIntent, "Birthday"))
             }
         }

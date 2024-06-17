@@ -57,8 +57,11 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(project(":data"))
+    implementation(project(":domain"))
+
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
 
     // DAGGER
 //    implementation ("com.google.dagger:dagger:2.35.1")

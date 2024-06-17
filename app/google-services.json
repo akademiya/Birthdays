@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "389369436999",
+    "project_id": "birthday-30814",
+    "storage_bucket": "birthday-30814.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:389369436999:android:30aa159e6fb381ec138a62",
+        "android_client_info": {
+          "package_name": "com.vadym.birthday"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBF7bRQOLgQ_uCOM4Aol7g5LSpLPvagZH0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

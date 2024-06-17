@@ -8,11 +8,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vadym.birthday.R
-import com.vadym.birthday.domain.model.Person
+import com.vadym.domain.domain.model.Person
 
 class PersonAdapter(
     private val context: Context,
-    private val personList: ArrayList<Person>,
+    private val personList: ArrayList<com.vadym.domain.domain.model.Person>,
     private val onDeleteItem: (String) -> Unit,
     private val isEditItem: Boolean
 ) : RecyclerView.Adapter<PersonAdapter.VH>() {
