@@ -8,10 +8,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vadym.birthday.R
+import com.vadym.birthday.domain.model.Person
 
 class PersonAdapter(
     private val context: Context,
-    private val personList: ArrayList<com.vadym.birthday.domain.model.Person>,
+    private val personList: ArrayList<Person>,
     private val onDeleteItem: (String) -> Unit,
     private val isEditItem: Boolean
 ) : RecyclerView.Adapter<PersonAdapter.VH>() {
@@ -30,6 +31,7 @@ class PersonAdapter(
             currFirstName.text = currentPerson.personFirstName
             currLastName.text = currentPerson.personLastName
             currAge.text = currentPerson.personAge.toString()
+            currGroup.text = currentPerson.group.toString()
 
 //            GlideApp.with(context)
 //                .load(currentPerson.personPhoto)
@@ -51,6 +53,7 @@ class PersonAdapter(
         val currLastName = view.findViewById<TextView>(R.id.person_last_name)
         val currAge = view.findViewById<TextView>(R.id.person_age)
         val currPhoto = view.findViewById<ImageView>(R.id.person_img)
+        val currGroup = view.findViewById<TextView>(R.id.create_group)
         val deleteItem = view.findViewById<ImageView>(R.id.delete_item)
     }
 }

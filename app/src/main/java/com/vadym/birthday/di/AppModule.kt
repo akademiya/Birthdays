@@ -5,7 +5,11 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    viewModel<MainVM>() {
-        MainVM(listPersonUseCase = get())
+    viewModel<MainVM> {
+        MainVM(
+            listPersonUseCase = get(),
+            fabButtonVisibilityUseCase = get(),
+            createPersonItemUseCase = get()
+        )
     }
 }
