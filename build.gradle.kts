@@ -1,10 +1,9 @@
-import org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("kapt") version "1.9.0"
     id("com.google.gms.google-services") version "4.4.1" apply false
-    id("com.android.application") version "8.4.1" apply false
+    id("com.android.application") version "8.5.0" apply false
     id("org.jetbrains.kotlin.android") version "1.9.0" apply false
     id("com.google.devtools.ksp") version "1.9.23-1.0.20" apply false
     alias(libs.plugins.androidLibrary) apply false
@@ -14,7 +13,7 @@ buildscript {
 
     val kotlin_version by extra("1.9.0")
     val google_services by extra("4.4.1")
-    val gradle by extra("8.4.1")
+    val gradle by extra("8.5.0")
 //    val koin_version by extra("3.2.0")
     //        val okhttpVersion = "3.10.0"
 
@@ -38,11 +37,11 @@ allprojects {
         mavenLocal()
     }
     tasks.withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "17"
     }
-    tasks.withType<KaptGenerateStubsTask> {
-        kotlinOptions.jvmTarget = "1.8"
-    }
+//    tasks.withType<KaptGenerateStubsTask> {
+//        kotlinOptions.jvmTarget = "17"
+//    }
 
 }
 
