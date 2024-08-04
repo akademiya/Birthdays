@@ -27,6 +27,9 @@
         <activity
             android:name=".ui.info.InfoActivity">
         </activity>
+        <activity
+            android:name=".ui.home.CreatePersonItemActivity">
+        </activity>
     </application>
 
 </manifest>

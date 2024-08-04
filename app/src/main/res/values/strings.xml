@@ -34,4 +34,9 @@
     <string name="info_text3">Завжди радий буду отримати певний відгук або пропозицію щодо вдосконалення додатку.</string>
     <string name="info_text4">Благослови вас та ваші родини.</string>
     <string name="info_text5">Все буде Чонільгук!</string>
+
+    // CREATE ITEM PERSON
+    <string name="select_photo">Select photo</string>
+    <string name="create_person_name">Person name</string>
+
 </resources>
