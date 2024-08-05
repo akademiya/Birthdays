@@ -10,7 +10,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CreatePersonItemActivity: BaseActivity() {
 
-    private val vm by viewModel<MainVM>()
+    private val vm by viewModel<MainViewModel>()
     val newFirstName = findViewById<TextView>(R.id.create_first_name)
     val newLastName = findViewById<TextView>(R.id.create_last_name)
     val newAge = findViewById<TextView>(R.id.create_age)

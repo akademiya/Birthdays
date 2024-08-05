@@ -36,13 +36,7 @@ class Person {
         this.personPosition = personPosition
     }
 
-    constructor(
-        personId: Int,
-        personFirstName: String?,
-        personLastName: String?,
-        personAge: Float,
-        group: Byte
-    ) {
+    constructor(personId: Int, personFirstName: String?, personLastName: String?, personAge: Float, group: Byte) {
         this.personId = personId
         this.personFirstName = personFirstName
         this.personLastName = personLastName

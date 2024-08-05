@@ -25,6 +25,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     private lateinit var drawer: DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var toggle: ActionBarDrawerToggle
+//     lateinit var binding: ActivityMainBinding
 
     override fun setContentView(layoutResID: Int) {
         val fullView = layoutInflater.inflate(R.layout.activity_main, null) as DrawerLayout
@@ -111,6 +112,8 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        binding = ActivityMainBinding.inflate(layoutInflater)
+//        setContentView(binding.root)
         init(savedInstanceState)
     }
 

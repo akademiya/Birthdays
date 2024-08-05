@@ -9,11 +9,13 @@ import com.vadym.birthday.domain.model.Person
 import com.vadym.birthday.domain.usecase.CreatePersonItemUseCase
 import com.vadym.birthday.domain.usecase.FabButtonVisibilityUseCase
 import com.vadym.birthday.domain.usecase.ListOfPersonUseCase
+import com.vadym.birthday.domain.usecase.SavePersonDataUseCase
 
-class MainVM(
+class MainViewModel(
     private val listPersonUseCase: ListOfPersonUseCase,
     private val fabButtonVisibilityUseCase: FabButtonVisibilityUseCase,
-    private val createPersonItemUseCase: CreatePersonItemUseCase
+    private val createPersonItemUseCase: CreatePersonItemUseCase,
+    private val savePersonDataUseCase: SavePersonDataUseCase
 ) : ViewModel() {
 
     private val resultLiveMutable = MutableLiveData<Person>()

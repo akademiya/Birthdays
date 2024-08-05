@@ -9,14 +9,15 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MainActivity : BaseActivity() {
 //    private lateinit var adapter: PersonAdapter
 //    private lateinit var petList: ArrayList<Person>
-    //    private lateinit var ref: DatabaseReference
+//    private lateinit var ref: DatabaseReference
 
-    private val vm by viewModel<MainVM>()
-    private var fab = findViewById<FloatingActionButton>(R.id.fab)
+    private val vm by viewModel<MainViewModel>()
 
 
     override fun init(savedInstanceState: Bundle?) {
         super.setContentView(R.layout.view_person_list)
+
+        val fab = findViewById<FloatingActionButton>(R.id.fab)
 
         toolbar.setOnClickListener {
             vm.clickByToolbar()

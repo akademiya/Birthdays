@@ -1,22 +1,35 @@
 package com.vadym.birthday.data.repository
 
-import android.content.Context
-import com.vadym.birthday.domain.repository.PersonRepository
+import com.vadym.birthday.data.storage.model.PersonModel
+import com.vadym.birthday.data.storage.sharedprefs.SharedPrefsPersonStorage
+import com.vadym.birthday.domain.model.Person
+import com.vadym.birthday.domain.repository.IPersonRepository
 
-private const val SHARED_PREFS = "shared_prefs"
-private const val KEY_FIRST_NAME = "firstName"
-private const val KEY_LAST_NAME = "lastName"
-class PersonRepository(context: Context) : PersonRepository {
 
-    val sharedPreferences = context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE)
-    override fun savePerson() {
-        sharedPreferences.edit().putString(KEY_FIRST_NAME, null).apply()
+class PersonRepository(private val sharedPrefsPersonStorage: SharedPrefsPersonStorage) : IPersonRepository {
+
+    override fun savePerson(saveParam: Person) : Boolean {
+        val person = PersonModel(
+            saveParam.personId,
+            saveParam.personFirstName,
+            saveParam.personLastName,
+            saveParam.personAge,
+            saveParam.group
+        )
+
+        return sharedPrefsPersonStorage.savePersonS(person)
     }
 
-    override fun listOfPerson() {
-        val firstName = sharedPreferences.getString(KEY_FIRST_NAME, "")
-        val lastName = sharedPreferences.getString(KEY_LAST_NAME, "")
-//        return Person()
+    override fun listOfPerson() : Person {
+        val personModel = sharedPrefsPersonStorage.getListOfPersonS()
+
+        return Person(
+            personModel.personId,
+            personModel.personFirstName,
+            personModel.personLastName,
+            personModel.personAge,
+            personModel.group
+        )
     }
 
 }
