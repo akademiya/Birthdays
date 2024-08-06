@@ -9,12 +9,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vadym.birthday.R
 import com.vadym.birthday.domain.model.Person
+import com.vadym.birthday.ui.ageToString
 
 class PersonAdapter(
     private val context: Context,
-    private val personList: ArrayList<Person>,
-    private val onDeleteItem: (String) -> Unit,
-    private val isEditItem: Boolean
+    private val personList: ArrayList<Person>
+//    private val onDeleteItem: (String) -> Unit,
+//    private val isEditItem: Boolean
 ) : RecyclerView.Adapter<PersonAdapter.VH>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = VH(
@@ -30,8 +31,8 @@ class PersonAdapter(
             val currentPerson = personList[position]
             currFirstName.text = currentPerson.personFirstName
             currLastName.text = currentPerson.personLastName
-            currAge.text = currentPerson.personAge.toString()
-            currGroup.text = currentPerson.group.toString()
+            currAge.text = currentPerson.personAge.ageToString()
+//            currGroup.text = currentPerson.group.toString()
 
 //            GlideApp.with(context)
 //                .load(currentPerson.personPhoto)
@@ -39,9 +40,9 @@ class PersonAdapter(
 //                .into(currPhoto)
 
             deleteItem.setOnClickListener {
-                onDeleteItem(currentPerson.personFirstName.toString())
+//                onDeleteItem(currentPerson.personFirstName.toString())
             }
-            deleteItem.visibility = if (isEditItem) View.VISIBLE else View.GONE
+//            deleteItem.visibility = if (isEditItem) View.VISIBLE else View.GONE
         }
     }
 
@@ -53,7 +54,7 @@ class PersonAdapter(
         val currLastName = view.findViewById<TextView>(R.id.person_last_name)
         val currAge = view.findViewById<TextView>(R.id.person_age)
         val currPhoto = view.findViewById<ImageView>(R.id.person_img)
-        val currGroup = view.findViewById<TextView>(R.id.create_group)
+//        val currGroup = view.findViewById<TextView>(R.id.create_group)
         val deleteItem = view.findViewById<ImageView>(R.id.delete_item)
     }
 }

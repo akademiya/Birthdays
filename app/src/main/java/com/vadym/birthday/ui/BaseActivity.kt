@@ -108,14 +108,14 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         return urlString
     }
 
-    abstract fun init(savedInstanceState: Bundle?)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        binding = ActivityMainBinding.inflate(layoutInflater)
 //        setContentView(binding.root)
         init(savedInstanceState)
     }
+
+    abstract fun init(savedInstanceState: Bundle?)
 
     override fun onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {

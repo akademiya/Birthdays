@@ -18,8 +18,8 @@ class MainViewModel(
     private val savePersonDataUseCase: SavePersonDataUseCase
 ) : ViewModel() {
 
-    private val resultLiveMutable = MutableLiveData<Person>()
-    val resultLive: LiveData<Person> = resultLiveMutable
+    private val resultLiveMutable = MutableLiveData<List<Person>>()
+    val resultPersonListLive: LiveData<List<Person>> = resultLiveMutable
     var fabIsVisible = MutableLiveData<Int>()
 
     init {

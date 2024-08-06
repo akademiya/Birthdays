@@ -20,15 +20,45 @@ class PersonRepository(private val sharedPrefsPersonStorage: SharedPrefsPersonSt
         return sharedPrefsPersonStorage.savePersonS(person)
     }
 
-    override fun listOfPerson() : Person {
+    override fun listOfPerson() : List<Person> {
         val personModel = sharedPrefsPersonStorage.getListOfPersonS()
 
-        return Person(
-            personModel.personId,
-            personModel.personFirstName,
-            personModel.personLastName,
-            personModel.personAge,
-            personModel.group
+        return listOf(
+            Person(
+                personModel.personId,
+                personModel.personFirstName,
+                personModel.personLastName,
+                personModel.personAge,
+                personModel.group
+            ),
+            Person(
+                personModel.personId,
+                personModel.personFirstName,
+                personModel.personLastName,
+                personModel.personAge,
+                personModel.group
+            ),
+            Person(
+                personModel.personId,
+                personModel.personFirstName,
+                personModel.personLastName,
+                personModel.personAge,
+                personModel.group
+            ),
+            Person(
+                personModel.personId,
+                personModel.personFirstName,
+                personModel.personLastName,
+                personModel.personAge,
+                personModel.group
+            ),
+            Person(
+                personModel.personId,
+                personModel.personFirstName,
+                personModel.personLastName,
+                personModel.personAge,
+                personModel.group
+            )
         )
     }
 
