@@ -2,15 +2,15 @@ package com.vadym.birthday.domain.usecase
 
 class FabButtonVisibilityUseCase {
 
-    private var counterClickByToolbar = 0F
+    private var counterClickByToolbar = 1F
 
     fun execute() : Boolean {
-        if (counterClickByToolbar.equals(7)) {
-            counterClickByToolbar = 0F
-            return true
+        return if (counterClickByToolbar == 7F) {
+            counterClickByToolbar = 1F
+            true
         } else {
             counterClickByToolbar++
-            return false
+            false
         }
     }
 
