@@ -17,7 +17,7 @@ val domainModule = module {
     }
 
     factory<CreatePersonItemUseCase> {
-        CreatePersonItemUseCase(personRepository = get())
+        CreatePersonItemUseCase(openViewRepository = get())
     }
 
     factory<SavePersonDataUseCase> {

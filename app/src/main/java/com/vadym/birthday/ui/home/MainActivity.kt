@@ -1,5 +1,6 @@
 package com.vadym.birthday.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +33,8 @@ class MainActivity : BaseActivity() {
         }
 
         fab.setOnClickListener {
-            vm.clickByFab()
+//            vm.clickByFab()
+            startActivity(Intent(this, CreatePersonItemActivity::class.java))
         }
 
         vm.getListPerson()

@@ -39,4 +39,12 @@
     <string name="select_photo">Select photo</string>
     <string name="create_person_name">Person name</string>
 
+    <string-array name="group_names">
+        <item>Preschoolers</item>
+        <item>Primary School</item>
+        <item>Secondary School</item>
+        <item>High School</item>
+        <item>Adults</item>
+    </string-array>
+
 </resources>

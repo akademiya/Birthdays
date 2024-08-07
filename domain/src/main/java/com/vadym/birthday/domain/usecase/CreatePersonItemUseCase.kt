@@ -1,10 +1,10 @@
 package com.vadym.birthday.domain.usecase
 
-import com.vadym.birthday.domain.repository.IPersonRepository
+import com.vadym.birthday.domain.repository.IOpenViewToDoRepository
 
-class CreatePersonItemUseCase(private val personRepository: IPersonRepository) {
+class CreatePersonItemUseCase(private val openViewRepository: IOpenViewToDoRepository) {
 
     fun execute() {
-//        startActivity(Intent(this, CreatePersonItemActivity::class.java))
+        openViewRepository.openViewToCreateItem()
     }
 }

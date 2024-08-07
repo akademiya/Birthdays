@@ -44,27 +44,30 @@
         android:hint="last name"
         android:inputType="textMultiLine" />
 
-    <EditText
-        android:id="@+id/create_age"
+    <Button
+        android:id="@+id/create_birth_of_date"
+        android:background="@color/text_disabled_dark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/create_last_name"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="@dimen/edge_margins"
+        android:layout_marginEnd="@dimen/edge_margins"
+        android:padding="14dp"
         android:layout_marginBottom="8dp"
-        android:hint="age"
-        android:inputType="textMultiLine" />
+        android:text="Date of birthday" />
 
-    <EditText
+    <Spinner
         android:id="@+id/create_group"
+        style="@style/Base.Widget.AppCompat.Spinner.Underlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/create_age"
+        android:layout_below="@+id/create_birth_of_date"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        android:hint="group"
-        android:inputType="textMultiLine" />
+        android:paddingBottom="20dp"
+        android:paddingStart="-1dp"
+        android:paddingTop="20dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -74,7 +77,7 @@
         android:layout_marginTop="24dp">
 
         <Button
-            android:id="@+id/start"
+            android:id="@+id/cansel_button"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="60dp"
@@ -82,7 +85,7 @@
             android:text="Cansel" />
 
         <Button
-            android:id="@+id/stop"
+            android:id="@+id/save_button"
             android:layout_width="0dp"
             android:layout_weight="1.5"
             android:layout_height="60dp"
