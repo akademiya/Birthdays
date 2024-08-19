@@ -4,6 +4,6 @@ import com.vadym.birthday.data.storage.model.PersonModel
 
 interface IPersonStorage {
 
-    fun savePersonS(saveParam: PersonModel) : Boolean
-    fun getListOfPersonS() : PersonModel
+    fun savePersonS(saveParam: PersonModel)
+    fun getListOfPersonS() : List<PersonModel>
 }

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "389369436999",
-    "project_id": "birthday-30814",
-    "storage_bucket": "birthday-30814.appspot.com"
+    "project_number": "115806813774",
+    "project_id": "birthday-7e48c",
+    "storage_bucket": "birthday-7e48c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:389369436999:android:30aa159e6fb381ec138a62",
+        "mobilesdk_app_id": "1:115806813774:android:b0248ed671a2a4c2294d1f",
         "android_client_info": {
           "package_name": "com.vadym.birthday"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBF7bRQOLgQ_uCOM4Aol7g5LSpLPvagZH0"
+          "current_key": "AIzaSyBnooXmT5ElEvKA3_KkN9ZNBei7Eetxkhk"
         }
       ],
       "services": {

@@ -12,15 +12,17 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
-import android.widget.TextView
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.vadym.birthday.R
+import com.vadym.birthday.domain.model.Person
 import com.vadym.birthday.ui.BaseActivity
-import com.vadym.birthday.ui.formatterDate
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.SimpleDateFormat
 import java.util.Calendar
 
 class CreatePersonItemActivity: BaseActivity() {
@@ -28,14 +30,15 @@ class CreatePersonItemActivity: BaseActivity() {
     private val vm by viewModel<MainViewModel>()
     private val PERMISSION_REQUEST_CODE = 101
     private val PICK_IMAGE_REQUEST_CODE = 102
+    private var newPhotoUri: String = ""
+    private var age: String = "0"
 
     override fun init(savedInstanceState: Bundle?) {
         super.setContentView(R.layout.create_item_person)
 
-        val newPhoto = findViewById<ImageView>(R.id.upload_img_person)
         val buttonSelectImage = findViewById<Button>(R.id.btn_select_photo)
-        val newFirstName = findViewById<TextView>(R.id.create_first_name)
-        val newLastName = findViewById<TextView>(R.id.create_last_name)
+        val newFirstName = findViewById<EditText>(R.id.create_first_name)
+        val newLastName = findViewById<EditText>(R.id.create_last_name)
         val birthOfDate = findViewById<Button>(R.id.create_birth_of_date)
         val newGroup = findViewById<Spinner>(R.id.create_group)
         val cansel = findViewById<Button>(R.id.cansel_button)
@@ -49,15 +52,11 @@ class CreatePersonItemActivity: BaseActivity() {
             }
         }
 
+        newFirstName.filters = arrayOf(MainViewModel.LetterInputFilter())
+        newLastName.filters = arrayOf(MainViewModel.LetterInputFilter())
 
-        newLastName.setOnFocusChangeListener { v, hasFocus ->
-            if (!hasFocus) {
-                hideKeyboard(v)
-            }
-        }
-
-        cansel.setOnClickListener {
-            super.onBackPressed()
+        if (!newFirstName.isFocused && newFirstName.text.isNullOrEmpty()) {
+            newFirstName.error
         }
 
         datePickerDialog(birthOfDate)
@@ -69,9 +68,56 @@ class CreatePersonItemActivity: BaseActivity() {
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             newGroup.adapter = adapter
-            newGroup.prompt = "Group"
         }
 
+        newFirstName.setOnFocusChangeListener { view, hasFocus ->
+            etErrorListener(hasFocus, view)
+        }
+
+        newLastName.setOnFocusChangeListener { view, hasFocus ->
+            etErrorListener(hasFocus, view)
+        }
+
+
+        save.setOnClickListener {
+            vm.onSaveButtonClick(
+                Person(
+                    personFirstName = newFirstName.text.toString(),
+                    personLastName = newLastName.text.toString(),
+                    age = age,
+                    group = newGroup.selectedItem.toString(),
+                    personDayOfBirth = birthOfDate.text.toString(),
+                    personPhoto = newPhotoUri
+                )
+            )
+        }
+
+        cansel.setOnClickListener {
+            finish()
+        }
+
+        vm.saveSuccessLive.observe(this) { success ->
+            if (success) {
+                Toast.makeText(this, "Successful saved", Toast.LENGTH_SHORT).show()
+                finish()
+            } else {
+                Toast.makeText(this, "Something wrong", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        vm.errorLive.observe(this) { error ->
+            Toast.makeText(this, error, Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+    private fun etErrorListener(hasFocus: Boolean, view: View?) {
+        if (!hasFocus) {
+            val editText = view as EditText
+            if (editText.text.isNullOrEmpty()) {
+                editText.error = "This row cannot be empty"
+            }
+        }
     }
 
     private fun checkPermission(): Boolean {
@@ -99,6 +145,7 @@ class CreatePersonItemActivity: BaseActivity() {
             if (selectedImageUri != null) {
                 val newPhoto = findViewById<ImageView>(R.id.upload_img_person)
                 newPhoto.setImageURI(selectedImageUri)
+                newPhotoUri = selectedImageUri.toString()
             }
         }
     }
@@ -125,26 +172,42 @@ class CreatePersonItemActivity: BaseActivity() {
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         birthOfDate.setOnClickListener {
+            hideKeyboard(it)
             val datePickerDialog = DatePickerDialog(this, { _, year, monthOfYear, dayOfMonth ->
                 val monthPlus = monthOfYear + 1
                 val currentMonth = if (monthPlus.toString().length == 1) { "0$monthPlus" } else "$monthPlus"
                 val date = "$year$currentMonth$dayOfMonth"
-                birthOfDate.text = date.formatterDate()
+                age = calculateAge(date)
+                vm.validateDate(birthOfDate, date)
+                vm.birthOfDateLive.observe(this) {
+                    birthOfDate.text = it
+                }
             }, year, month, day)
             datePickerDialog.show()
         }
     }
 
-    private fun getToday() : String {
-        val calendar = Calendar.getInstance()
-        return calendar.time.formatterDate()
+    private fun calculateAge(birthOfDate: String): String {
+        // Define the date format (assuming yyyyMMdd format)
+        val sdf = SimpleDateFormat("yyyyMMdd")
+        val birthDate = sdf.parse(birthOfDate)  // Parse the birth date string to a Date object
+
+        // Get the current date
+        val today = Calendar.getInstance()
+
+        // Get the birth date as a Calendar instance
+        val birthDay = Calendar.getInstance().apply {
+            time = birthDate
+        }
+
+        // Calculate age
+        var age = today.get(Calendar.YEAR) - birthDay.get(Calendar.YEAR)
+
+        // If today's date is before the birth date, subtract one year
+        if (today.get(Calendar.DAY_OF_YEAR) < birthDay.get(Calendar.DAY_OF_YEAR)) {
+            age--
+        }
+        return age.toString()
     }
 
-    enum class GroupName {
-        PRESCHOOLERS,
-        PRIMARY_SCHOOL,
-        SECONDARY_SCHOOL,
-        HIGH_SCHOOL,
-        ADULTS
-    }
 }

@@ -4,16 +4,16 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.vadym.birthday.R
 import com.vadym.birthday.domain.model.Person
-import com.vadym.birthday.ui.ageToString
 
 class PersonAdapter(
     private val context: Context,
-    private val personList: ArrayList<Person>
+    private val personList: List<Person>
 //    private val onDeleteItem: (String) -> Unit,
 //    private val isEditItem: Boolean
 ) : RecyclerView.Adapter<PersonAdapter.VH>() {
@@ -31,14 +31,20 @@ class PersonAdapter(
             val currentPerson = personList[position]
             currFirstName.text = currentPerson.personFirstName
             currLastName.text = currentPerson.personLastName
-            currAge.text = currentPerson.personAge.ageToString()
-//            currGroup.text = currentPerson.group.toString()
+            currAge.text = currentPerson.age
 
 //            GlideApp.with(context)
 //                .load(currentPerson.personPhoto)
 //                .circleCrop()
 //                .into(currPhoto)
 
+
+
+
+            itemView.setOnLongClickListener {
+                editItemFrame.visibility = View.VISIBLE
+                true
+            }
             deleteItem.setOnClickListener {
 //                onDeleteItem(currentPerson.personFirstName.toString())
             }
@@ -56,5 +62,7 @@ class PersonAdapter(
         val currPhoto = view.findViewById<ImageView>(R.id.person_img)
 //        val currGroup = view.findViewById<TextView>(R.id.create_group)
         val deleteItem = view.findViewById<ImageView>(R.id.delete_item)
+//        val itemView = view.findViewById<RelativeLayout>(R.id.listView)
+        val editItemFrame = view.findViewById<FrameLayout>(R.id.edit_person_card_frame)
     }
 }

@@ -5,29 +5,44 @@ import com.vadym.birthday.data.storage.IPersonStorage
 import com.vadym.birthday.data.storage.model.PersonModel
 
 private const val SHARED_PREFS = "shared_prefs"
-private const val KEY_FIRST_NAME = "firstName"
-private const val KEY_LAST_NAME = "lastName"
+private const val KEY_FIRST_NAME = "personFirstName"
+private const val KEY_LAST_NAME = "personLastName"
 private const val KEY_AGE = "age"
 private const val KEY_GROUP = "group"
+private const val KEY_BIRTH_DAY = "personDayOfBirth"
+private const val KEY_PHOTO = "personPhoto"
 
 class SharedPrefsPersonStorage(context: Context): IPersonStorage {
 
+    private var personList: List<PersonModel> = ArrayList()
+
     private val sharedPreferences = context.getSharedPreferences(SHARED_PREFS, Context.MODE_PRIVATE)
 
-    override fun savePersonS(saveParam: PersonModel): Boolean {
+    override fun savePersonS(saveParam: PersonModel) {
         sharedPreferences.edit().putString(KEY_FIRST_NAME, saveParam.personFirstName).apply()
         sharedPreferences.edit().putString(KEY_LAST_NAME, saveParam.personLastName).apply()
-        sharedPreferences.edit().putInt(KEY_AGE, saveParam.personAge.toInt()).apply()
-        sharedPreferences.edit().putInt(KEY_GROUP, saveParam.group.toInt()).apply()
-        return true
+        sharedPreferences.edit().putString(KEY_AGE, saveParam.age).apply()
+        sharedPreferences.edit().putString(KEY_GROUP, saveParam.group).apply()
+        sharedPreferences.edit().putString(KEY_BIRTH_DAY, saveParam.personDayOfBirth).apply()
+        sharedPreferences.edit().putString(KEY_PHOTO, saveParam.personPhoto).apply()
     }
 
-    override fun getListOfPersonS(): PersonModel {
-        val firstName = sharedPreferences.getString(KEY_FIRST_NAME, "name sdfjadgjk")
-        val lastName = sharedPreferences.getString(KEY_LAST_NAME, "last 234545")
-        val age = sharedPreferences.getFloat(KEY_AGE, 25F)
-        val group = sharedPreferences.getInt(KEY_GROUP, 4).toByte()
-        return PersonModel(1, firstName, lastName, age, group)
+    override fun getListOfPersonS(): List<PersonModel> {
+        val firstName = sharedPreferences.getString(KEY_FIRST_NAME, "Default")
+        val lastName = sharedPreferences.getString(KEY_LAST_NAME, "Default")
+        val age = sharedPreferences.getString(KEY_AGE, "0")
+        val birthDay = sharedPreferences.getString(KEY_BIRTH_DAY, "0")
+        val group = sharedPreferences.getString(KEY_GROUP, "Default")
+        val photo = sharedPreferences.getString(KEY_PHOTO, "Default")
+//        personList.add(1, PersonModel(firstName, lastName, group, age, photo))
+        return arrayListOf(PersonModel(
+            personFirstName = firstName,
+            personLastName = lastName,
+            age = age.toString(),
+            group = group,
+            personDayOfBirth = birthDay,
+            personPhoto = photo)
+        )
     }
 
 

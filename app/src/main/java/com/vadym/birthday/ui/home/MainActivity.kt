@@ -3,6 +3,7 @@ package com.vadym.birthday.ui.home
 import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vadym.birthday.R
@@ -12,8 +13,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity() {
     private lateinit var adapter: PersonAdapter
-    private lateinit var personList: ArrayList<Person>
-//    private lateinit var ref: DatabaseReference
+    private var personList: ArrayList<Person> = ArrayList()
 
     private val vm by viewModel<MainViewModel>()
 
@@ -23,6 +23,9 @@ class MainActivity : BaseActivity() {
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         val rvListPerson = findViewById<RecyclerView>(R.id.rv_list_person)
+
+        rvListPerson.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+        rvListPerson.setHasFixedSize(true)
 
         toolbar.setOnClickListener {
             vm.clickByToolbar()
@@ -39,45 +42,13 @@ class MainActivity : BaseActivity() {
 
         vm.getListPerson()
 
-//        vm.resultPersonListLive.observe(this) {
-//            personList = it
-//        }
-
-        personList = arrayListOf(
-            Person(
-                1,
-                "fn - Irena",
-                "ln - erjnvdfjkvndfvv",
-                7F,
-                2
-            ),
-            Person(
-                2,
-                "fn - Milosh",
-                "ln - adfkgjdfblkfgadlkfngdfklb",
-                9F,
-                2
-            ),
-            Person(
-                3,
-                "fn - Kira",
-                "ln - Nightly",
-                35F,
-                3
+        vm.resultPersonListLive.observe(this) {
+            adapter = PersonAdapter(
+                context = this,
+                personList = it
             )
-        )
-
-        rvListPerson.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-        rvListPerson.setHasFixedSize(true)
-
-        adapter = PersonAdapter(
-            context = this,
-            personList = personList
-//                .sortedBy { it.personPosition }
-//            onDeleteItem = database = database,
-//            isEditItem = onMoveItemTouch = { viewHolder -> onStartDrag(viewHolder) }
-            )
-        rvListPerson.adapter = adapter
+            rvListPerson.adapter = adapter
+        }
 
     }
 

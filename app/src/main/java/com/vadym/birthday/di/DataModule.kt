@@ -15,7 +15,10 @@ val dataModule = module {
     }
 
     single<IPersonRepository> {
-        PersonRepository(sharedPrefsPersonStorage = SharedPrefsPersonStorage(get()))
+        PersonRepository(
+            sharedPrefsPersonStorage = SharedPrefsPersonStorage(get())
+//            firebaseStorage = get()
+        )
     }
 
     single<IOpenViewToDoRepository> {

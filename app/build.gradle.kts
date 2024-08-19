@@ -70,7 +70,7 @@ dependencies {
     testImplementation("io.insert-koin:koin-test-junit4:$koin_version")
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
 
     // GLIDE
     implementation ("com.github.bumptech.glide:glide:4.12.0")
