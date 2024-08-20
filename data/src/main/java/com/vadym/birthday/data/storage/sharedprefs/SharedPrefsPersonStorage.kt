@@ -1,6 +1,7 @@
 package com.vadym.birthday.data.storage.sharedprefs
 
 import android.content.Context
+import com.vadym.birthday.data.storage.IBirthdayStorage
 import com.vadym.birthday.data.storage.IPersonStorage
 import com.vadym.birthday.data.storage.model.PersonModel
 
@@ -12,7 +13,7 @@ private const val KEY_GROUP = "group"
 private const val KEY_BIRTH_DAY = "personDayOfBirth"
 private const val KEY_PHOTO = "personPhoto"
 
-class SharedPrefsPersonStorage(context: Context): IPersonStorage {
+class SharedPrefsPersonStorage(context: Context): IPersonStorage, IBirthdayStorage {
 
     private var personList: List<PersonModel> = ArrayList()
 
@@ -31,7 +32,7 @@ class SharedPrefsPersonStorage(context: Context): IPersonStorage {
         val firstName = sharedPreferences.getString(KEY_FIRST_NAME, "Default")
         val lastName = sharedPreferences.getString(KEY_LAST_NAME, "Default")
         val age = sharedPreferences.getString(KEY_AGE, "0")
-        val birthDay = sharedPreferences.getString(KEY_BIRTH_DAY, "0")
+        val birthDay = sharedPreferences.getString(KEY_BIRTH_DAY, "20240820")
         val group = sharedPreferences.getString(KEY_GROUP, "Default")
         val photo = sharedPreferences.getString(KEY_PHOTO, "Default")
 //        personList.add(1, PersonModel(firstName, lastName, group, age, photo))
@@ -43,6 +44,14 @@ class SharedPrefsPersonStorage(context: Context): IPersonStorage {
             personDayOfBirth = birthDay,
             personPhoto = photo)
         )
+    }
+
+    override fun isBirthToday(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun isBirthInWeek(): Boolean {
+        TODO("Not yet implemented")
     }
 
 

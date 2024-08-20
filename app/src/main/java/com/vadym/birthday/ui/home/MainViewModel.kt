@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.vadym.birthday.domain.model.Person
+import com.vadym.birthday.domain.usecase.CalculateBirthdayUseCase
 import com.vadym.birthday.domain.usecase.CreatePersonItemUseCase
 import com.vadym.birthday.domain.usecase.FabButtonVisibilityUseCase
 import com.vadym.birthday.domain.usecase.ListOfPersonUseCase
@@ -20,18 +21,29 @@ class MainViewModel(
     private val listPersonUseCase: ListOfPersonUseCase,
     private val fabButtonVisibilityUseCase: FabButtonVisibilityUseCase,
     private val createPersonItemUseCase: CreatePersonItemUseCase,
-    private val savePersonDataUseCase: SavePersonDataUseCase
-//    private val calculateBirthdayUseCase: CalculateBirthdayUseCase
+    private val savePersonDataUseCase: SavePersonDataUseCase,
+    private val calculateBirthdayUseCase: CalculateBirthdayUseCase
 ) : ViewModel() {
 
     private val resultLiveMutable = MutableLiveData<List<Person>>()
     val resultPersonListLive: LiveData<List<Person>> get() = resultLiveMutable
-    var fabIsVisible = MutableLiveData<Int>()
+
+    private var _fabIsVisible = MutableLiveData<Int>()
+    val fabIsVisible: LiveData<Int> get() = _fabIsVisible
+
     private var _errorLive = MutableLiveData<String>()
     val errorLive: LiveData<String> = _errorLive
+
     private var _saveSuccessLive = MutableLiveData<Boolean>()
     val saveSuccessLive: LiveData<Boolean> get() = _saveSuccessLive
+
     var birthOfDateLive = MutableLiveData<String>()
+
+    private var _isBirthTodayLive = MutableLiveData<Boolean>()
+    val isBirthTodayLive: LiveData<Boolean> get() = _isBirthTodayLive
+
+    private var _isBirthWeekLive = MutableLiveData<Boolean>()
+    val isBirthWeekLive: LiveData<Boolean> get() = _isBirthWeekLive
 
     init {
         Log.e("aaa", "VM created")
@@ -47,8 +59,8 @@ class MainViewModel(
 
     fun clickByToolbar() {
         if (fabButtonVisibilityUseCase.execute()) {
-            fabIsVisible.value = View.VISIBLE
-        } else fabIsVisible.value = View.GONE
+            _fabIsVisible.value = View.VISIBLE
+        } else _fabIsVisible.value = View.GONE
     }
 
     fun clickByFab() {
@@ -83,11 +95,20 @@ class MainViewModel(
         } else _saveSuccessLive.value = true
     }
 
+
+    fun isBirthToday(birthOfDate: String) {
+        _isBirthTodayLive.value = calculateBirthdayUseCase.execute(birthOfDate)
+    }
+
+    fun isBirthOnWeek(birthOfDate: String) {
+        _isBirthWeekLive.value = calculateBirthdayUseCase.isBirthdayInThisWeek(birthOfDate)
+    }
+
     fun validateDate(birthOfDate: Button, date: String) {
         birthOfDateLive.value = if (birthOfDate.text.isNullOrEmpty()) {
             getToday()
         } else {
-            date.formatterDate()
+            date
         }
     }
 

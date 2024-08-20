@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import com.vadym.birthday.R
 import com.vadym.birthday.domain.model.Person
 import com.vadym.birthday.ui.BaseActivity
+import com.vadym.birthday.ui.formatterDate
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -31,6 +32,7 @@ class CreatePersonItemActivity: BaseActivity() {
     private val PERMISSION_REQUEST_CODE = 101
     private val PICK_IMAGE_REQUEST_CODE = 102
     private var newPhotoUri: String = ""
+    private var birthDay: String = "00000000"
     private var age: String = "0"
 
     override fun init(savedInstanceState: Bundle?) {
@@ -52,8 +54,8 @@ class CreatePersonItemActivity: BaseActivity() {
             }
         }
 
-        newFirstName.filters = arrayOf(MainViewModel.LetterInputFilter())
-        newLastName.filters = arrayOf(MainViewModel.LetterInputFilter())
+//        newFirstName.filters = arrayOf(MainViewModel.LetterInputFilter())
+//        newLastName.filters = arrayOf(MainViewModel.LetterInputFilter())
 
         if (!newFirstName.isFocused && newFirstName.text.isNullOrEmpty()) {
             newFirstName.error
@@ -86,7 +88,7 @@ class CreatePersonItemActivity: BaseActivity() {
                     personLastName = newLastName.text.toString(),
                     age = age,
                     group = newGroup.selectedItem.toString(),
-                    personDayOfBirth = birthOfDate.text.toString(),
+                    personDayOfBirth = birthDay,
                     personPhoto = newPhotoUri
                 )
             )
@@ -178,10 +180,8 @@ class CreatePersonItemActivity: BaseActivity() {
                 val currentMonth = if (monthPlus.toString().length == 1) { "0$monthPlus" } else "$monthPlus"
                 val date = "$year$currentMonth$dayOfMonth"
                 age = calculateAge(date)
-                vm.validateDate(birthOfDate, date)
-                vm.birthOfDateLive.observe(this) {
-                    birthOfDate.text = it
-                }
+                birthDay = date
+                birthOfDate.text = date.formatterDate()
             }, year, month, day)
             datePickerDialog.show()
         }

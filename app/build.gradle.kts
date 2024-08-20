@@ -73,5 +73,5 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
 
     // GLIDE
-    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
 }

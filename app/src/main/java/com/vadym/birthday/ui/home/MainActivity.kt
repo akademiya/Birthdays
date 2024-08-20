@@ -42,11 +42,25 @@ class MainActivity : BaseActivity() {
 
         vm.getListPerson()
 
-        vm.resultPersonListLive.observe(this) {
+        vm.resultPersonListLive.observe(this) { persons ->
+//            val isBirthdayList = persons.map { vm.isBirthToday(it.personDayOfBirth.toString()) }
+
             adapter = PersonAdapter(
                 context = this,
-                personList = it
-            )
+                personList = persons
+//                isBirthdayList
+            ) { person ->
+                vm.isBirthToday(person.personDayOfBirth.toString())
+                vm.isBirthTodayLive.observe(this) { isToday ->
+                    person.isBirthToday = isToday
+                }
+
+                vm.isBirthOnWeek(person.personDayOfBirth.toString())
+                vm.isBirthWeekLive.observe(this) { duringWeek ->
+                    person.isBirthOnWeek = duringWeek
+                }
+
+            }
             rvListPerson.adapter = adapter
         }
 

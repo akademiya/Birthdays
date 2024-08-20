@@ -10,7 +10,8 @@ val appModule = module {
             listPersonUseCase = get(),
             fabButtonVisibilityUseCase = get(),
             createPersonItemUseCase = get(),
-            savePersonDataUseCase = get()
+            savePersonDataUseCase = get(),
+            calculateBirthdayUseCase = get()
         )
     }
 }

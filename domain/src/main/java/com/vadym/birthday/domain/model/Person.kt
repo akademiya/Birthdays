@@ -10,7 +10,7 @@ class Person {
     var age: String = "0"
     var group: String? = null
     var isBirthToday = false
-    var isCakeVisible = false
+    var isBirthOnWeek = false
 
     constructor(personId: Int, personFirstName: String?, personLastName: String?, age: String, personDayOfBirth: String?,
         personPosition: Int, personPhoto: String?, group: String) {
@@ -34,9 +34,9 @@ class Person {
         this.personPhoto = personPhoto
     }
 
-    constructor(isBirthToday: Boolean, isCakeVisible: Boolean) {
+    constructor(isBirthToday: Boolean, isBirthOnWeek: Boolean) {
         this.isBirthToday = isBirthToday
-        this.isCakeVisible = isCakeVisible
+        this.isBirthOnWeek = isBirthOnWeek
     }
 
 }
