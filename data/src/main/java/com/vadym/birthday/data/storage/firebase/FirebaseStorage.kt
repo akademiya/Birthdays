@@ -5,7 +5,6 @@ import android.widget.Toast
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -16,7 +15,6 @@ private const val DB_URL = "https://birthday-7e48c-default-rtdb.europe-west1.fir
 
 class FirebaseStorage(private val context: Context): IPersonStorage {
 
-    private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val personRef: DatabaseReference = Firebase.database(DB_URL).getReference("persons")
 
     override fun savePersonS(saveParam: PersonModel) {
@@ -28,15 +26,14 @@ class FirebaseStorage(private val context: Context): IPersonStorage {
 
     override fun getListOfPersonS(callback: (List<PersonModel>) -> Unit) {
         val personList = mutableListOf<PersonModel>()
-        val databaseRef = database.getReference("persons")
 
         personRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 Toast.makeText(context, "InSnapshot", Toast.LENGTH_SHORT).show()
+                personList.clear()
                 for (personSnapshot in dataSnapshot.children) {
                     val personModel = personSnapshot.getValue(PersonModel::class.java)
                     if (personModel != null) {
-//                        personModel.age = personSnapshot.child("age").getValue(Long::class.java)?.toString() ?: ""
                         personList.add(personModel)
                     }
                 }
