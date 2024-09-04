@@ -4,22 +4,28 @@ import com.vadym.birthday.data.repository.BirthdayRepository
 import com.vadym.birthday.data.repository.OpenViewToDoRepository
 import com.vadym.birthday.data.repository.PersonRepository
 import com.vadym.birthday.data.storage.IPersonStorage
+import com.vadym.birthday.data.storage.firebase.FirebaseStorage
 import com.vadym.birthday.data.storage.sharedprefs.SharedPrefsPersonStorage
 import com.vadym.birthday.domain.repository.IBirthdayRepository
 import com.vadym.birthday.domain.repository.IOpenViewToDoRepository
 import com.vadym.birthday.domain.repository.IPersonRepository
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val dataModule = module {
 
-    single<IPersonStorage> {
+    single<IPersonStorage>(named("shared_prefs")) {
         SharedPrefsPersonStorage(context = get())
+    }
+
+    single<IPersonStorage>(named("firebase")) {
+        FirebaseStorage(context = get())
     }
 
     single<IPersonRepository> {
         PersonRepository(
-            sharedPrefsPersonStorage = SharedPrefsPersonStorage(context = get())
-//            firebaseStorage = get()
+            sharedPrefsPersonStorage = get(named("shared_prefs")),
+            firebaseStorage = get(named("firebase"))
         )
     }
 

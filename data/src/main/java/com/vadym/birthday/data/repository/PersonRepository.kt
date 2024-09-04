@@ -1,14 +1,14 @@
 package com.vadym.birthday.data.repository
 
+import com.vadym.birthday.data.storage.IPersonStorage
 import com.vadym.birthday.data.storage.model.PersonModel
-import com.vadym.birthday.data.storage.sharedprefs.SharedPrefsPersonStorage
 import com.vadym.birthday.domain.model.Person
 import com.vadym.birthday.domain.repository.IPersonRepository
 
 
 class PersonRepository(
-    private val sharedPrefsPersonStorage: SharedPrefsPersonStorage
-//    private val firebaseStorage: FirebaseStorage
+    private val sharedPrefsPersonStorage: IPersonStorage,
+    private val firebaseStorage: IPersonStorage
 ) : IPersonRepository {
 
     override fun savePerson(saveParam: Person) {
@@ -22,46 +22,36 @@ class PersonRepository(
         )
 
         sharedPrefsPersonStorage.savePersonS(person)
-//        firebaseStorage.savePersonS(person)
+        firebaseStorage.savePersonS(person)
     }
 
-    override fun listOfPerson() : List<Person> {
-        val personModel = sharedPrefsPersonStorage.getListOfPersonS()
-
-        return ArrayList(personModel.map { personModel ->
-            Person(
-                personFirstName = personModel.personFirstName,
-                personLastName = personModel.personLastName,
-                age = personModel.age,
-                group = personModel.group,
-                personDayOfBirth = personModel.personDayOfBirth,
-                personPhoto = personModel.personPhoto
-            )
-        })
-
-
-//        val personList = mutableListOf<Person>()
-//
-//        val db = FirebaseFirestore.getInstance()
-//        db.collection("persons").get()
-//            .addOnSuccessListener { result ->
-//                for (document in result) {
-//                    val person = document.toObject(PersonModel::class.java)
-//                    personList.add(
-//                        Person(
-//                            personFirstName = person.personFirstName,
-//                            personLastName = person.personLastName,
-//                            group = person.group,
-//                            personDayOfBirth = person.personDayOfBirth,
-//                            personPhoto = person.personPhoto
-//                        )
-//                    )
-//                }
-//            }.addOnFailureListener {
-//                Log.e("PersonRepository", "Failed to retrieve persons: ${it.message}")
+    override fun listOfPerson(callback: (List<Person>) -> Unit) {
+        firebaseStorage.getListOfPersonS { personModelList ->
+            val personList = personModelList.map { personModel ->
+                Person(
+                    personFirstName = personModel.personFirstName,
+                    personLastName = personModel.personLastName,
+                    age = personModel.age,
+                    group = personModel.group,
+                    personDayOfBirth = personModel.personDayOfBirth,
+                    personPhoto = personModel.personPhoto
+                )
+            }
+            callback(personList)
+        }
+//        sharedPrefsPersonStorage.getListOfPersonS { personModelList ->
+//            val personList = personModelList.map { personModel ->
+//                Person(
+//                    personFirstName = personModel.personFirstName,
+//                    personLastName = personModel.personLastName,
+//                    age = personModel.age,
+//                    group = personModel.group,
+//                    personDayOfBirth = personModel.personDayOfBirth,
+//                    personPhoto = personModel.personPhoto
+//                )
 //            }
-//
-//        return personList
+//            callback(personList)
+//        }
     }
 
 }

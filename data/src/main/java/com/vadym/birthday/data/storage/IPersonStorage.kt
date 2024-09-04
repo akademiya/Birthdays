@@ -5,5 +5,5 @@ import com.vadym.birthday.data.storage.model.PersonModel
 interface IPersonStorage {
 
     fun savePersonS(saveParam: PersonModel)
-    fun getListOfPersonS() : List<PersonModel>
+    fun getListOfPersonS(callback: (List<PersonModel>) -> Unit)
 }

@@ -54,7 +54,18 @@ class MainViewModel(
     }
 
     fun getListPerson() {
-        resultLiveMutable.value = listPersonUseCase.execute()
+//        viewModelScope.launch {
+//            try {
+//                val personList = execute()
+//                resultLiveMutable.postValue(personList)
+//            } catch (e: Exception) {
+//                // Handle any errors here
+//            }
+//        }
+
+        listPersonUseCase.execute { personList ->
+            resultLiveMutable.value = personList
+        }
     }
 
     fun clickByToolbar() {

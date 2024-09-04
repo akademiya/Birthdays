@@ -1,6 +1,7 @@
 package com.vadym.birthday.ui
 
 import android.os.Build
+import android.view.View
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -26,3 +27,5 @@ fun String.formatterDate() : String {
 fun Date.formatterDate() : String {
     return SimpleDateFormat("dd MMMM yyyy", deviceLocale()).format(this)
 }
+
+fun Boolean.toAndroidVisibility() = if (this) View.VISIBLE else View.GONE

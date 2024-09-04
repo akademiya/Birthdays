@@ -5,7 +5,9 @@ import com.vadym.birthday.domain.repository.IPersonRepository
 
 class ListOfPersonUseCase(private val personRepository: IPersonRepository) {
 
-    fun execute() : List<Person> {
-        return personRepository.listOfPerson()
+    fun execute(callback: (List<Person>) -> Unit) {
+        personRepository.listOfPerson { personList ->
+            callback(personList)
+        }
     }
 }

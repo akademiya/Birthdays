@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -70,7 +71,8 @@ dependencies {
     testImplementation("io.insert-koin:koin-test-junit4:$koin_version")
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation("com.google.firebase:firebase-database-ktx:20.3.0")
+    implementation("com.google.firebase:firebase-analytics-ktx:21.3.0")
 
     // GLIDE
     implementation("com.github.bumptech.glide:glide:4.15.1")

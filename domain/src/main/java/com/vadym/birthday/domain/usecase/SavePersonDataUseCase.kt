@@ -8,7 +8,7 @@ class SavePersonDataUseCase(private val personRepository: IPersonRepository) {
     fun execute(param: Person): Boolean {
         if (param.personFirstName.isNullOrEmpty() ||
             param.personLastName.isNullOrEmpty() ||
-            param.age.isEmpty()
+            param.age!!.isEmpty()
         ) {
             return false
         } else {

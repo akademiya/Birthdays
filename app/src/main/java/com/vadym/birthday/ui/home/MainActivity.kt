@@ -13,7 +13,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity() {
     private lateinit var adapter: PersonAdapter
-    private var personList: ArrayList<Person> = ArrayList()
 
     private val vm by viewModel<MainViewModel>()
 
@@ -36,7 +35,6 @@ class MainActivity : BaseActivity() {
         }
 
         fab.setOnClickListener {
-//            vm.clickByFab()
             startActivity(Intent(this, CreatePersonItemActivity::class.java))
         }
 

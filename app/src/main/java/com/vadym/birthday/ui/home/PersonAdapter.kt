@@ -53,10 +53,10 @@ class PersonAdapter(
                 .into(currPhoto)
 
 
-            itemView.setOnLongClickListener {
-                editItemFrame.visibility = View.VISIBLE
-                true
-            }
+//            itemView.setOnLongClickListener {
+//                editItemFrame.visibility = View.VISIBLE
+//                true
+//            }
             deleteItem.setOnClickListener {
 //                onDeleteItem(currentPerson.personFirstName.toString())
             }
