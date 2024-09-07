@@ -2,6 +2,7 @@ package com.vadym.birthday.di
 
 import com.vadym.birthday.domain.usecase.CalculateBirthdayUseCase
 import com.vadym.birthday.domain.usecase.CreatePersonItemUseCase
+import com.vadym.birthday.domain.usecase.DeleteItemUseCase
 import com.vadym.birthday.domain.usecase.FabButtonVisibilityUseCase
 import com.vadym.birthday.domain.usecase.ListOfPersonUseCase
 import com.vadym.birthday.domain.usecase.SavePersonDataUseCase
@@ -27,5 +28,9 @@ val domainModule = module {
 
     factory<CalculateBirthdayUseCase> {
         CalculateBirthdayUseCase(birthdayRepository = get())
+    }
+
+    factory<DeleteItemUseCase> {
+        DeleteItemUseCase(personRepository = get())
     }
 }

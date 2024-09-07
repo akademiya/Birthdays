@@ -3,17 +3,16 @@ package com.vadym.birthday.ui.home
 import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vadym.birthday.R
-import com.vadym.birthday.domain.model.Person
 import com.vadym.birthday.ui.BaseActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity() {
     private lateinit var adapter: PersonAdapter
-
     private val vm by viewModel<MainViewModel>()
 
 
@@ -45,7 +44,9 @@ class MainActivity : BaseActivity() {
 
             adapter = PersonAdapter(
                 context = this,
-                personList = persons
+                personList = persons,
+                { id -> vm.onRemovePersonClick(id) }
+//                isDevMode = isDevMode
 //                isBirthdayList
             ) { person ->
                 vm.isBirthToday(person.personDayOfBirth.toString())
@@ -56,6 +57,14 @@ class MainActivity : BaseActivity() {
                 vm.isBirthOnWeek(person.personDayOfBirth.toString())
                 vm.isBirthWeekLive.observe(this) { duringWeek ->
                     person.isBirthOnWeek = duringWeek
+                }
+
+                vm.isDevMode.observe(this) { devMode ->
+                    person.isDevMode = devMode
+                }
+
+                vm.isPersonDeleted.observe(this) { delete ->
+                    if (delete) Toast.makeText(this, "${person.personFirstName} position successful removed", Toast.LENGTH_SHORT).show()
                 }
 
             }

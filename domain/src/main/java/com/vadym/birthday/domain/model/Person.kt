@@ -11,6 +11,7 @@ class Person {
     var group: String? = null
     var isBirthToday = false
     var isBirthOnWeek = false
+    var isDevMode = false
 
     constructor(personId: String, personFirstName: String?, personLastName: String?, age: String?, personDayOfBirth: String?,
                 personPosition: Int, personPhoto: String?, group: String) {
@@ -41,6 +42,10 @@ class Person {
 
     constructor(personId: String) {
         this.personId = personId
+    }
+
+    constructor(isDevMode: Boolean) {
+        this.isDevMode = isDevMode
     }
 
 }

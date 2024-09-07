@@ -6,4 +6,5 @@ interface IPersonStorage {
 
     fun savePersonS(saveParam: PersonModel)
     fun getListOfPersonS(callback: (List<PersonModel>) -> Unit)
+    fun deletePersonItem(personId: String, callback: (Boolean) -> Unit)
 }

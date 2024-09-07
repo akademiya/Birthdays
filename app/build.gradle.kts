@@ -73,7 +73,11 @@ dependencies {
     // Firebase
     implementation("com.google.firebase:firebase-database-ktx:20.3.0")
     implementation("com.google.firebase:firebase-analytics-ktx:21.3.0")
+    implementation("com.google.firebase:firebase-messaging:24.0.1")
 
     // GLIDE
     implementation("com.github.bumptech.glide:glide:4.15.1")
+
+    // Lottie Animation
+    implementation("com.airbnb.android:lottie:3.4.0")
 }

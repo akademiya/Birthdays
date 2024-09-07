@@ -74,6 +74,10 @@ class SharedPrefsPersonStorage(context: Context): IPersonStorage {
         callback(personList)
     }
 
+    override fun deletePersonItem(personId: String, callback: (Boolean) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
 //    private fun getListOfPersonS(): List<PersonModel> {
 //        val firstName = sharedPreferences.getString(KEY_FIRST_NAME, "Default")
 //        val lastName = sharedPreferences.getString(KEY_LAST_NAME, "Default")

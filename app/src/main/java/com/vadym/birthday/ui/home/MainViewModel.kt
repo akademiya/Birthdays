@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import com.vadym.birthday.domain.model.Person
 import com.vadym.birthday.domain.usecase.CalculateBirthdayUseCase
 import com.vadym.birthday.domain.usecase.CreatePersonItemUseCase
+import com.vadym.birthday.domain.usecase.DeleteItemUseCase
 import com.vadym.birthday.domain.usecase.FabButtonVisibilityUseCase
 import com.vadym.birthday.domain.usecase.ListOfPersonUseCase
 import com.vadym.birthday.domain.usecase.SavePersonDataUseCase
@@ -22,7 +23,8 @@ class MainViewModel(
     private val fabButtonVisibilityUseCase: FabButtonVisibilityUseCase,
     private val createPersonItemUseCase: CreatePersonItemUseCase,
     private val savePersonDataUseCase: SavePersonDataUseCase,
-    private val calculateBirthdayUseCase: CalculateBirthdayUseCase
+    private val calculateBirthdayUseCase: CalculateBirthdayUseCase,
+    private val deleteItemUseCase: DeleteItemUseCase
 ) : ViewModel() {
 
     private val resultLiveMutable = MutableLiveData<List<Person>>()
@@ -30,6 +32,9 @@ class MainViewModel(
 
     private var _fabIsVisible = MutableLiveData<Int>()
     val fabIsVisible: LiveData<Int> get() = _fabIsVisible
+
+    private var _isDevMode = MutableLiveData<Boolean>()
+    val isDevMode: LiveData<Boolean> get() = _isDevMode
 
     private var _errorLive = MutableLiveData<String>()
     val errorLive: LiveData<String> = _errorLive
@@ -44,6 +49,9 @@ class MainViewModel(
 
     private var _isBirthWeekLive = MutableLiveData<Boolean>()
     val isBirthWeekLive: LiveData<Boolean> get() = _isBirthWeekLive
+
+    private var _isPersonDeleted = MutableLiveData<Boolean>()
+    val isPersonDeleted: LiveData<Boolean> get() = _isPersonDeleted
 
     init {
         Log.e("aaa", "VM created")
@@ -71,7 +79,17 @@ class MainViewModel(
     fun clickByToolbar() {
         if (fabButtonVisibilityUseCase.execute()) {
             _fabIsVisible.value = View.VISIBLE
-        } else _fabIsVisible.value = View.GONE
+            _isDevMode.value = true
+        } else {
+            _fabIsVisible.value = View.GONE
+            _isDevMode.value = false
+        }
+    }
+
+    fun onRemovePersonClick(personId: String) {
+        deleteItemUseCase.execute(personId) {
+            isDeleted -> _isPersonDeleted.value = isDeleted
+        }
     }
 
     fun clickByFab() {

@@ -54,4 +54,8 @@ class PersonRepository(
 //        }
     }
 
+    override fun deletePersonItem(personId: String, callback: (Boolean) -> Unit) {
+        firebaseStorage.deletePersonItem(personId, { isDeleted -> callback(isDeleted) })
+    }
+
 }

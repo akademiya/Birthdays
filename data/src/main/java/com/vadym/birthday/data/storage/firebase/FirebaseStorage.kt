@@ -1,7 +1,6 @@
 package com.vadym.birthday.data.storage.firebase
 
 import android.content.Context
-import android.widget.Toast
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -29,7 +28,6 @@ class FirebaseStorage(private val context: Context): IPersonStorage {
 
         personRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                Toast.makeText(context, "InSnapshot", Toast.LENGTH_SHORT).show()
                 personList.clear()
                 for (personSnapshot in dataSnapshot.children) {
                     val personModel = personSnapshot.getValue(PersonModel::class.java)
@@ -47,11 +45,14 @@ class FirebaseStorage(private val context: Context): IPersonStorage {
 
     }
 
+    override fun deletePersonItem(personId: String, callback: (Boolean) -> Unit) {
+        personRef.child(personId).removeValue().addOnCompleteListener { task ->
+            callback(task.isSuccessful)
+        }
+    }
+
     fun updatePerson(personId: String, updatedPerson: PersonModel) {
         personRef.child(personId).setValue(updatedPerson)
     }
 
-    fun deletePerson(personId: String) {
-        personRef.child(personId).removeValue()
-    }
 }
