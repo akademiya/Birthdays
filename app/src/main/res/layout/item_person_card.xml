@@ -58,7 +58,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="30dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/cake"
+        android:src="@drawable/baloon_blue"
         android:visibility="gone"
         tools:visibility="visible" />
 
@@ -126,7 +126,7 @@
         android:layout_height="wrap_content"
         android:background="@color/text_disabled_dark"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"

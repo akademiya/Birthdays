@@ -17,6 +17,7 @@ class PersonRepository(
             saveParam.personLastName,
             saveParam.age,
             saveParam.group,
+            saveParam.gender,
             saveParam.personDayOfBirth,
             saveParam.personPhoto
         )
@@ -33,6 +34,7 @@ class PersonRepository(
                     personLastName = personModel.personLastName,
                     age = personModel.age,
                     group = personModel.group,
+                    gender = personModel.gender,
                     personDayOfBirth = personModel.personDayOfBirth,
                     personPhoto = personModel.personPhoto
                 )

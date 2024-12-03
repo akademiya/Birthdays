@@ -43,6 +43,7 @@ class CreatePersonItemActivity: BaseActivity() {
         val newLastName = findViewById<EditText>(R.id.create_last_name)
         val birthOfDate = findViewById<Button>(R.id.create_birth_of_date)
         val newGroup = findViewById<Spinner>(R.id.create_group)
+        val gender = findViewById<Spinner>(R.id.create_gender)
         val cansel = findViewById<Button>(R.id.cansel_button)
         val save = findViewById<Button>(R.id.save_button)
 
@@ -72,6 +73,15 @@ class CreatePersonItemActivity: BaseActivity() {
             newGroup.adapter = adapter
         }
 
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.gender,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            gender.adapter = adapter
+        }
+
         newFirstName.setOnFocusChangeListener { view, hasFocus ->
             etErrorListener(hasFocus, view)
         }
@@ -88,6 +98,7 @@ class CreatePersonItemActivity: BaseActivity() {
                     personLastName = newLastName.text.toString(),
                     age = age,
                     group = newGroup.selectedItem.toString(),
+                    gender = gender.selectedItem.toString(),
                     personDayOfBirth = birthDay,
                     personPhoto = newPhotoUri
                 )

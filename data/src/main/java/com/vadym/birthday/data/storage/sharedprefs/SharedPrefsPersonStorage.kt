@@ -25,6 +25,7 @@ class SharedPrefsPersonStorage(context: Context): IPersonStorage {
         private const val KEY_LAST_NAME = "key_last_name_"
         private const val KEY_AGE = "key_age_"
         private const val KEY_GROUP = "key_group_"
+        private const val KEY_GENDER = "key_gender_"
         private const val KEY_BIRTH_DAY = "key_birth_day_"
         private const val KEY_PHOTO = "key_photo_"
     }
@@ -37,6 +38,7 @@ class SharedPrefsPersonStorage(context: Context): IPersonStorage {
         editor.putString("$KEY_LAST_NAME$personId", saveParam.personLastName)
         editor.putString("$KEY_AGE$personId", saveParam.age)
         editor.putString("$KEY_GROUP$personId", saveParam.group)
+        editor.putString("$KEY_GENDER$personId", saveParam.gender)
         editor.putString("$KEY_BIRTH_DAY$personId", saveParam.personDayOfBirth)
         editor.putString("$KEY_PHOTO$personId", saveParam.personPhoto)
 
@@ -55,16 +57,18 @@ class SharedPrefsPersonStorage(context: Context): IPersonStorage {
             val lastName = sharedPreferences.getString("$KEY_LAST_NAME$personId", null)
             val age = sharedPreferences.getString("$KEY_AGE$personId", null)
             val group = sharedPreferences.getString("$KEY_GROUP$personId", null)
+            val gender = sharedPreferences.getString("$KEY_GENDER$personId", null)
             val birthDay = sharedPreferences.getString("$KEY_BIRTH_DAY$personId", null)
             val photo = sharedPreferences.getString("$KEY_PHOTO$personId", null)
 
-            if (firstName != null && lastName != null && age != null && group != null && birthDay != null && photo != null) {
+            if (firstName != null && lastName != null && age != null && group != null && gender != null && birthDay != null && photo != null) {
                 val person = PersonModel(
                     personId = personId,
                     personFirstName = firstName,
                     personLastName = lastName,
                     age = age,
                     group = group,
+                    gender = gender,
                     personDayOfBirth = birthDay,
                     personPhoto = photo
                 )

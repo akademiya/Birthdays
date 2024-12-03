@@ -9,12 +9,13 @@ class Person {
     var personDayOfBirth: String? = null
     var age: String? = null
     var group: String? = null
+    var gender: String? = null
     var isBirthToday = false
     var isBirthOnWeek = false
     var isDevMode = false
 
     constructor(personId: String, personFirstName: String?, personLastName: String?, age: String?, personDayOfBirth: String?,
-                personPosition: Int, personPhoto: String?, group: String) {
+                personPosition: Int, personPhoto: String?, group: String, gender: String) {
         this.personId = personId
         this.personFirstName = personFirstName
         this.personLastName = personLastName
@@ -23,14 +24,16 @@ class Person {
         this.personPosition = personPosition
         this.personPhoto = personPhoto
         this.group = group
+        this.gender = gender
     }
 
 
-    constructor(personFirstName: String?, personLastName: String?, age: String?, group: String?, personDayOfBirth: String?, personPhoto: String?) {
+    constructor(personFirstName: String?, personLastName: String?, age: String?, group: String?, gender: String?, personDayOfBirth: String?, personPhoto: String?) {
         this.personFirstName = personFirstName
         this.personLastName = personLastName
         this.age = age
         this.group = group
+        this.gender = gender
         this.personDayOfBirth = personDayOfBirth
         this.personPhoto = personPhoto
     }

@@ -2,6 +2,7 @@ package com.vadym.birthday.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -11,6 +12,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
@@ -25,6 +27,9 @@ class PersonAdapter(
     private val callback: (Person) -> Unit
 //    private val onMoveItemTouch: (viewHolder: VH) -> Unit
 ) : RecyclerView.Adapter<PersonAdapter.VH>() {
+    private var isSoundOn = false
+    private var isItemClicked = false
+    private val songs = arrayOf(R.raw.song1, R.raw.song2, R.raw.song3, R.raw.song4, R.raw.song5)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = VH(
         LayoutInflater.from(parent.context).inflate(R.layout.item_person_card, parent, false)
@@ -34,7 +39,6 @@ class PersonAdapter(
         return personList.size
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.apply {
             val currentPerson = personList[position]
@@ -52,6 +56,14 @@ class PersonAdapter(
             }
 
             if (currentPerson.isBirthOnWeek) {
+                val drawableRes = when {
+                    currentPerson.gender == "Male" && !currentPerson.isBirthToday -> R.drawable.baloon_blue
+                    currentPerson.gender == "Female" && !currentPerson.isBirthToday -> R.drawable.baloon_pink
+                    else -> R.drawable.cake
+                }
+
+                isBirthOnWeek.setImageDrawable(ContextCompat.getDrawable(context, drawableRes))
+
                 isBirthOnWeek.visibility = View.VISIBLE
                 saluteAnimation.visibility = View.VISIBLE
             } else {
@@ -71,17 +83,37 @@ class PersonAdapter(
                 .into(currPhoto)
 
 
-            ivMoveItem?.setOnTouchListener { _, event ->
-                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-//                    onMoveItemTouch(holder)
-                    Toast.makeText(context, "Move item to...", Toast.LENGTH_SHORT).show()
-                }
-                return@setOnTouchListener false
-            }
+//            ivMoveItem?.setOnTouchListener { _, event ->
+//                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+////                    onMoveItemTouch(holder)
+//                    Toast.makeText(context, "Move item to...", Toast.LENGTH_SHORT).show()
+//                }
+//                return@setOnTouchListener false
+//            }
+
+
 
             itemView.setOnClickListener {
-                saluteAnimation.playAnimation()
-                clapperAnimation.playAnimation()
+                if (currentPerson.isBirthToday || currentPerson.isBirthOnWeek) {
+                    saluteAnimation.playAnimation()
+                    clapperAnimation.playAnimation()
+
+                    if (isSoundOn) {
+                        var mediaPlayer: MediaPlayer? = null
+                        val randomSong = songs.random()
+                        mediaPlayer = MediaPlayer.create(context, randomSong)
+                        mediaPlayer?.apply {
+                            if (!isItemClicked) start()
+                            if (!isPlaying) {
+                                stop()
+                                release()
+                                isItemClicked = false // TODO: it rewrite to TRUE below
+                            }
+                        }
+                        mediaPlayer = null
+                    }
+                }
+//                isItemClicked = true
             }
 
             deleteItem.setOnClickListener {
@@ -103,7 +135,7 @@ class PersonAdapter(
         val currPhoto = view.findViewById<ImageView>(R.id.person_img)
         val deleteItem = view.findViewById<ImageView>(R.id.delete_item)
         val editItem = view.findViewById<ImageView>(R.id.edit_item)
-        val itemView = view.findViewById<RelativeLayout>(R.id.listView)
+//        val itemView = view.findViewById<RelativeLayout>(R.id.listView)
         val editItemFrame = view.findViewById<FrameLayout>(R.id.edit_person_card_frame)
         val ivMoveItem = view.findViewById<ImageView>(R.id.iv_move_item)
 
