@@ -64,7 +64,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
 //                    noAnimation()
                     type = "text/plain"
                     putExtra(Intent.EXTRA_SUBJECT, "Birthday")
-                    putExtra(Intent.EXTRA_TEXT, shareBody + URL("https", "play.google.com", "store/apps/details?id=me.vadym.adv.tfprayer"))
+                    putExtra(Intent.EXTRA_TEXT, shareBody + URL("https", "play.google.com", "store/apps/details?id=com.vadym.birthday"))
                 }
                 startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_by)))
             }

@@ -6,8 +6,12 @@ import java.util.Calendar
 
 class CalculateBirthdayUseCase(private val birthdayRepository: IBirthdayRepository) {
 
-    fun execute(birthOfDate: String) : Boolean {
+    fun execute(personId: String, birthOfDate: String) : Boolean {
+        if (isTodayMyBirthday(birthOfDate) && !personId.isNullOrEmpty()) {
+            birthdayRepository.updateBirthdayData(personId)
+        }
         return isTodayMyBirthday(birthOfDate)
+//            .also { if (it) birthdayRepository.updateBirthdayData(personId) }
     }
 
     private fun isTodayMyBirthday(birthOfDate: String): Boolean {

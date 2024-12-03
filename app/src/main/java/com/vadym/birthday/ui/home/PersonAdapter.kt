@@ -1,13 +1,16 @@
 package com.vadym.birthday.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
@@ -19,7 +22,8 @@ class PersonAdapter(
     private val personList: List<Person>,
 //    private val isBirthdayList: List<Boolean>
     private val onDeleteItem: (String) -> Unit,
-    private val callback: (Person) -> Unit,
+    private val callback: (Person) -> Unit
+//    private val onMoveItemTouch: (viewHolder: VH) -> Unit
 ) : RecyclerView.Adapter<PersonAdapter.VH>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = VH(
@@ -30,6 +34,7 @@ class PersonAdapter(
         return personList.size
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.apply {
             val currentPerson = personList[position]
@@ -66,6 +71,13 @@ class PersonAdapter(
                 .into(currPhoto)
 
 
+            ivMoveItem?.setOnTouchListener { _, event ->
+                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+//                    onMoveItemTouch(holder)
+                    Toast.makeText(context, "Move item to...", Toast.LENGTH_SHORT).show()
+                }
+                return@setOnTouchListener false
+            }
 
             itemView.setOnClickListener {
                 saluteAnimation.playAnimation()
@@ -73,7 +85,7 @@ class PersonAdapter(
             }
 
             deleteItem.setOnClickListener {
-//                onDeleteItem(currentPerson.personId!!)
+                onDeleteItem(currentPerson.personId.toString())
             }
 
             editItem.setOnClickListener {  }
@@ -93,6 +105,7 @@ class PersonAdapter(
         val editItem = view.findViewById<ImageView>(R.id.edit_item)
         val itemView = view.findViewById<RelativeLayout>(R.id.listView)
         val editItemFrame = view.findViewById<FrameLayout>(R.id.edit_person_card_frame)
+        val ivMoveItem = view.findViewById<ImageView>(R.id.iv_move_item)
 
         val isBirthToday = view.findViewById<ImageView>(R.id.img_cap)
         val isBirthOnWeek = view.findViewById<ImageView>(R.id.img_cake)

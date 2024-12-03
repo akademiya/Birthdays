@@ -125,8 +125,8 @@ class MainViewModel(
     }
 
 
-    fun isBirthToday(birthOfDate: String) {
-        _isBirthTodayLive.value = calculateBirthdayUseCase.execute(birthOfDate)
+    fun isBirthToday(personId: String, birthOfDate: String) {
+        _isBirthTodayLive.value = calculateBirthdayUseCase.execute(personId, birthOfDate)
     }
 
     fun isBirthOnWeek(birthOfDate: String) {

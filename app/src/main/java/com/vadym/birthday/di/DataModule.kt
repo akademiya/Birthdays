@@ -3,6 +3,7 @@ package com.vadym.birthday.di
 import com.vadym.birthday.data.repository.BirthdayRepository
 import com.vadym.birthday.data.repository.OpenViewToDoRepository
 import com.vadym.birthday.data.repository.PersonRepository
+import com.vadym.birthday.data.storage.IBirthdayStorage
 import com.vadym.birthday.data.storage.IPersonStorage
 import com.vadym.birthday.data.storage.firebase.FirebaseStorage
 import com.vadym.birthday.data.storage.sharedprefs.SharedPrefsPersonStorage
@@ -34,6 +35,10 @@ val dataModule = module {
     }
 
     single<IBirthdayRepository> {
-        BirthdayRepository(context = get())
+        BirthdayRepository(firebaseStorage = get(named("firebase")))
+    }
+
+    single<IBirthdayStorage>(named("firebase")) {
+        FirebaseStorage(context = get())
     }
 }
