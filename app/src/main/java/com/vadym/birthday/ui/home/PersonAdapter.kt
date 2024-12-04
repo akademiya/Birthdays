@@ -1,19 +1,15 @@
 package com.vadym.birthday.ui.home
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
@@ -23,8 +19,7 @@ import com.vadym.birthday.domain.model.Person
 
 class PersonAdapter(
     private val context: Context,
-    private val personList: List<Person>,
-//    private val isBirthdayList: List<Boolean>
+    private var personList: List<Person>,
     private val onDeleteItem: (String) -> Unit,
     private val callback: (Person) -> Unit
 //    private val onMoveItemTouch: (viewHolder: VH) -> Unit
@@ -33,6 +28,11 @@ class PersonAdapter(
     private var isItemClicked = false
     private val songs = arrayOf(R.raw.song1, R.raw.song2, R.raw.song3, R.raw.song4, R.raw.song5)
     private lateinit var sharedPreferences: SharedPreferences
+
+    fun updateList(newList: List<Person>) {
+        personList = newList
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = VH(
         LayoutInflater.from(parent.context).inflate(R.layout.item_person_card, parent, false)
@@ -44,7 +44,7 @@ class PersonAdapter(
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         sharedPreferences = context.getSharedPreferences("AppPreferences", MODE_PRIVATE)
-//        isSoundOn = sharedPreferences.getBoolean("soundSwitchState", false) TODO: turn on after fix FLAG
+//        isSoundOn = sharedPreferences.getBoolean("soundSwitchState", false) //TODO: turn on after fix FLAG
         holder.apply {
             val currentPerson = personList[position]
             currFirstName.text = currentPerson.personFirstName
@@ -129,6 +129,8 @@ class PersonAdapter(
 
         }
     }
+
+
 
 
 

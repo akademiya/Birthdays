@@ -27,8 +27,13 @@ class MainViewModel(
     private val deleteItemUseCase: DeleteItemUseCase
 ) : ViewModel() {
 
+    private val allPersons = mutableListOf<Person>()
+
     private val resultLiveMutable = MutableLiveData<List<Person>>()
     val resultPersonListLive: LiveData<List<Person>> get() = resultLiveMutable
+
+    private val _filterListMutable = MutableLiveData<List<Person>>()
+    val filterPersonListLive: LiveData<List<Person>> get() = _filterListMutable
 
     private var _fabIsVisible = MutableLiveData<Int>()
     val fabIsVisible: LiveData<Int> get() = _fabIsVisible
@@ -53,26 +58,16 @@ class MainViewModel(
     private var _isPersonDeleted = MutableLiveData<Boolean>()
     val isPersonDeleted: LiveData<Boolean> get() = _isPersonDeleted
 
-    init {
-        Log.e("aaa", "VM created")
-    }
+    init {}
 
     override fun onCleared() {
         super.onCleared()
     }
 
     fun getListPerson() {
-//        viewModelScope.launch {
-//            try {
-//                val personList = execute()
-//                resultLiveMutable.postValue(personList)
-//            } catch (e: Exception) {
-//                // Handle any errors here
-//            }
-//        }
-
         listPersonUseCase.execute { personList ->
             resultLiveMutable.value = personList
+            setPersons(personList)
         }
     }
 
@@ -87,8 +82,8 @@ class MainViewModel(
     }
 
     fun onRemovePersonClick(personId: String) {
-        deleteItemUseCase.execute(personId) {
-            isDeleted -> _isPersonDeleted.value = isDeleted
+        deleteItemUseCase.execute(personId) { isDeleted ->
+            _isPersonDeleted.value = isDeleted
         }
     }
 
@@ -144,6 +139,28 @@ class MainViewModel(
     private fun getToday() : String {
         val calendar = Calendar.getInstance()
         return calendar.time.formatterDate()
+    }
+
+
+
+    fun setPersons(persons: List<Person>) {
+        allPersons.clear()
+        allPersons.addAll(persons)
+        resultLiveMutable.value = allPersons // Initialize with the full list
+    }
+
+    fun filterListByCategory(category: String) {
+        val filteredList = when (category) {
+            "today" -> allPersons.filter { calculateBirthdayUseCase.execute(it.personId.toString(), it.personDayOfBirth.toString()) }
+            "week" -> allPersons.filter { calculateBirthdayUseCase.isBirthdayInThisWeek(it.personDayOfBirth.toString()) }
+            "preschoolers" -> allPersons.filter { it.age!!.toInt() in 0..6 }
+            "primary_school" -> allPersons.filter { it.age!!.toInt() in 7..11 }
+            "secondary_school" -> allPersons.filter { it.age!!.toInt() in 12..16 }
+            "high_school" -> allPersons.filter { it.age!!.toInt() in 17..19 }
+            "adults" -> allPersons.filter { it.age!!.toInt() > 20 }
+            else -> allPersons
+        }
+        resultLiveMutable.value = filteredList
     }
 
     enum class GroupName(val title: String) {

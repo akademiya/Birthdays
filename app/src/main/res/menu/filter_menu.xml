@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="----- BIRTHDAY FILTER -----"/>
+    <item
+        android:id="@+id/today"
+        android:title="today birthdays" />
+
+    <item
+        android:id="@+id/week"
+        android:title="week birthdays" />
+
+    <item android:title="----- FILTER BY CATEGORY -----"/>
+
+    <item
+        android:id="@+id/preschoolers"
+        android:title="preschoolers" />
+
+    <item
+        android:id="@+id/primary_school"
+        android:title="primary-school" />
+
+    <item
+        android:id="@+id/secondary_school"
+        android:title="secondary-school" />
+
+    <item
+        android:id="@+id/high_school"
+        android:title="high-school" />
+
+    <item
+        android:id="@+id/adults"
+        android:title="adults" />
+
+
+</menu>

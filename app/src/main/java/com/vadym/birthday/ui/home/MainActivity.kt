@@ -2,6 +2,8 @@ package com.vadym.birthday.ui.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -21,6 +23,7 @@ class MainActivity : BaseActivity() {
 
     override fun init(savedInstanceState: Bundle?) {
         super.setContentView(R.layout.view_person_list)
+        setSupportActionBar(toolbar)
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         val rvListPerson = findViewById<RecyclerView>(R.id.rv_list_person)
@@ -43,19 +46,11 @@ class MainActivity : BaseActivity() {
             startActivity(Intent(this, CreatePersonItemActivity::class.java))
         }
 
-        vm.getListPerson()
-
-        vm.resultPersonListLive.observe(this) { persons ->
-//            val isBirthdayList = persons.map { vm.isBirthToday(it.personDayOfBirth.toString()) }
-
-            adapter = PersonAdapter(
-                context = this,
-                personList = persons,
-                { id -> vm.onRemovePersonClick(id) }
-//                { viewHolder -> onStartDrag(viewHolder) }
-//                isDevMode = isDevMode
-//                isBirthdayList
-            ) { person ->
+        adapter = PersonAdapter(
+            context = this,
+            personList = emptyList(),
+            { id -> vm.onRemovePersonClick(id) },
+            { person ->
                 vm.isBirthToday(person.personId.toString(), person.personDayOfBirth.toString())
                 vm.isBirthTodayLive.observe(this) { isToday ->
                     person.isBirthToday = isToday
@@ -72,12 +67,96 @@ class MainActivity : BaseActivity() {
 
                 vm.isPersonDeleted.observe(this) { delete ->
 //                    if (delete) Toast.makeText(this, "${person.personFirstName} position successful removed", Toast.LENGTH_SHORT).show()
-                }
+                }}
+        )
 
-            }
-            rvListPerson.adapter = adapter
+        rvListPerson.adapter = adapter
+
+        vm.resultPersonListLive.observe(this) { filteredPersons ->
+            adapter.updateList(filteredPersons)
         }
 
+        vm.getListPerson()
+
+
+
+//        vm.resultPersonListLive.observe(this) { persons ->
+////            val isBirthdayList = persons.map { vm.isBirthToday(it.personDayOfBirth.toString()) }
+//
+//            adapter = PersonAdapter(
+//                context = this,
+//                personList = persons,
+//                { id -> vm.onRemovePersonClick(id) }
+////                { viewHolder -> onStartDrag(viewHolder) }
+////                isDevMode = isDevMode
+////                isBirthdayList
+//            ) { person ->
+//                vm.isBirthToday(person.personId.toString(), person.personDayOfBirth.toString())
+//                vm.isBirthTodayLive.observe(this) { isToday ->
+//                    person.isBirthToday = isToday
+//                }
+//
+//                vm.isBirthOnWeek(person.personDayOfBirth.toString())
+//                vm.isBirthWeekLive.observe(this) { duringWeek ->
+//                    person.isBirthOnWeek = duringWeek
+//                }
+//
+//                vm.isDevMode.observe(this) { devMode ->
+//                    person.isDevMode = devMode
+//                }
+//
+//                vm.isPersonDeleted.observe(this) { delete ->
+////                    if (delete) Toast.makeText(this, "${person.personFirstName} position successful removed", Toast.LENGTH_SHORT).show()
+//                }
+//
+//            }
+//            rvListPerson.adapter = adapter
+//        }
+//
+//        vm.filterPersonListLive.observe(this) { persons ->
+//            adapter.updateList(persons)
+//            rvListPerson.adapter = adapter
+//        }
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.filter_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.today -> {
+                vm.filterListByCategory("today")
+                true
+            }
+            R.id.week -> {
+                vm.filterListByCategory("week")
+                true
+            }
+            R.id.preschoolers -> {
+                vm.filterListByCategory("preschoolers")
+                true
+            }
+            R.id.primary_school -> {
+                vm.filterListByCategory("primary_school")
+                true
+            }
+            R.id.secondary_school -> {
+                vm.filterListByCategory("secondary_school")
+                true
+            }
+            R.id.high_school -> {
+                vm.filterListByCategory("high_school")
+                true
+            }
+            R.id.adults -> {
+                vm.filterListByCategory("adults")
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
