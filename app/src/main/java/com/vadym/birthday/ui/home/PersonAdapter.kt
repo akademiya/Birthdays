@@ -2,6 +2,8 @@ package com.vadym.birthday.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -30,6 +32,7 @@ class PersonAdapter(
     private var isSoundOn = false
     private var isItemClicked = false
     private val songs = arrayOf(R.raw.song1, R.raw.song2, R.raw.song3, R.raw.song4, R.raw.song5)
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = VH(
         LayoutInflater.from(parent.context).inflate(R.layout.item_person_card, parent, false)
@@ -40,6 +43,8 @@ class PersonAdapter(
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
+        sharedPreferences = context.getSharedPreferences("AppPreferences", MODE_PRIVATE)
+//        isSoundOn = sharedPreferences.getBoolean("soundSwitchState", false) TODO: turn on after fix FLAG
         holder.apply {
             val currentPerson = personList[position]
             currFirstName.text = currentPerson.personFirstName
