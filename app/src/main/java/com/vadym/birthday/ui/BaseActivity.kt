@@ -56,6 +56,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         when (id) {
             R.id.nav_home -> startActivity(Intent(this, MainActivity::class.java))
             R.id.nav_tl -> startActivity(Intent(openTelegram(this)))
+            R.id.nav_tf -> startActivity(Intent(openTfCommunity(this)))
             R.id.nav_info -> startActivity(Intent(this, InfoActivity::class.java))
             R.id.nav_share -> {
                 val sharingIntent = Intent(Intent.ACTION_SEND)
@@ -84,7 +85,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     }
 
     private fun openTelegram(context: Context): Intent? {
-        val url = "https://t.me/+ojQ6VT3l-4g1NTdi"
+        val url = "https://t.me/+uFJQivbxGdswZmMy"
         return try {
             context.packageManager.getPackageInfo("org.telegram.messenger", 0)
             Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -92,6 +93,16 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
             Intent(Intent.ACTION_VIEW, Uri.parse(url))
         }
 
+    }
+
+    private fun openTfCommunity(context: Context): Intent? {
+        val url = "https://umua.org/hpwords/channels/town-square"
+        return try {
+//            context.packageManager.getPackageInfo("org.telegram.messenger", 0)
+            Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        } catch (e: Exception) {
+            Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        }
     }
 
     fun sendToTelegram(text: String): String {

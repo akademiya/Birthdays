@@ -10,8 +10,12 @@
             android:title="@string/menu_home" />
         <item
             android:id="@+id/nav_tl"
-            android:icon="@drawable/tl"
+            android:icon="@drawable/tl_2"
             android:title="@string/menu_tel_group" />
+        <item
+            android:id="@+id/nav_tf"
+            android:icon="@drawable/ff_24"
+            android:title="@string/menu_ff_group" />
         <item
             android:id="@+id/nav_info"
             android:icon="@drawable/ic_info"
