@@ -49,7 +49,13 @@ class FirebaseStorage(private val context: Context): IPersonStorage, IBirthdaySt
 
     override fun deletePersonItem(personId: String, callback: (Boolean) -> Unit) {
         personRef.child(personId).removeValue().addOnCompleteListener { task ->
-            callback(task.isSuccessful)
+            if (task.isSuccessful) {
+                callback(true)
+            } else {
+                callback(false)
+            }
+        }.addOnFailureListener {
+            callback(false)
         }
     }
 

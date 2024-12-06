@@ -2,7 +2,6 @@ package com.vadym.birthday.ui.home
 
 import android.text.InputFilter
 import android.text.Spanned
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.lifecycle.LiveData
@@ -75,15 +74,27 @@ class MainViewModel(
         if (fabButtonVisibilityUseCase.execute()) {
             _fabIsVisible.value = View.VISIBLE
             _isDevMode.value = true
+            listPersonUseCase.execute { personList ->
+                personList.forEach { item ->
+                    item.isDevMode = true
+                }
+                setPersons(personList)
+            }
         } else {
             _fabIsVisible.value = View.GONE
             _isDevMode.value = false
+            listPersonUseCase.execute { personList ->
+                personList.forEach { item ->
+                    item.isDevMode = false
+                }
+                setPersons(personList)
+            }
         }
     }
 
     fun onRemovePersonClick(personId: String) {
         deleteItemUseCase.execute(personId) { isDeleted ->
-            _isPersonDeleted.value = isDeleted
+            _isPersonDeleted.postValue(isDeleted)
         }
     }
 
@@ -146,29 +157,29 @@ class MainViewModel(
     fun setPersons(persons: List<Person>) {
         allPersons.clear()
         allPersons.addAll(persons)
-        resultLiveMutable.value = allPersons // Initialize with the full list
+        resultLiveMutable.value = allPersons
     }
 
     fun filterListByCategory(category: String) {
         val filteredList = when (category) {
             "today" -> allPersons.filter { calculateBirthdayUseCase.execute(it.personId.toString(), it.personDayOfBirth.toString()) }
             "week" -> allPersons.filter { calculateBirthdayUseCase.isBirthdayInThisWeek(it.personDayOfBirth.toString()) }
-            "preschoolers" -> allPersons.filter { it.age!!.toInt() in 0..6 }
-            "primary_school" -> allPersons.filter { it.age!!.toInt() in 7..11 }
-            "secondary_school" -> allPersons.filter { it.age!!.toInt() in 12..16 }
-            "high_school" -> allPersons.filter { it.age!!.toInt() in 17..19 }
-            "adults" -> allPersons.filter { it.age!!.toInt() > 20 }
+            GroupName.PRESCHOOLERS.title -> allPersons.filter { it.group.equals(GroupName.PRESCHOOLERS.title) }
+            GroupName.ELEMENTARY_SCHOOL.title -> allPersons.filter { it.group.equals(GroupName.ELEMENTARY_SCHOOL.title) }
+            GroupName.SECONDARY_SCHOOL.title -> allPersons.filter { it.group.equals(GroupName.SECONDARY_SCHOOL.title) }
+            GroupName.HIGH_SCHOOL.title -> allPersons.filter { it.group.equals(GroupName.HIGH_SCHOOL.title) }
+            GroupName.ADULTS.title -> allPersons.filter { it.group.equals(GroupName.ADULTS.title) }
             else -> allPersons
         }
         resultLiveMutable.value = filteredList
     }
 
     enum class GroupName(val title: String) {
-        PRESCHOOLERS("preschoolers"),
-        PRIMARY_SCHOOL("primary-school"),
-        SECONDARY_SCHOOL("secondary-school"),
-        HIGH_SCHOOL("high-school"),
-        ADULTS("adults")
+        PRESCHOOLERS("Preschoolers"),
+        ELEMENTARY_SCHOOL("Elementary School"),
+        SECONDARY_SCHOOL("Secondary School"),
+        HIGH_SCHOOL("High School"),
+        ADULTS("Adults")
     }
 
     enum class Errors(val textError: String) {

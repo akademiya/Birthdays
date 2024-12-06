@@ -41,23 +41,10 @@ class PersonRepository(
             }
             callback(personList)
         }
-//        sharedPrefsPersonStorage.getListOfPersonS { personModelList ->
-//            val personList = personModelList.map { personModel ->
-//                Person(
-//                    personFirstName = personModel.personFirstName,
-//                    personLastName = personModel.personLastName,
-//                    age = personModel.age,
-//                    group = personModel.group,
-//                    personDayOfBirth = personModel.personDayOfBirth,
-//                    personPhoto = personModel.personPhoto
-//                )
-//            }
-//            callback(personList)
-//        }
     }
 
     override fun deletePersonItem(personId: String, callback: (Boolean) -> Unit) {
-        firebaseStorage.deletePersonItem(personId, { isDeleted -> callback(isDeleted) })
+        firebaseStorage.deletePersonItem(personId) { isDeleted -> callback(isDeleted) }
     }
 
 }

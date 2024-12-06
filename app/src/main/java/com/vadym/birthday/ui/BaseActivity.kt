@@ -23,10 +23,9 @@ import java.net.URL
 abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var toolbar: Toolbar
-    private lateinit var drawer: DrawerLayout
-    private lateinit var navigationView: NavigationView
-    private lateinit var toggle: ActionBarDrawerToggle
-//     lateinit var binding: ActivityMainBinding
+    lateinit var drawer: DrawerLayout
+    lateinit var navigationView: NavigationView
+    lateinit var toggle: ActionBarDrawerToggle
 
     override fun setContentView(layoutResID: Int) {
         val fullView = layoutInflater.inflate(R.layout.activity_main, null) as DrawerLayout
@@ -62,7 +61,6 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
                 val sharingIntent = Intent(Intent.ACTION_SEND)
                 val shareBody = getString(R.string.share_body)
                 sharingIntent.apply {
-//                    noAnimation()
                     type = "text/plain"
                     putExtra(Intent.EXTRA_SUBJECT, "Birthday")
                     putExtra(Intent.EXTRA_TEXT, shareBody + URL("https", "play.google.com", "store/apps/details?id=com.vadym.birthday"))
@@ -74,7 +72,6 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
                 val uri = Uri.parse("mailto:vadym.adv@gmail.com")
                 val sendIntent = Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:"))
                 sendIntent.data = uri
-//                sendIntent.noAnimation()
                 startActivity(Intent.createChooser(sendIntent, "Birthday"))
             }
         }
@@ -98,7 +95,6 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     private fun openTfCommunity(context: Context): Intent? {
         val url = "https://umua.org/hpwords/channels/town-square"
         return try {
-//            context.packageManager.getPackageInfo("org.telegram.messenger", 0)
             Intent(Intent.ACTION_VIEW, Uri.parse(url))
         } catch (e: Exception) {
             Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -122,7 +118,6 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         FirebaseApp.initializeApp(this)
         init(savedInstanceState)
     }

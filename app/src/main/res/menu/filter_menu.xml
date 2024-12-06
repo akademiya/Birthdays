@@ -4,33 +4,33 @@
     <item android:title="----- BIRTHDAY FILTER -----"/>
     <item
         android:id="@+id/today"
-        android:title="today birthdays" />
+        android:title="Today birthdays" />
 
     <item
         android:id="@+id/week"
-        android:title="week birthdays" />
+        android:title="Week birthdays" />
 
     <item android:title="----- FILTER BY CATEGORY -----"/>
 
     <item
         android:id="@+id/preschoolers"
-        android:title="preschoolers" />
+        android:title="Preschoolers" />
 
     <item
         android:id="@+id/primary_school"
-        android:title="primary-school" />
+        android:title="Primary School" />
 
     <item
         android:id="@+id/secondary_school"
-        android:title="secondary-school" />
+        android:title="Secondary School" />
 
     <item
         android:id="@+id/high_school"
-        android:title="high-school" />
+        android:title="High School" />
 
     <item
         android:id="@+id/adults"
-        android:title="adults" />
+        android:title="Adults" />
 
 
 </menu>

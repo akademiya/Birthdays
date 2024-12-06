@@ -5,6 +5,12 @@ import com.vadym.birthday.domain.repository.IPersonRepository
 class DeleteItemUseCase(private val personRepository: IPersonRepository) {
 
     fun execute(personId: String, callback: (Boolean) -> Unit) {
-        return personRepository.deletePersonItem(personId) { isDeleted -> callback(isDeleted) }
+        if (personId.isNotEmpty()) {
+            personRepository.deletePersonItem(personId) { isDeleted ->
+                callback(isDeleted)
+            }
+        } else {
+            callback(false) // Invalid personId
+        }
     }
 }

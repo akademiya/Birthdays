@@ -6,14 +6,15 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.vadym.birthday.R
 import com.vadym.birthday.ui.BaseActivity
+import com.vadym.birthday.ui.home.MainViewModel.GroupName
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.Collections
 
 class MainActivity : BaseActivity() {
     private lateinit var adapter: PersonAdapter
@@ -24,6 +25,14 @@ class MainActivity : BaseActivity() {
     override fun init(savedInstanceState: Bundle?) {
         super.setContentView(R.layout.view_person_list)
         setSupportActionBar(toolbar)
+
+        toggle = ActionBarDrawerToggle(
+            this, drawer, toolbar,
+            R.string.drawer_open,
+            R.string.drawer_close
+        )
+        drawer.addDrawerListener(toggle)
+        toggle.syncState()
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         val rvListPerson = findViewById<RecyclerView>(R.id.rv_list_person)
@@ -41,6 +50,10 @@ class MainActivity : BaseActivity() {
         vm.fabIsVisible.observe(this) { isVisible ->
             fab.visibility = isVisible
         }
+
+//        vm.isDevMode.observe(this) { devMode ->
+////            person.isDevMode = devMode
+//        }
 
         fab.setOnClickListener {
             startActivity(Intent(this, CreatePersonItemActivity::class.java))
@@ -60,14 +73,7 @@ class MainActivity : BaseActivity() {
                 vm.isBirthWeekLive.observe(this) { duringWeek ->
                     person.isBirthOnWeek = duringWeek
                 }
-
-                vm.isDevMode.observe(this) { devMode ->
-                    person.isDevMode = devMode
-                }
-
-                vm.isPersonDeleted.observe(this) { delete ->
-//                    if (delete) Toast.makeText(this, "${person.personFirstName} position successful removed", Toast.LENGTH_SHORT).show()
-                }}
+            }
         )
 
         rvListPerson.adapter = adapter
@@ -77,6 +83,15 @@ class MainActivity : BaseActivity() {
         }
 
         vm.getListPerson()
+
+        vm.isPersonDeleted.observe(this) { isDeleted ->
+            if (isDeleted) {
+                Toast.makeText(this, "Person deleted successfully", Toast.LENGTH_SHORT).show()
+                vm.getListPerson()
+            } else {
+                Toast.makeText(this, "Failed to delete person", Toast.LENGTH_SHORT).show()
+            }
+        }
 
 
 
@@ -136,23 +151,23 @@ class MainActivity : BaseActivity() {
                 true
             }
             R.id.preschoolers -> {
-                vm.filterListByCategory("preschoolers")
+                vm.filterListByCategory(GroupName.PRESCHOOLERS.title)
                 true
             }
             R.id.primary_school -> {
-                vm.filterListByCategory("primary_school")
+                vm.filterListByCategory(GroupName.ELEMENTARY_SCHOOL.title)
                 true
             }
             R.id.secondary_school -> {
-                vm.filterListByCategory("secondary_school")
+                vm.filterListByCategory(GroupName.SECONDARY_SCHOOL.title)
                 true
             }
             R.id.high_school -> {
-                vm.filterListByCategory("high_school")
+                vm.filterListByCategory(GroupName.HIGH_SCHOOL.title)
                 true
             }
             R.id.adults -> {
-                vm.filterListByCategory("adults")
+                vm.filterListByCategory(GroupName.ADULTS.title)
                 true
             }
             else -> super.onOptionsItemSelected(item)

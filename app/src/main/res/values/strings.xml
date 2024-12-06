@@ -15,7 +15,7 @@
     <string name="menu_fb">Facebook</string>
     <string name="menu_ins">Instagram</string>
     <string name="menu_info">Info</string>
-    <string name="menu_tel_group">Telegram</string>
+    <string name="menu_tel_group">Група Україна</string>
     <string name="menu_ff_group">True Family Community</string>
     <string name="communicate">Communicate</string>
     <string name="menu_share">Share</string>
@@ -42,7 +42,7 @@
 
     <string-array name="group_names">
         <item>Preschoolers</item>
-        <item>Primary School</item>
+        <item>Elementary School</item>
         <item>Secondary School</item>
         <item>High School</item>
         <item>Adults</item>

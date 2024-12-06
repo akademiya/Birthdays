@@ -44,7 +44,7 @@ class PersonAdapter(
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         sharedPreferences = context.getSharedPreferences("AppPreferences", MODE_PRIVATE)
-//        isSoundOn = sharedPreferences.getBoolean("soundSwitchState", false) //TODO: turn on after fix FLAG
+        isSoundOn = sharedPreferences.getBoolean("soundSwitchState", false) //TODO: turn on after fix FLAG
         holder.apply {
             val currentPerson = personList[position]
             currFirstName.text = currentPerson.personFirstName
@@ -99,12 +99,12 @@ class PersonAdapter(
 
 
             itemView.setOnClickListener {
-                if (currentPerson.isBirthToday || currentPerson.isBirthOnWeek) {
-                    saluteAnimation.playAnimation()
-                    clapperAnimation.playAnimation()
+                saluteAnimation.playAnimation()
+                clapperAnimation.playAnimation()
 
+                if (currentPerson.isBirthToday || currentPerson.isBirthOnWeek) {
                     if (isSoundOn) {
-                        var mediaPlayer: MediaPlayer? = null
+                        val mediaPlayer: MediaPlayer?
                         val randomSong = songs.random()
                         mediaPlayer = MediaPlayer.create(context, randomSong)
                         mediaPlayer?.apply {
@@ -115,10 +115,9 @@ class PersonAdapter(
                                 isItemClicked = false // TODO: it rewrite to TRUE below
                             }
                         }
-                        mediaPlayer = null
                     }
                 }
-//                isItemClicked = true
+                isItemClicked = true
             }
 
             deleteItem.setOnClickListener {
