@@ -1,27 +1,45 @@
 package com.vadym.birthday.domain.usecase
 
 import com.vadym.birthday.domain.repository.IBirthdayRepository
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class CalculateBirthdayUseCase(private val birthdayRepository: IBirthdayRepository) {
+    private var newAge = 0
 
-    fun execute(personId: String, birthOfDate: String) : Boolean {
-        if (isTodayMyBirthday(birthOfDate) && !personId.isNullOrEmpty()) {
-            birthdayRepository.updateBirthdayData(personId)
+    fun execute(personId: String, birthOfDate: String) {
+        if (isTodayMyBirthday(birthOfDate) && personId.isNotEmpty()) {
+            birthdayRepository.updateBirthdayData(personId, newAge)
         }
-        return isTodayMyBirthday(birthOfDate)
-//            .also { if (it) birthdayRepository.updateBirthdayData(personId) }
     }
 
-    private fun isTodayMyBirthday(birthOfDate: String): Boolean {
+    fun isTodayMyBirthday(birthOfDate: String): Boolean {
+        if (birthOfDate.isNullOrEmpty()) {
+            return false
+        }
         val sdf = SimpleDateFormat("yyyyMMdd")
         val birthDate = sdf.parse(birthOfDate)
         val birthDay = Calendar.getInstance().apply { time = birthDate }
         val today = Calendar.getInstance()
 
+        val currentYear = today.get(Calendar.YEAR)
+        val birthYear = birthDay.get(Calendar.YEAR)
+        newAge = currentYear - birthYear
+
         return today.get(Calendar.DAY_OF_MONTH) == birthDay.get(Calendar.DAY_OF_MONTH) &&
                 today.get(Calendar.MONTH) == birthDay.get(Calendar.MONTH)
+
+//        return try {
+//            val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(birthOfDate)
+//            val today = Calendar.getInstance().time
+//            DateUtils.isSameDay(date, today)
+//        } catch (e: ParseException) {
+//            e.printStackTrace()
+//            false // Return false if the date is unparseable.
+//        }
     }
 
 
@@ -52,3 +70,17 @@ class CalculateBirthdayUseCase(private val birthdayRepository: IBirthdayReposito
                 birthDay.equals(endOfWeek)
     }
 }
+
+//object DateUtils {
+//    fun isSameDay(date1: Date?, date2: Date?): Boolean {
+//        if (date1 == null || date2 == null) {
+//            return false
+//        }
+//
+//        val calendar1 = Calendar.getInstance().apply { time = date1 }
+//        val calendar2 = Calendar.getInstance().apply { time = date2 }
+//
+//        return calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH) &&
+//                calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH)
+//    }
+//}

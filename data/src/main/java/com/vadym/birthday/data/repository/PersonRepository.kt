@@ -13,11 +13,12 @@ class PersonRepository(
 
     override fun savePerson(saveParam: Person) {
         val person = PersonModel(
+            saveParam.personId.toString(),
             saveParam.personFirstName,
             saveParam.personLastName,
             saveParam.age,
-            saveParam.group,
-            saveParam.gender,
+            saveParam.group.toString(),
+            saveParam.gender.toString(),
             saveParam.personDayOfBirth,
             saveParam.personPhoto
         )
@@ -30,17 +31,27 @@ class PersonRepository(
         firebaseStorage.getListOfPersonS { personModelList ->
             val personList = personModelList.map { personModel ->
                 Person(
+                    personId = personModel.personId.toString(),
                     personFirstName = personModel.personFirstName,
                     personLastName = personModel.personLastName,
                     age = personModel.age,
-                    group = personModel.group,
-                    gender = personModel.gender,
+                    group = personModel.group.toString(),
+                    gender = personModel.gender.toString(),
                     personDayOfBirth = personModel.personDayOfBirth,
-                    personPhoto = personModel.personPhoto
+                    personPhoto = personModel.personPhoto,
+                    position = personModel.position
                 )
             }
-            callback(personList)
+            callback(personList.sortedBy { it.position })
         }
+    }
+
+    override fun updatePersonList(personId: String, updatedList: List<Person>) {
+        firebaseStorage.updatePersonList(personId, updatedList)
+    }
+
+    override fun updatePosition(updatedList: List<Person>) {
+        firebaseStorage.updatePosition(updatedList)
     }
 
     override fun deletePersonItem(personId: String, callback: (Boolean) -> Unit) {

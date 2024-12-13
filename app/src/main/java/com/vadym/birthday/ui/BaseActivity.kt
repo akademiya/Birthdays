@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -26,10 +27,12 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     lateinit var drawer: DrawerLayout
     lateinit var navigationView: NavigationView
     lateinit var toggle: ActionBarDrawerToggle
+    lateinit var appVersion: TextView
 
     override fun setContentView(layoutResID: Int) {
         val fullView = layoutInflater.inflate(R.layout.activity_main, null) as DrawerLayout
         val activityContainer = fullView.findViewById<View>(R.id.content_base) as FrameLayout
+//        appVersion = findViewById<TextView>(R.id.app_version)
 
         layoutInflater.inflate(layoutResID, activityContainer, true)
         super.setContentView(fullView)

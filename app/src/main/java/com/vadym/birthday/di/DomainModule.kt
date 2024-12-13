@@ -6,6 +6,7 @@ import com.vadym.birthday.domain.usecase.DeleteItemUseCase
 import com.vadym.birthday.domain.usecase.FabButtonVisibilityUseCase
 import com.vadym.birthday.domain.usecase.ListOfPersonUseCase
 import com.vadym.birthday.domain.usecase.SavePersonDataUseCase
+import com.vadym.birthday.domain.usecase.UpdatePositionListUseCase
 import org.koin.dsl.module
 
 val domainModule = module {
@@ -28,6 +29,10 @@ val domainModule = module {
 
     factory<CalculateBirthdayUseCase> {
         CalculateBirthdayUseCase(birthdayRepository = get())
+    }
+
+    factory<UpdatePositionListUseCase> {
+        UpdatePositionListUseCase(personRepository = get())
     }
 
     factory<DeleteItemUseCase> {

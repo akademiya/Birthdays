@@ -1,33 +1,41 @@
 package com.vadym.birthday.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.vadym.birthday.R
 import com.vadym.birthday.domain.model.Person
+import java.util.Collections
 
 class PersonAdapter(
     private val context: Context,
     private var personList: List<Person>,
     private val onDeleteItem: (String) -> Unit,
-    private val callback: (Person) -> Unit
-//    private val onMoveItemTouch: (viewHolder: VH) -> Unit
+    private val callback: (Person) -> Unit,
+    private var itemTouchHelper: ItemTouchHelper?
 ) : RecyclerView.Adapter<PersonAdapter.VH>() {
     private var isSoundOn = false
     private var isItemClicked = false
     private val songs = arrayOf(R.raw.song1, R.raw.song2, R.raw.song3, R.raw.song4, R.raw.song5)
     private lateinit var sharedPreferences: SharedPreferences
+
+    fun setItemTouchHelper(itemTouchHelper: ItemTouchHelper) {
+        this.itemTouchHelper = itemTouchHelper
+    }
 
     fun updateList(newList: List<Person>) {
         personList = newList
@@ -42,6 +50,7 @@ class PersonAdapter(
         return personList.size
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: VH, position: Int) {
         sharedPreferences = context.getSharedPreferences("AppPreferences", MODE_PRIVATE)
         isSoundOn = sharedPreferences.getBoolean("soundSwitchState", false) //TODO: turn on after fix FLAG
@@ -88,14 +97,12 @@ class PersonAdapter(
                 .into(currPhoto)
 
 
-//            ivMoveItem?.setOnTouchListener { _, event ->
-//                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
-////                    onMoveItemTouch(holder)
-//                    Toast.makeText(context, "Move item to...", Toast.LENGTH_SHORT).show()
-//                }
-//                return@setOnTouchListener false
-//            }
-
+            ivMoveItem.setOnTouchListener { _, event ->
+                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+                    itemTouchHelper?.startDrag(holder)
+                }
+                false
+            }
 
 
             itemView.setOnClickListener {
@@ -129,7 +136,18 @@ class PersonAdapter(
         }
     }
 
+    fun onItemMove(fromPosition: Int, toPosition: Int) : List<Person> {
+        val mutableList = personList.toMutableList()
+        val movedItem = mutableList.removeAt(fromPosition)
+        mutableList.add(toPosition, movedItem)
+        personList = mutableList
+        notifyItemMoved(fromPosition, toPosition)
+        return personList
+    }
 
+    fun getCurrentList(): List<Person> {
+        return personList
+    }
 
 
 

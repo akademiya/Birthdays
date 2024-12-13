@@ -55,8 +55,6 @@ class CreatePersonItemActivity: BaseActivity() {
             }
         }
 
-//        newFirstName.filters = arrayOf(MainViewModel.LetterInputFilter())
-//        newLastName.filters = arrayOf(MainViewModel.LetterInputFilter())
 
         if (!newFirstName.isFocused && newFirstName.text.isNullOrEmpty()) {
             newFirstName.error
@@ -94,13 +92,15 @@ class CreatePersonItemActivity: BaseActivity() {
         save.setOnClickListener {
             vm.onSaveButtonClick(
                 Person(
+                    personId = "id",
                     personFirstName = newFirstName.text.toString(),
                     personLastName = newLastName.text.toString(),
                     age = age,
                     group = newGroup.selectedItem.toString(),
                     gender = gender.selectedItem.toString(),
                     personDayOfBirth = birthDay,
-                    personPhoto = newPhotoUri
+                    personPhoto = newPhotoUri,
+                    1
                 )
             )
         }

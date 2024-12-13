@@ -2,7 +2,6 @@ package com.vadym.birthday.data.storage.model
 
 class PersonModel {
     var personId: String? = null
-//    var personPosition: Int = 0
     var personPhoto: String? = null
     var personFirstName: String? = null
     var personLastName: String? = null
@@ -12,11 +11,12 @@ class PersonModel {
     var gender: String? = null
     var isBirthToday = false
     var isBirthOnWeek = false
+    var position = 0
 
     // No-argument constructor
-    constructor() : this(null, null, null, null, null, null, null)
+    constructor()
 
-    constructor(personId: String?, personFirstName: String?, personLastName: String?, age: String?, group: String, gender: String?, personDayOfBirth: String?,
+    constructor(personId: String, personFirstName: String?, personLastName: String?, age: String?, group: String, gender: String, personDayOfBirth: String?,
                 personPhoto: String?) {
         this.personId = personId
         this.personFirstName = personFirstName
@@ -26,11 +26,10 @@ class PersonModel {
         this.gender = gender
         this.personDayOfBirth = personDayOfBirth
         this.personPhoto = personPhoto
-
     }
 
 
-    constructor(personFirstName: String?, personLastName: String?, age: String?, group: String?, gender: String?, personDayOfBirth: String?, personPhoto: String?) {
+    constructor(personFirstName: String?, personLastName: String?, age: String?, group: String?, gender: String?, personDayOfBirth: String?, personPhoto: String?, position: Int) {
         this.personFirstName = personFirstName
         this.personLastName = personLastName
         this.age = age
@@ -38,6 +37,7 @@ class PersonModel {
         this.gender = gender
         this.personDayOfBirth = personDayOfBirth
         this.personPhoto = personPhoto
+        this.position = position
     }
 
     constructor(isBirthToday: Boolean, isBirthOnWeek: Boolean) {
@@ -47,5 +47,9 @@ class PersonModel {
 
     constructor(personId: String) {
         this.personId = personId
+    }
+
+    constructor(position: Int) {
+        this.position = position
     }
 }

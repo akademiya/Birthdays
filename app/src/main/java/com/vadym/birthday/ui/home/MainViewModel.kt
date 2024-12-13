@@ -1,12 +1,11 @@
 package com.vadym.birthday.ui.home
 
-import android.text.InputFilter
-import android.text.Spanned
 import android.view.View
 import android.widget.Button
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.vadym.birthday.data.storage.model.PersonModel
 import com.vadym.birthday.domain.model.Person
 import com.vadym.birthday.domain.usecase.CalculateBirthdayUseCase
 import com.vadym.birthday.domain.usecase.CreatePersonItemUseCase
@@ -14,6 +13,7 @@ import com.vadym.birthday.domain.usecase.DeleteItemUseCase
 import com.vadym.birthday.domain.usecase.FabButtonVisibilityUseCase
 import com.vadym.birthday.domain.usecase.ListOfPersonUseCase
 import com.vadym.birthday.domain.usecase.SavePersonDataUseCase
+import com.vadym.birthday.domain.usecase.UpdatePositionListUseCase
 import com.vadym.birthday.ui.formatterDate
 import java.util.Calendar
 
@@ -23,6 +23,7 @@ class MainViewModel(
     private val createPersonItemUseCase: CreatePersonItemUseCase,
     private val savePersonDataUseCase: SavePersonDataUseCase,
     private val calculateBirthdayUseCase: CalculateBirthdayUseCase,
+    private val updatePositionListUseCase: UpdatePositionListUseCase,
     private val deleteItemUseCase: DeleteItemUseCase
 ) : ViewModel() {
 
@@ -68,6 +69,15 @@ class MainViewModel(
             resultLiveMutable.value = personList
             setPersons(personList)
         }
+    }
+
+    fun updatePersonData(person: PersonModel) {
+//        val firebaseStorage = FirebaseStorage(context)
+//        firebaseStorage.updatePerson(person.personId, person)
+    }
+
+    fun updatePosition(updatedList: List<Person>) {
+        updatePositionListUseCase.execute(updatedList)
     }
 
     fun clickByToolbar() {
@@ -132,7 +142,8 @@ class MainViewModel(
 
 
     fun isBirthToday(personId: String, birthOfDate: String) {
-        _isBirthTodayLive.value = calculateBirthdayUseCase.execute(personId, birthOfDate)
+        _isBirthTodayLive.value = calculateBirthdayUseCase.isTodayMyBirthday(birthOfDate)
+        calculateBirthdayUseCase.execute(personId, birthOfDate)
     }
 
     fun isBirthOnWeek(birthOfDate: String) {
@@ -162,8 +173,17 @@ class MainViewModel(
 
     fun filterListByCategory(category: String) {
         val filteredList = when (category) {
-            "today" -> allPersons.filter { calculateBirthdayUseCase.execute(it.personId.toString(), it.personDayOfBirth.toString()) }
-            "week" -> allPersons.filter { calculateBirthdayUseCase.isBirthdayInThisWeek(it.personDayOfBirth.toString()) }
+//            "today" -> allPersons.filter { calculateBirthdayUseCase.isTodayMyBirthday(it.personDayOfBirth.toString()) }
+//            "week" -> allPersons.filter { calculateBirthdayUseCase.isBirthdayInThisWeek(it.personDayOfBirth.toString()) }
+
+            "today" -> allPersons.filter {
+                !it.personDayOfBirth.isNullOrEmpty() &&
+                        calculateBirthdayUseCase.isTodayMyBirthday(it.personDayOfBirth!!)
+            }
+            "week" -> allPersons.filter {
+                !it.personDayOfBirth.isNullOrEmpty() &&
+                        calculateBirthdayUseCase.isBirthdayInThisWeek(it.personDayOfBirth!!)
+            }
             GroupName.PRESCHOOLERS.title -> allPersons.filter { it.group.equals(GroupName.PRESCHOOLERS.title) }
             GroupName.ELEMENTARY_SCHOOL.title -> allPersons.filter { it.group.equals(GroupName.ELEMENTARY_SCHOOL.title) }
             GroupName.SECONDARY_SCHOOL.title -> allPersons.filter { it.group.equals(GroupName.SECONDARY_SCHOOL.title) }
@@ -188,28 +208,6 @@ class MainViewModel(
         NOT_VALID_DIGIT("Check the correct entered value"),
         DATE_OF_BIRTH("Date of birth must be choose"),
         WRONG("Something wrong")
-    }
-
-    class LetterInputFilter : InputFilter {
-        override fun filter(
-            source: CharSequence?,
-            start: Int,
-            end: Int,
-            dest: Spanned?,
-            dstart: Int,
-            dend: Int
-        ): CharSequence? {
-            if (source == null) {
-                return null
-            }
-
-            for (i in start until end) {
-                if (!source[i].isLetter()) {
-                    return ""
-                }
-            }
-            return null
-        }
     }
 
 }

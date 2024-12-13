@@ -12,6 +12,7 @@ val appModule = module {
             createPersonItemUseCase = get(),
             savePersonDataUseCase = get(),
             calculateBirthdayUseCase = get(),
+            updatePositionListUseCase = get(),
             deleteItemUseCase = get()
         )
     }
