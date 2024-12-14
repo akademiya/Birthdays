@@ -1,8 +1,13 @@
 package com.vadym.birthday.ui.home
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.view.LayoutInflater
@@ -12,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +25,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.vadym.birthday.R
 import com.vadym.birthday.domain.model.Person
+import java.util.Calendar
 import java.util.Collections
 
 class PersonAdapter(
@@ -64,6 +71,7 @@ class PersonAdapter(
             if (currentPerson.isBirthToday) {
                 isBirthToday.visibility = View.VISIBLE
                 clapperAnimation.visibility = View.VISIBLE
+                sendNotification(currentPerson)
             } else {
                 isBirthToday.visibility = View.GONE
                 clapperAnimation.visibility = View.GONE
@@ -145,8 +153,106 @@ class PersonAdapter(
         return personList
     }
 
-    fun getCurrentList(): List<Person> {
-        return personList
+    private fun sendNotification(person: Person) {
+        val sharedPreferences = context.getSharedPreferences("NotificationPrefs", MODE_PRIVATE)
+        val todayKey = "${person.personId}_${System.currentTimeMillis() / (1000 * 60 * 60 * 24)}"
+
+        if (sharedPreferences.getBoolean(todayKey, false)) {
+            return
+        }
+
+        sharedPreferences.edit().putBoolean(todayKey, true).apply()
+
+
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        val intent = Intent(context, BirthdayNotificationReceiver::class.java).apply {
+//            putExtra("personId", person.personId)
+//            putExtra("personFirstName", person.personFirstName)
+//            putExtra("age", person.age)
+//        }
+
+//        val pendingIntent = PendingIntent.getBroadcast(
+//            context,
+//            person.personId.hashCode(),
+//            intent,
+//            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//        )
+
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            if (get(Calendar.HOUR_OF_DAY) >= 6) {
+                add(Calendar.DATE, 1)
+            }
+            set(Calendar.HOUR_OF_DAY, 6)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+        }
+
+        val alarmClockInfo = AlarmManager.AlarmClockInfo(calendar.timeInMillis, alarmPendingIntent())
+
+
+        alarmManager.setAlarmClock(alarmClockInfo, actionPendingIntent(person))
+
+
+
+
+
+
+
+
+//        val notificationManager = ContextCompat.getSystemService(context, NotificationManager::class.java) as NotificationManager
+//
+//        // Create notification channel for Android 8.0+
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//            val channel = NotificationChannel(
+//                "birthday_channel",
+//                "Birthday Notifications",
+//                NotificationManager.IMPORTANCE_HIGH
+//            ).apply {
+//                description = "Notifications for birthdays"
+//            }
+//            notificationManager.createNotificationChannel(channel)
+//        }
+//
+//        val intent = Intent(context, MainActivity::class.java).apply {
+//            putExtra("personId", person.personId)
+//            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+//        }
+//
+//        val pendingIntent = PendingIntent.getActivity(
+//            context,
+//            person.personId.hashCode(),
+//            intent,
+//            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//        )
+//
+//        val notification = NotificationCompat.Builder(context, "birthday_channel")
+//            .setSmallIcon(R.drawable.cake)
+//            .setContentTitle("${person.personFirstName} 🎉 Happy Birthday")
+//            .setContentText("Cьогодні ${person.age}-й День народження!")
+//            .setPriority(NotificationCompat.PRIORITY_HIGH)
+//            .setAutoCancel(true)
+//            .setContentIntent(pendingIntent)
+//            .build()
+//
+//        notificationManager.notify(person.personId.hashCode(), notification)
+    }
+
+    private fun alarmPendingIntent() : PendingIntent {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+        return PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
+    private fun actionPendingIntent(person: Person) : PendingIntent {
+        val intent = Intent(context, BirthdayNotificationReceiver::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            putExtra("personId", person.personId)
+            putExtra("personFirstName", person.personFirstName)
+            putExtra("age", person.age)
+        }
+        return PendingIntent.getActivity(context, person.personId.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
 
