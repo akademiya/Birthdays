@@ -40,6 +40,14 @@ class PersonModel {
         this.position = position
     }
 
+    constructor(personId: String, personFirstName: String?, personLastName: String?, group: String?, personPhoto: String?) {
+        this.personId = personId
+        this.personFirstName = personFirstName
+        this.personLastName = personLastName
+        this.group = group
+        this.personPhoto = personPhoto
+    }
+
     constructor(isBirthToday: Boolean, isBirthOnWeek: Boolean) {
         this.isBirthToday = isBirthToday
         this.isBirthOnWeek = isBirthOnWeek

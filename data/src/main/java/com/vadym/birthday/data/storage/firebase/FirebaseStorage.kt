@@ -61,14 +61,31 @@ class FirebaseStorage(private val context: Context) : IPersonStorage, IBirthdayS
         }
     }
 
-    override fun updatePersonList(personId: String, updatedList: List<Person>) {
-//        personRef.child(personId).updateChildren(updatedFields).addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                Log.d("Firebase", "Update successful!")
-//            } else {
-//                Log.e("Firebase", "Update failed", task.exception)
-//            }
-//        }
+    override fun updatePerson(personId: String, updatedFields: PersonModel) {
+        val updates = mutableMapOf<String, Any?>()
+
+//        updatedFields.personId?.let { updates["personId"] = it }
+        updatedFields.personPhoto?.let { updates["personPhoto"] = it }
+        updatedFields.personFirstName?.let { updates["personFirstName"] = it }
+        updatedFields.personLastName?.let { updates["personLastName"] = it }
+        updatedFields.group?.let { updates["group"] = it }
+//        updatedFields.personDayOfBirth?.let { updates["personDayOfBirth"] = it }
+//        updatedFields.age?.let { updates["age"] = it }
+//        updatedFields.gender?.let { updates["gender"] = it }
+//        updates["isBirthToday"] = updatedFields.isBirthToday
+//        updates["isBirthOnWeek"] = updatedFields.isBirthOnWeek
+//        updates["isDevMode"] = updatedFields.isDevMode
+//        updates["position"] = updatedFields.position
+
+        // Remove any null values from the map to avoid overwriting fields with null
+        val nonNullUpdates = updates.filterValues { it != null }
+        personRef.child(personId).updateChildren(nonNullUpdates).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d("Firebase", "Update successful!")
+            } else {
+                Log.e("Firebase", "Update failed", task.exception)
+            }
+        }
     }
 
     override fun updatePosition(updatedList: List<Person>) {

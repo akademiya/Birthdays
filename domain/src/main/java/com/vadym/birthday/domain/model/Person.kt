@@ -1,6 +1,9 @@
 package com.vadym.birthday.domain.model
 
-class Person {
+import java.io.Serializable
+
+
+class Person : Serializable {
     var personId: String? = null
     var personPhoto: String? = null
     var personFirstName: String? = null
@@ -37,6 +40,14 @@ class Person {
         this.personDayOfBirth = personDayOfBirth
         this.personPhoto = personPhoto
         this.position = position
+    }
+
+    constructor(personId: String, personFirstName: String?, personLastName: String?, group: String?, personPhoto: String?) {
+        this.personId = personId
+        this.personFirstName = personFirstName
+        this.personLastName = personLastName
+        this.group = group
+        this.personPhoto = personPhoto
     }
 
     constructor(isBirthToday: Boolean, isBirthOnWeek: Boolean) {

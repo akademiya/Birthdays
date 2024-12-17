@@ -13,6 +13,7 @@ import com.vadym.birthday.domain.usecase.DeleteItemUseCase
 import com.vadym.birthday.domain.usecase.FabButtonVisibilityUseCase
 import com.vadym.birthday.domain.usecase.ListOfPersonUseCase
 import com.vadym.birthday.domain.usecase.SavePersonDataUseCase
+import com.vadym.birthday.domain.usecase.UpdatePersonDataUseCase
 import com.vadym.birthday.domain.usecase.UpdatePositionListUseCase
 import com.vadym.birthday.ui.formatterDate
 import java.util.Calendar
@@ -22,6 +23,7 @@ class MainViewModel(
     private val fabButtonVisibilityUseCase: FabButtonVisibilityUseCase,
     private val createPersonItemUseCase: CreatePersonItemUseCase,
     private val savePersonDataUseCase: SavePersonDataUseCase,
+    private val updatePersonDataUseCase: UpdatePersonDataUseCase,
     private val calculateBirthdayUseCase: CalculateBirthdayUseCase,
     private val updatePositionListUseCase: UpdatePositionListUseCase,
     private val deleteItemUseCase: DeleteItemUseCase
@@ -66,15 +68,11 @@ class MainViewModel(
 
     fun getListPerson() {
         listPersonUseCase.execute { personList ->
-            resultLiveMutable.value = personList
-            setPersons(personList)
+            resultLiveMutable.value = personList.sortedBy { person: Person -> person.position }
+            setPersons(personList.sortedBy { person: Person -> person.position })
         }
     }
 
-    fun updatePersonData(person: PersonModel) {
-//        val firebaseStorage = FirebaseStorage(context)
-//        firebaseStorage.updatePerson(person.personId, person)
-    }
 
     fun updatePosition(updatedList: List<Person>) {
         updatePositionListUseCase.execute(updatedList)
@@ -138,6 +136,10 @@ class MainViewModel(
         if(!errorsCheckIn(data)) {
             _saveSuccessLive.value = savePersonDataUseCase.execute(data)
         } else _saveSuccessLive.value = true
+    }
+
+    fun onUpdateButtonClick(data: Person) {
+        _saveSuccessLive.value = updatePersonDataUseCase.execute(data)
     }
 
 
@@ -207,7 +209,7 @@ class MainViewModel(
         EMPTY_LAST_NAME("Enter the Last name"),
         NOT_VALID_DIGIT("Check the correct entered value"),
         DATE_OF_BIRTH("Date of birth must be choose"),
-        WRONG("Something wrong")
+        WRONG("Something wrong with validate row")
     }
 
 }

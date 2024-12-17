@@ -46,8 +46,15 @@ class PersonRepository(
         }
     }
 
-    override fun updatePersonList(personId: String, updatedList: List<Person>) {
-        firebaseStorage.updatePersonList(personId, updatedList)
+    override fun updatePerson(personId: String, updatedFields: Person) {
+        val person = PersonModel(
+            updatedFields.personId.toString(),
+            updatedFields.personFirstName,
+            updatedFields.personLastName,
+            updatedFields.group,
+            updatedFields.personPhoto
+        )
+        firebaseStorage.updatePerson(personId, person)
     }
 
     override fun updatePosition(updatedList: List<Person>) {

@@ -79,7 +79,7 @@ class SharedPrefsPersonStorage(context: Context): IPersonStorage {
         TODO("Not yet implemented")
     }
 
-    override fun updatePersonList(personId: String, updatedList: List<Person>) {
+    override fun updatePerson(personId: String, updatedFields: PersonModel) {
         TODO("Not yet implemented")
     }
 

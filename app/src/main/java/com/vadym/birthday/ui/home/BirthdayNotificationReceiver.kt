@@ -31,7 +31,7 @@ class BirthdayNotificationReceiver: BroadcastReceiver() {
         }
 
         val notificationIntent = Intent(context, MainActivity::class.java).apply {
-            putExtra("personId", personId)
+//            putExtra("personId", personId)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
@@ -44,8 +44,8 @@ class BirthdayNotificationReceiver: BroadcastReceiver() {
 
         val notification = NotificationCompat.Builder(context, "birthday_channel")
             .setSmallIcon(R.drawable.cake)
-            .setContentTitle("$personFirstName 🎉 Happy Birthday")
-            .setContentText("Cьогодні $age-й День народження!")
+            .setContentTitle("$personFirstName 🎉")
+            .setContentText("Cьогодні святкує свій $age-й День народження!")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)

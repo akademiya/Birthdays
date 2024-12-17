@@ -11,6 +11,7 @@ val appModule = module {
             fabButtonVisibilityUseCase = get(),
             createPersonItemUseCase = get(),
             savePersonDataUseCase = get(),
+            updatePersonDataUseCase = get(),
             calculateBirthdayUseCase = get(),
             updatePositionListUseCase = get(),
             deleteItemUseCase = get()

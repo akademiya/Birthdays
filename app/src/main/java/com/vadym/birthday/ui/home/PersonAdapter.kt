@@ -10,6 +10,8 @@ import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
 import android.media.MediaPlayer
+import android.os.Build
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -26,7 +28,6 @@ import com.bumptech.glide.Glide
 import com.vadym.birthday.R
 import com.vadym.birthday.domain.model.Person
 import java.util.Calendar
-import java.util.Collections
 
 class PersonAdapter(
     private val context: Context,
@@ -37,8 +38,9 @@ class PersonAdapter(
 ) : RecyclerView.Adapter<PersonAdapter.VH>() {
     private var isSoundOn = false
     private var isItemClicked = false
-    private val songs = arrayOf(R.raw.song1, R.raw.song2, R.raw.song3, R.raw.song4, R.raw.song5)
+    private val songs = arrayOf(R.raw.pook_birthday, R.raw.song6)
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var mediaPlayer: MediaPlayer
 
     fun setItemTouchHelper(itemTouchHelper: ItemTouchHelper) {
         this.itemTouchHelper = itemTouchHelper
@@ -60,7 +62,9 @@ class PersonAdapter(
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: VH, position: Int) {
         sharedPreferences = context.getSharedPreferences("AppPreferences", MODE_PRIVATE)
-        isSoundOn = sharedPreferences.getBoolean("soundSwitchState", false) //TODO: turn on after fix FLAG
+        isSoundOn = sharedPreferences.getBoolean("soundSwitchState", false)
+        val randomSong = songs.random()
+        mediaPlayer = MediaPlayer.create(context, randomSong)
         holder.apply {
             val currentPerson = personList[position]
             currFirstName.text = currentPerson.personFirstName
@@ -69,11 +73,11 @@ class PersonAdapter(
             callback(currentPerson)
 
             if (currentPerson.isBirthToday) {
-                isBirthToday.visibility = View.VISIBLE
+                imgCapBirthToday.visibility = View.VISIBLE
                 clapperAnimation.visibility = View.VISIBLE
                 sendNotification(currentPerson)
             } else {
-                isBirthToday.visibility = View.GONE
+                imgCapBirthToday.visibility = View.GONE
                 clapperAnimation.visibility = View.GONE
             }
 
@@ -84,12 +88,12 @@ class PersonAdapter(
                     else -> R.drawable.cake
                 }
 
-                isBirthOnWeek.setImageDrawable(ContextCompat.getDrawable(context, drawableRes))
+                imgCakeBirthOnWeek.setImageDrawable(ContextCompat.getDrawable(context, drawableRes))
 
-                isBirthOnWeek.visibility = View.VISIBLE
+                imgCakeBirthOnWeek.visibility = View.VISIBLE
                 saluteAnimation.visibility = View.VISIBLE
             } else {
-                isBirthOnWeek.visibility = View.GONE
+                imgCakeBirthOnWeek.visibility = View.GONE
                 saluteAnimation.visibility = View.GONE
             }
 
@@ -112,34 +116,26 @@ class PersonAdapter(
                 false
             }
 
+            clapperAnimation.setOnClickListener {
+                if (isSoundOn) playSound(currentPerson)
+                clapperAnimation.playAnimation()
+            }
 
             itemView.setOnClickListener {
                 saluteAnimation.playAnimation()
                 clapperAnimation.playAnimation()
-
-                if (currentPerson.isBirthToday || currentPerson.isBirthOnWeek) {
-                    if (isSoundOn) {
-                        val mediaPlayer: MediaPlayer?
-                        val randomSong = songs.random()
-                        mediaPlayer = MediaPlayer.create(context, randomSong)
-                        mediaPlayer?.apply {
-                            if (!isItemClicked) start()
-                            if (!isPlaying) {
-                                stop()
-                                release()
-                                isItemClicked = false // TODO: it rewrite to TRUE below
-                            }
-                        }
-                    }
-                }
-                isItemClicked = true
             }
 
             deleteItem.setOnClickListener {
                 onDeleteItem(currentPerson.personId.toString())
             }
 
-            editItem.setOnClickListener {  }
+            editItem.setOnClickListener {
+                context.startActivity(Intent(context, CreatePersonItemActivity::class.java).apply {
+                    putExtra("person", currentPerson)
+                    putExtra("isEdit", true)
+                })
+            }
 
         }
     }
@@ -156,103 +152,103 @@ class PersonAdapter(
     private fun sendNotification(person: Person) {
         val sharedPreferences = context.getSharedPreferences("NotificationPrefs", MODE_PRIVATE)
         val todayKey = "${person.personId}_${System.currentTimeMillis() / (1000 * 60 * 60 * 24)}"
+        val calendar = Calendar.getInstance()
+        val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
+        val currentMinute = calendar.get(Calendar.MINUTE)
 
+        /** Check if the notification for today is already sent */
         if (sharedPreferences.getBoolean(todayKey, false)) {
             return
         }
 
-        sharedPreferences.edit().putBoolean(todayKey, true).apply()
+        val notificationManager = ContextCompat.getSystemService(context, NotificationManager::class.java) as NotificationManager
 
-
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//        val intent = Intent(context, BirthdayNotificationReceiver::class.java).apply {
-//            putExtra("personId", person.personId)
-//            putExtra("personFirstName", person.personFirstName)
-//            putExtra("age", person.age)
-//        }
-
-//        val pendingIntent = PendingIntent.getBroadcast(
-//            context,
-//            person.personId.hashCode(),
-//            intent,
-//            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-//        )
-
-        val calendar = Calendar.getInstance().apply {
-            timeInMillis = System.currentTimeMillis()
-            if (get(Calendar.HOUR_OF_DAY) >= 6) {
-                add(Calendar.DATE, 1)
+        // Create notification channel for Android 8.0+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                "birthday_channel",
+                "Birthday Notifications",
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = "Notifications for birthdays"
             }
-            set(Calendar.HOUR_OF_DAY, 6)
-            set(Calendar.MINUTE, 0)
-            set(Calendar.SECOND, 0)
+            notificationManager.createNotificationChannel(channel)
         }
 
-        val alarmClockInfo = AlarmManager.AlarmClockInfo(calendar.timeInMillis, alarmPendingIntent())
+        val notificationIntent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            person.personId.hashCode(),
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(context, "birthday_channel")
+            .setSmallIcon(R.drawable.cake)
+            .setContentTitle("${person.personFirstName} 🎉")
+            .setContentText("Cьогодні святкує свій ${person.age}-й День народження!")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+
+//        if (currentHour == 7) {
+            sharedPreferences.edit().putBoolean(todayKey, true).apply()
+            notificationManager.notify(person.personId.hashCode(), notification)
+//        }
 
 
-        alarmManager.setAlarmClock(alarmClockInfo, actionPendingIntent(person))
-
-
-
-
-
-
-
-
-//        val notificationManager = ContextCompat.getSystemService(context, NotificationManager::class.java) as NotificationManager
+        // Get AlarmManager instance
+//        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 //
-//        // Create notification channel for Android 8.0+
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//            val channel = NotificationChannel(
-//                "birthday_channel",
-//                "Birthday Notifications",
-//                NotificationManager.IMPORTANCE_HIGH
-//            ).apply {
-//                description = "Notifications for birthdays"
+//        // Set the time for the notification (e.g., 13:20)
+//        val calendar = Calendar.getInstance().apply {
+//            timeInMillis = System.currentTimeMillis()
+//            if (get(Calendar.HOUR_OF_DAY) >= 21) { // If past 1 PM, schedule for the next day
+//                add(Calendar.DATE, 1)
 //            }
-//            notificationManager.createNotificationChannel(channel)
+//            set(Calendar.HOUR_OF_DAY, 16) // Set hour
+//            set(Calendar.MINUTE, 35) // Set minute
+//            set(Calendar.SECOND, 0) // Reset seconds
 //        }
 //
-//        val intent = Intent(context, MainActivity::class.java).apply {
-//            putExtra("personId", person.personId)
-//            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            // For Android 12+, check if the app can schedule exact alarms
+//            if (alarmManager.canScheduleExactAlarms()) {
+//                scheduleExactAlarm(alarmManager, calendar, person)
+//            } else {
+//                // Request the user to allow exact alarms
+//                val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+//                context.startActivity(intent)
+//
+//                // Show fallback notification explaining why exact alarms are important
+//                showFallbackNotification()
+//
+//                // Fallback: Use inexact alarm
+//                scheduleInexactAlarm(alarmManager, calendar, person)
+//            }
+//        } else {
+//            // For Android versions below 12
+//            scheduleExactAlarm(alarmManager, calendar, person)
 //        }
-//
-//        val pendingIntent = PendingIntent.getActivity(
-//            context,
-//            person.personId.hashCode(),
-//            intent,
-//            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-//        )
-//
-//        val notification = NotificationCompat.Builder(context, "birthday_channel")
-//            .setSmallIcon(R.drawable.cake)
-//            .setContentTitle("${person.personFirstName} 🎉 Happy Birthday")
-//            .setContentText("Cьогодні ${person.age}-й День народження!")
-//            .setPriority(NotificationCompat.PRIORITY_HIGH)
-//            .setAutoCancel(true)
-//            .setContentIntent(pendingIntent)
-//            .build()
-//
-//        notificationManager.notify(person.personId.hashCode(), notification)
     }
 
-    private fun alarmPendingIntent() : PendingIntent {
-        val intent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+
+    private fun playSound(currentPerson: Person) {
+        if (isSoundOn && currentPerson.isBirthToday || currentPerson.isBirthOnWeek) {
+            mediaPlayer.start()
         }
-        return PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    private fun actionPendingIntent(person: Person) : PendingIntent {
-        val intent = Intent(context, BirthdayNotificationReceiver::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-            putExtra("personId", person.personId)
-            putExtra("personFirstName", person.personFirstName)
-            putExtra("age", person.age)
+    override fun onViewDetachedFromWindow(holder: VH) {
+        if (isSoundOn && mediaPlayer.isPlaying) {
+            mediaPlayer.stop()
+            mediaPlayer.release()
         }
-        return PendingIntent.getActivity(context, person.personId.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        super.onViewDetachedFromWindow(holder)
     }
 
 
@@ -265,12 +261,11 @@ class PersonAdapter(
         val currPhoto = view.findViewById<ImageView>(R.id.person_img)
         val deleteItem = view.findViewById<ImageView>(R.id.delete_item)
         val editItem = view.findViewById<ImageView>(R.id.edit_item)
-//        val itemView = view.findViewById<RelativeLayout>(R.id.listView)
         val editItemFrame = view.findViewById<FrameLayout>(R.id.edit_person_card_frame)
         val ivMoveItem = view.findViewById<ImageView>(R.id.iv_move_item)
 
-        val isBirthToday = view.findViewById<ImageView>(R.id.img_cap)
-        val isBirthOnWeek = view.findViewById<ImageView>(R.id.img_cake)
+        val imgCapBirthToday = view.findViewById<ImageView>(R.id.img_cap)
+        val imgCakeBirthOnWeek = view.findViewById<ImageView>(R.id.img_cake)
         val saluteAnimation = view.findViewById<LottieAnimationView>(R.id.salute_animation)
         val clapperAnimation = view.findViewById<LottieAnimationView>(R.id.clapper_animation)
     }

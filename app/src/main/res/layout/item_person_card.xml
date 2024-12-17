@@ -58,7 +58,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="30dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/baloon_blue"
+        android:src="@drawable/cake"
         android:visibility="gone"
         tools:visibility="visible" />
 
