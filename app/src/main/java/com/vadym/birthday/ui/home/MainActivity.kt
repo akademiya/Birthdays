@@ -25,6 +25,10 @@ class MainActivity : BaseActivity() {
     override fun init(savedInstanceState: Bundle?) {
         super.setContentView(R.layout.view_person_list)
         setSupportActionBar(toolbar)
+        val headerView = navigationView.getHeaderView(0) // Get the first header view
+        appVersion = headerView.findViewById(R.id.app_version)
+        val versionName = packageManager.getPackageInfo(packageName, 0).versionName // Retrieve app version
+        appVersion.text = "app v. $versionName" // Set version text
 
         toggle = ActionBarDrawerToggle(
             this, drawer, toolbar,
@@ -40,8 +44,8 @@ class MainActivity : BaseActivity() {
         rvListPerson.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rvListPerson.setHasFixedSize(true)
 
-        toolbar.setOnClickListener {
-            vm.clickByToolbar()
+        appVersion.setOnClickListener {
+            vm.clickByAppV()
         }
 
         vm.fabIsVisible.observe(this) { isVisible ->

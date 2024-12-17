@@ -5,7 +5,6 @@ import android.widget.Button
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.vadym.birthday.data.storage.model.PersonModel
 import com.vadym.birthday.domain.model.Person
 import com.vadym.birthday.domain.usecase.CalculateBirthdayUseCase
 import com.vadym.birthday.domain.usecase.CreatePersonItemUseCase
@@ -78,7 +77,7 @@ class MainViewModel(
         updatePositionListUseCase.execute(updatedList)
     }
 
-    fun clickByToolbar() {
+    fun clickByAppV() {
         if (fabButtonVisibilityUseCase.execute()) {
             _fabIsVisible.value = View.VISIBLE
             _isDevMode.value = true

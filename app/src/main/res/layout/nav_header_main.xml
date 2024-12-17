@@ -37,5 +37,5 @@
         android:layout_height="wrap_content"
         android:textColor="@color/black"
         android:layout_alignParentBottom="true"
-        android:text="app v. 1.2" />
+        tools:text="app v. 0.0" />
 </RelativeLayout>
