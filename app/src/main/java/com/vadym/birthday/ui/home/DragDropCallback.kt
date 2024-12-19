@@ -30,7 +30,7 @@ class DragDropCallback (private val adapter: PersonAdapter, private val viewMode
     }
 
     override fun isLongPressDragEnabled(): Boolean {
-        return true // Enable drag on long press
+        return false // Enable drag on long press
     }
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {

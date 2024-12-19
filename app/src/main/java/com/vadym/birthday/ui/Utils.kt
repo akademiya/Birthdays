@@ -18,6 +18,9 @@ fun deviceLocale() : Locale {
         Locale.getDefault()
     }
 }
+fun String.simpleFormatterDate() : Date {
+    return SimpleDateFormat("yyyyMMdd", deviceLocale()).parse(this)
+}
 
 fun String.formatterDate() : String {
     val result = SimpleDateFormat("yyyyMMdd", deviceLocale()).parse(this)

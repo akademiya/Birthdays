@@ -1,6 +1,7 @@
 package com.vadym.birthday.ui.home
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -25,10 +26,10 @@ class MainActivity : BaseActivity() {
     override fun init(savedInstanceState: Bundle?) {
         super.setContentView(R.layout.view_person_list)
         setSupportActionBar(toolbar)
-        val headerView = navigationView.getHeaderView(0) // Get the first header view
+        val headerView = navigationView.getHeaderView(0)
         appVersion = headerView.findViewById(R.id.app_version)
-        val versionName = packageManager.getPackageInfo(packageName, 0).versionName // Retrieve app version
-        appVersion.text = "app v. $versionName" // Set version text
+        val versionName = packageManager.getPackageInfo(packageName, 0).versionName
+        appVersion.text = "app v. $versionName"
 
         toggle = ActionBarDrawerToggle(
             this, drawer, toolbar,

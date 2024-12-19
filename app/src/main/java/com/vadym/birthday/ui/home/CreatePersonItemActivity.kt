@@ -26,6 +26,7 @@ import com.vadym.birthday.R
 import com.vadym.birthday.domain.model.Person
 import com.vadym.birthday.ui.BaseActivity
 import com.vadym.birthday.ui.formatterDate
+import com.vadym.birthday.ui.simpleFormatterDate
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -213,15 +214,36 @@ class CreatePersonItemActivity: BaseActivity() {
     }
 
     private fun checkPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED
+        } else {
+            ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        }
     }
 
     private fun requestPermission() {
-        ActivityCompat.requestPermissions(
-            this,
-            arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-            PERMISSION_REQUEST_CODE
-        )
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.READ_MEDIA_IMAGES),
+                PERMISSION_REQUEST_CODE
+            )
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openGallery()
+            } else Toast.makeText(this, "Ви можете керувати дозволами в налаштуваннях вашого дивайса", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun openGallery() {
@@ -242,20 +264,10 @@ class CreatePersonItemActivity: BaseActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openGallery()
-            }
-        }
-    }
-
     private fun hideKeyboard(view: View) {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
-
 
     private fun datePickerDialog(birthOfDate: Button) {
         val calendar = Calendar.getInstance()
@@ -278,31 +290,18 @@ class CreatePersonItemActivity: BaseActivity() {
     }
 
     private fun calculateAge(birthOfDate: String): String {
-        // Define the date format (assuming yyyyMMdd format)
-        val sdf = SimpleDateFormat("yyyyMMdd")
-        val birthDate = sdf.parse(birthOfDate)  // Parse the birth date string to a Date object
-
-        // Get the current date
+//        val sdf = SimpleDateFormat("yyyyMMdd")
+//        val birthDate = sdf.parse(birthOfDate)
         val today = Calendar.getInstance()
-
-        // Get the birth date as a Calendar instance
         val birthDay = Calendar.getInstance().apply {
-            time = birthDate
+            time = birthOfDate.simpleFormatterDate()
         }
-
-        // Calculate age
         var age = today.get(Calendar.YEAR) - birthDay.get(Calendar.YEAR)
 
-        // If today's date is before the birth date, subtract one year
         if (today.get(Calendar.DAY_OF_YEAR) < birthDay.get(Calendar.DAY_OF_YEAR)) {
             age--
         }
         return age.toString()
-    }
-
-    private fun editItem(person: Person) {
-//        newFirstName.setText(person.personFirstName, TextView.BufferType.EDITABLE)
-//        newLastName.setText(person.personLastName, TextView.BufferType.EDITABLE)
     }
 
 }

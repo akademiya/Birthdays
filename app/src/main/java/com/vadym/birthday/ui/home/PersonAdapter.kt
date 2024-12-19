@@ -116,11 +116,6 @@ class PersonAdapter(
                 false
             }
 
-            clapperAnimation.setOnClickListener {
-                if (isSoundOn) playSound(currentPerson)
-                clapperAnimation.playAnimation()
-            }
-
             itemView.setOnClickListener {
                 saluteAnimation.playAnimation()
                 clapperAnimation.playAnimation()
@@ -135,6 +130,14 @@ class PersonAdapter(
                     putExtra("person", currentPerson)
                     putExtra("isEdit", true)
                 })
+            }
+
+            if (isSoundOn && (currentPerson.isBirthToday || currentPerson.isBirthOnWeek)) {
+                itemView.setOnClickListener {
+                    playSound()
+                    saluteAnimation.playAnimation()
+                    clapperAnimation.playAnimation()
+                }
             }
 
         }
@@ -186,6 +189,8 @@ class PersonAdapter(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        sharedPreferences.edit().putBoolean(todayKey, true).apply()
+
         val notification = NotificationCompat.Builder(context, "birthday_channel")
             .setSmallIcon(R.drawable.cake)
             .setContentTitle("${person.personFirstName} 🎉")
@@ -196,8 +201,8 @@ class PersonAdapter(
             .build()
 
 //        if (currentHour == 7) {
-            sharedPreferences.edit().putBoolean(todayKey, true).apply()
-            notificationManager.notify(person.personId.hashCode(), notification)
+
+        notificationManager.notify(person.personId.hashCode(), notification)
 //        }
 
 
@@ -237,18 +242,8 @@ class PersonAdapter(
     }
 
 
-    private fun playSound(currentPerson: Person) {
-        if (isSoundOn && currentPerson.isBirthToday || currentPerson.isBirthOnWeek) {
-            mediaPlayer.start()
-        }
-    }
-
-    override fun onViewDetachedFromWindow(holder: VH) {
-        if (isSoundOn && mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
-            mediaPlayer.release()
-        }
-        super.onViewDetachedFromWindow(holder)
+    private fun playSound() {
+        mediaPlayer.start()
     }
 
 
