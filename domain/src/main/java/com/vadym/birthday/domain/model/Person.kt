@@ -55,6 +55,11 @@ class Person : Serializable {
         this.isBirthOnWeek = isBirthOnWeek
     }
 
+    constructor(personId: String, position: Int) {
+        this.personId = personId
+        this.position = position
+    }
+
     constructor(personId: String) {
         this.personId = personId
     }

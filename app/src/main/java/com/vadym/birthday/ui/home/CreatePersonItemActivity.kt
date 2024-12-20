@@ -41,14 +41,17 @@ class CreatePersonItemActivity: BaseActivity() {
     private var age: String = "0"
     private var isEdit = false
     private lateinit var editedSharedPref: SharedPreferences
+    private lateinit var position: SharedPreferences
     private lateinit var newPhoto: ImageView
     private lateinit var idEditablePerson: String
     private var count = 0
+    private var lastChild: Int = 0
 
     override fun init(savedInstanceState: Bundle?) {
         super.setContentView(R.layout.create_item_person)
 
         editedSharedPref = getSharedPreferences("Edit", MODE_PRIVATE)
+        position = getSharedPreferences("Position", MODE_PRIVATE)
         val buttonSelectImage = findViewById<Button>(R.id.btn_select_photo)
         val newFirstName = findViewById<EditText>(R.id.create_first_name)
         val newLastName = findViewById<EditText>(R.id.create_last_name)
@@ -58,6 +61,10 @@ class CreatePersonItemActivity: BaseActivity() {
         val cansel = findViewById<Button>(R.id.cansel_button)
         val save = findViewById<Button>(R.id.save_button)
         newPhoto = findViewById(R.id.upload_img_person)
+        vm.resultPersonListLive.observe(this) { personList ->
+            lastChild = personList.lastIndex
+        }
+        val lastPosition = position.getInt("lastPosition", -1)
 
         buttonSelectImage.setOnClickListener {
             if (checkPermission()) {
@@ -167,7 +174,7 @@ class CreatePersonItemActivity: BaseActivity() {
                         gender = gender.selectedItem.toString(),
                         personDayOfBirth = birthDay,
                         personPhoto = newPhotoUri,
-                        count++
+                        position = lastPosition
                     )
                 )
             } else {

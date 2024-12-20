@@ -54,7 +54,12 @@ class MainActivity : BaseActivity() {
         }
 
         fab.setOnClickListener {
+            val shared = this.getSharedPreferences("Position", MODE_PRIVATE)
             startActivity(Intent(this, CreatePersonItemActivity::class.java))
+            with(shared.edit()) {
+                putInt("lastPosition", vm.allPersons.lastIndex) // TODO: change to observe
+                apply()
+            }
         }
 
         adapter = PersonAdapter(

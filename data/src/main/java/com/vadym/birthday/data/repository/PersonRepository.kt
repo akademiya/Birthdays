@@ -20,7 +20,8 @@ class PersonRepository(
             saveParam.group.toString(),
             saveParam.gender.toString(),
             saveParam.personDayOfBirth,
-            saveParam.personPhoto
+            saveParam.personPhoto,
+            saveParam.position
         )
 
         sharedPrefsPersonStorage.savePersonS(person)
@@ -58,7 +59,13 @@ class PersonRepository(
     }
 
     override fun updatePosition(updatedList: List<Person>) {
-        firebaseStorage.updatePosition(updatedList)
+        val personModelList: List<PersonModel> = updatedList.map { person ->
+            PersonModel(
+                personId = person.personId.toString(),
+                position = person.position
+            )
+        }
+        firebaseStorage.updatePosition(personModelList)
     }
 
     override fun deletePersonItem(personId: String, callback: (Boolean) -> Unit) {

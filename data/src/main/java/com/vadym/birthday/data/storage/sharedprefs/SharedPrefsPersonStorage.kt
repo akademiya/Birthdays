@@ -63,7 +63,8 @@ class SharedPrefsPersonStorage(context: Context): IPersonStorage {
                     group = group,
                     gender = gender,
                     personDayOfBirth = birthDay,
-                    personPhoto = photo
+                    personPhoto = photo,
+                    position = 0
                 )
                 personList.add(person)
             }
@@ -75,7 +76,7 @@ class SharedPrefsPersonStorage(context: Context): IPersonStorage {
         TODO("Not yet implemented")
     }
 
-    override fun updatePosition(updatedList: List<Person>) {
+    override fun updatePosition(updatedList: List<PersonModel>) {
         TODO("Not yet implemented")
     }
 

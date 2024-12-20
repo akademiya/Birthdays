@@ -2,8 +2,11 @@ package com.vadym.birthday.ui.home
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.vadym.birthday.domain.model.Person
 
 class DragDropCallback (private val adapter: PersonAdapter, private val viewModel: MainViewModel) : ItemTouchHelper.Callback() {
+
+//    private lateinit var mutableListPerson: List<Person>
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,
@@ -21,7 +24,7 @@ class DragDropCallback (private val adapter: PersonAdapter, private val viewMode
     ): Boolean {
         // Notify the adapter of the move
         val mutableListPerson = adapter.onItemMove(viewHolder.adapterPosition, target.adapterPosition)
-//        viewModel.updatePosition(mutableListPerson)
+        viewModel.updatePosition(mutableListPerson)
         return true
     }
 
@@ -30,13 +33,6 @@ class DragDropCallback (private val adapter: PersonAdapter, private val viewMode
     }
 
     override fun isLongPressDragEnabled(): Boolean {
-        return false // Enable drag on long press
-    }
-
-    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-        super.onSelectedChanged(viewHolder, actionState)
-//        if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
-//            (viewHolder?.itemView?.context as? MainActivity)?.saveUpdatedOrderToFirebase(adapter.getCurrentList())
-//        }
+        return false
     }
 }

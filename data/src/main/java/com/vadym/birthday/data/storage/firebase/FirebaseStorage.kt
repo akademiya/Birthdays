@@ -88,68 +88,42 @@ class FirebaseStorage(private val context: Context) : IPersonStorage, IBirthdayS
         }
     }
 
-    override fun updatePosition(updatedList: List<Person>) {
+    override fun updatePosition(updatedList: List<PersonModel>) {
+        val updates = mutableMapOf<String, Any>()
+
         updatedList.forEachIndexed { index, person ->
-            personRef.child(person.personId.toString()).child("position").setValue(index)
+            updates["${person.personId}/position"] = index
         }
+
+        personRef.updateChildren(updates).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d("Firebase", "All positions updated successfully!")
+            } else {
+                Log.e("Firebase", "Failed to update positions", task.exception)
+            }
+        }
+
+
+//        val updates = updatedList.mapIndexed { index, person ->
+//            val updatesMap = mapOf(
+//                "position" to index // Update the position field
+//            )
+//            personRef.child(person.personId).updateChildren(updatesMap)
+//        }
+//
+//        // Execute all updates asynchronously
+//        updates.forEach { task ->
+//            task.addOnCompleteListener { updateTask ->
+//                if (updateTask.isSuccessful) {
+//                    Log.d("Firebase", "Update successful for ${updateTask.result}")
+//                } else {
+//                    Log.e("Firebase", "Update failed for ${updateTask.result}", updateTask.exception)
+//                }
+//            }
+//        }
     }
 
     override fun updateBirthdayData(personId: String, newAge: Int) {
-//            personRef.child(personId).child("birthday").get().addOnSuccessListener { dataSnapshot ->
-////                val currentAge = dataSnapshot.value.toString().toInt()
-////                val newAge = currentAge + 1
-////
-////                personRef.child(personId).child("age").setValue(newAge.toString())
-////                    .addOnCompleteListener { task ->
-////                        if (task.isSuccessful) {
-////                            Log.d("Firebase", "Age updated to $newAge for personId: $personId")
-////                        } else {
-////                            Log.e("Firebase", "Failed to update age", task.exception)
-////                        }
-////                    }.addOnFailureListener {
-////                        Log.e("FirebaseError", "Failed to read age", it)
-////                    }
-//
-//                val personModel =
-//                    dataSnapshot.getValue(PersonModel::class.java) ?: return@addOnSuccessListener
-//                val birthDateString = personModel.personDayOfBirth ?: return@addOnSuccessListener
-//
-//                try {
-//                    val birthDate =
-//                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(birthDateString)
-//                            ?: return@addOnSuccessListener
-//
-//                    val birthCalendar = Calendar.getInstance().apply { time = birthDate }
-//                    val currentCalendar = Calendar.getInstance()
-//
-//                    // Calculate the difference in years
-//                    val currentYear = currentCalendar.get(Calendar.YEAR)
-//                    val birthYear = birthCalendar.get(Calendar.YEAR)
-//                    val newAge = currentYear - birthYear
-//
-//                    // Update the "age" in Firebase
-//                    if (newAge == personModel.age?.toInt()) {
-//                        personRef.child(personId).child("age").setValue(newAge)
-//                            .addOnCompleteListener { task ->
-//                                if (task.isSuccessful) {
-//                                    Log.d(
-//                                        "Firebase",
-//                                        "Age updated to $newAge for personId: $personId"
-//                                    )
-//                                } else {
-//                                    Log.e("Firebase", "Failed to update age", task.exception)
-//                                }
-//                            }
-//                    }
-//
-//                } catch (e: Exception) {
-//                    Log.e("FirebaseError", "Failed to parse or update age", e)
-//                }
-//            }.addOnFailureListener {
-//                Log.e("FirebaseError", "Failed to fetch person data", it)
-//            }
-
-
         personRef.child(personId).child("age").get().addOnSuccessListener { dataSnapshot ->
             val currentAge = dataSnapshot.value.toString().toInt()
 

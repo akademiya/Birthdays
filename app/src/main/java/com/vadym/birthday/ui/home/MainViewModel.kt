@@ -28,7 +28,7 @@ class MainViewModel(
     private val deleteItemUseCase: DeleteItemUseCase
 ) : ViewModel() {
 
-    private val allPersons = mutableListOf<Person>()
+    val allPersons = mutableListOf<Person>()
 
     private val resultLiveMutable = MutableLiveData<List<Person>>()
     val resultPersonListLive: LiveData<List<Person>> get() = resultLiveMutable

@@ -9,5 +9,5 @@ interface IPersonStorage {
     fun getListOfPersonS(callback: (List<PersonModel>) -> Unit)
     fun deletePersonItem(personId: String, callback: (Boolean) -> Unit)
     fun updatePerson(personId: String, updatedFields: PersonModel)
-    fun updatePosition(updatedList: List<Person>)
+    fun updatePosition(updatedList: List<PersonModel>)
 }
