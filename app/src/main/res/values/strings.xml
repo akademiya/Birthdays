@@ -31,7 +31,7 @@
 
     // INFO VIEW
     <string name="info_text1">Привіт, я Вадим - розробник даного додатка. Ідея його полягає в тому, щоб отримувати сповіщення про День народження братів / сестер нашої спільноти.</string>
-    <string name="info_text2">Можете бути певними, що окрім спільноти доступу до цього додатка ніхто не має. Можна ознайомитися із Privacy Policy та Term of Use.</string>
+    <string name="info_text2">Можете бути певними, що окрім спільноти доступу до цього додатка ніхто не має. Можна ознайомитися із <a href="https://sites.google.com/view/birthday-app/privacy-policy?authuser=0">Privacy Policy and Term of Use</a>.</string>
     <string name="info_text3">Завжди радий буду отримати певний відгук або пропозицію щодо вдосконалення додатку.</string>
     <string name="info_text4">Благослови, Боже, вас та ваші родини.</string>
     <string name="info_text5">Все буде Чонільгук!</string>
