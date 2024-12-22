@@ -1,6 +1,7 @@
 package com.vadym.birthday.di
 
 import com.vadym.birthday.ui.home.MainViewModel
+import com.vadym.birthday.ui.info.InfoViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -16,5 +17,9 @@ val appModule = module {
             updatePositionListUseCase = get(),
             deleteItemUseCase = get()
         )
+    }
+
+    viewModel<InfoViewModel>{
+        InfoViewModel()
     }
 }

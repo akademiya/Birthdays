@@ -1,13 +1,12 @@
 package com.vadym.birthday.ui.info
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.text.method.LinkMovementMethod
+import android.widget.TextView
 import androidx.lifecycle.ViewModel
 
-class InfoViewModel : ViewModel() {
+class InfoViewModel() : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is gallery Fragment"
+    fun onPrivacyLinkClick(linkView: TextView) {
+        linkView.movementMethod = LinkMovementMethod.getInstance()
     }
-    val text: LiveData<String> = _text
 }

@@ -23,6 +23,7 @@
         style="@style/InfoText"
         android:text="@string/info_text1" />
     <TextView
+        android:id="@+id/privacy"
         style="@style/InfoText"
         android:text="@string/info_text2" />
     <TextView
