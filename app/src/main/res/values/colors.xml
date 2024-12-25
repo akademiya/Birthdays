@@ -27,11 +27,12 @@
 
     <color name="icon_pressed">#EEEEEE</color> <!--Gray 200-->
     <color name="color_age">#6200EE</color> <!--Green 500-->
-    <color name="color_active_age">#26FF2F</color> <!--Green 500-->
+    <color name="color_active_age">#64DD17</color> <!--Green 500-->
     <color name="primary">#4CAF50</color> <!--Green 500-->
     <color name="accent_darker">#689F38</color> <!--Light Green 700-->
     <color name="color_text">#FFA500</color>
     <color name="color_pause">#FFA500</color>
+    <color name="pink_text">#E040FB</color>
 
     <color name="bg_boy">#3396C8FA</color>
     <color name="bg_girl">#33FA96FA</color>

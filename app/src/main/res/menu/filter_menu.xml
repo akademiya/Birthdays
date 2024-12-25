@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/primary_school"
-        android:title="Primary School" />
+        android:title="Elementary School" />
 
     <item
         android:id="@+id/secondary_school"

@@ -1,7 +1,7 @@
 package com.vadym.birthday.ui.home
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
+import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -11,7 +11,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.Build
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -27,6 +26,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.vadym.birthday.R
 import com.vadym.birthday.domain.model.Person
+import com.vadym.birthday.ui.formatterDate
 import java.util.Calendar
 
 class PersonAdapter(
@@ -41,6 +41,8 @@ class PersonAdapter(
     private val songs = arrayOf(R.raw.pook_birthday, R.raw.song6)
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var mediaPlayer: MediaPlayer
+    private var isToday = false
+    private var isOnWeek = false
 
     fun setItemTouchHelper(itemTouchHelper: ItemTouchHelper) {
         this.itemTouchHelper = itemTouchHelper
@@ -76,9 +78,11 @@ class PersonAdapter(
                 imgCapBirthToday.visibility = View.VISIBLE
                 clapperAnimation.visibility = View.VISIBLE
                 sendNotification(currentPerson)
+                isToday = true
             } else {
                 imgCapBirthToday.visibility = View.GONE
                 clapperAnimation.visibility = View.GONE
+                isToday = false
             }
 
             if (currentPerson.isBirthOnWeek) {
@@ -92,9 +96,11 @@ class PersonAdapter(
 
                 imgCakeBirthOnWeek.visibility = View.VISIBLE
                 saluteAnimation.visibility = View.VISIBLE
+                isOnWeek = true
             } else {
                 imgCakeBirthOnWeek.visibility = View.GONE
                 saluteAnimation.visibility = View.GONE
+                isOnWeek = false
             }
 
             if (currentPerson.isDevMode) {
@@ -119,6 +125,11 @@ class PersonAdapter(
             itemView.setOnClickListener {
                 saluteAnimation.playAnimation()
                 clapperAnimation.playAnimation()
+            }
+
+            itemView.setOnLongClickListener {
+                openPersonCardDialog(currentPerson, isToday, isOnWeek)
+                true
             }
 
             deleteItem.setOnClickListener {
@@ -244,6 +255,78 @@ class PersonAdapter(
 
     private fun playSound() {
         mediaPlayer.start()
+    }
+
+    private fun openPersonCardDialog(currentPerson: Person, isBirthToday:Boolean, isBirthOnWeek: Boolean) {
+        val inflater = LayoutInflater.from(context)
+        val subView = inflater.inflate(R.layout.personal_card, null)
+
+        val nameField = subView.findViewById<TextView>(R.id.person_f_name)
+        val descriptionField = subView.findViewById<TextView>(R.id.person_last_name)
+        val imgField = subView.findViewById<ImageView>(R.id.person_img)
+        val age = subView.findViewById<TextView>(R.id.person_age)
+        val birthDate = subView.findViewById<TextView>(R.id.person_birth_date)
+        val imgCapBToday = subView.findViewById<ImageView>(R.id.img_cap)
+        val imgCakeBOnWeek = subView.findViewById<ImageView>(R.id.img_cake)
+        val saluteAnim = subView.findViewById<LottieAnimationView>(R.id.salute_animation)
+        val clapperAnim = subView.findViewById<LottieAnimationView>(R.id.clapper_animation)
+
+        val color = when (currentPerson.gender) {
+            "Male" -> ContextCompat.getColor(context, R.color.colorPrimaryDark)
+            "Female" -> ContextCompat.getColor(context, R.color.pink_text)
+            else -> R.color.black
+        }
+        nameField.setTextColor(color)
+        nameField.text = currentPerson.personFirstName
+        descriptionField.text = currentPerson.personLastName
+        age.text = currentPerson.age
+        birthDate.text = currentPerson.personDayOfBirth?.formatterDate()
+        Glide.with(context)
+            .load(currentPerson.personPhoto)
+            .circleCrop()
+            .error(R.drawable.ic_person)
+            .into(imgField)
+
+        if (isBirthToday) {
+            imgCapBToday.visibility = View.VISIBLE
+            clapperAnim.visibility = View.VISIBLE
+            subView.setOnClickListener {
+                saluteAnim.playAnimation()
+                clapperAnim.playAnimation()
+            }
+        } else {
+            imgCapBToday.visibility = View.GONE
+            clapperAnim.visibility = View.GONE
+        }
+
+        if (isBirthOnWeek) {
+            val drawableRes = when {
+                currentPerson.gender == "Male" && !isBirthToday -> R.drawable.baloon_blue
+                currentPerson.gender == "Female" && !isBirthToday -> R.drawable.baloon_pink
+                else -> R.drawable.cake
+            }
+
+            imgCakeBOnWeek.setImageDrawable(ContextCompat.getDrawable(context, drawableRes))
+
+            imgCakeBOnWeek.visibility = View.VISIBLE
+            saluteAnim.visibility = View.VISIBLE
+            subView.setOnClickListener {
+                saluteAnim.playAnimation()
+                clapperAnim.playAnimation()
+            }
+        } else {
+            imgCakeBOnWeek.visibility = View.GONE
+            saluteAnim.visibility = View.GONE
+        }
+
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Person card")
+        builder.setView(subView)
+        builder.create()
+        builder.setPositiveButton("Close") { _, _ ->
+
+        }
+        builder.show()
     }
 
 
