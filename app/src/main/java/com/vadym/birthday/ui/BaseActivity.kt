@@ -32,7 +32,6 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
     override fun setContentView(layoutResID: Int) {
         val fullView = layoutInflater.inflate(R.layout.activity_main, null) as DrawerLayout
         val activityContainer = fullView.findViewById<View>(R.id.content_base) as FrameLayout
-//        appVersion = findViewById<TextView>(R.id.app_version)
 
         layoutInflater.inflate(layoutResID, activityContainer, true)
         super.setContentView(fullView)
