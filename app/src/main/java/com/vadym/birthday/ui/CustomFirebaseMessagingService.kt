@@ -17,5 +17,18 @@ class CustomFirebaseMessagingService : FirebaseMessagingService() {
         message.notification?.let {
             // Handle the notification message here.
         }
+
+        val title = message.data["title"]
+        val message = message.data["message"]
+
+    }
+
+    override fun onNewToken(token: String) {
+        super.onNewToken(token)
+    }
+
+    companion object {
+        private const val TAG = "CustomFirebaseMessagingService"
+        private const val CHANNEL_ID = "my_channel_id"
     }
 }

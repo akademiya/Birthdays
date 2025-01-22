@@ -8,9 +8,12 @@ class CalculateBirthdayUseCase(private val birthdayRepository: IBirthdayReposito
     private var newAge = 0
 
     fun execute(personId: String, birthOfDate: String) {
-        if (isTodayMyBirthday(birthOfDate) && personId.isNotEmpty()) {
+        if (isTodayMyBirthday(birthOfDate)) {
             birthdayRepository.updateBirthdayData(personId, newAge)
-        }
+            birthdayRepository.isBirthToday(personId, true)
+        } else birthdayRepository.isBirthToday(personId, false)
+
+        birthdayRepository.isBirthInWeek(personId, isBirthdayInThisWeek(birthOfDate))
     }
 
     fun isTodayMyBirthday(birthOfDate: String): Boolean {

@@ -142,4 +142,30 @@ class FirebaseStorage(private val context: Context) : IPersonStorage, IBirthdayS
         }
 
     }
+
+    override fun isBirthToday(personId: String, isToday: Boolean) {
+        personRef.child(personId).child("birthToday").setValue(isToday)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("Firebase", "birthToday updated to $isToday for personId: $personId")
+                } else {
+                    Log.e("Firebase", "Failed to update birthToday", task.exception)
+                }
+            }.addOnFailureListener {
+                Log.e("FirebaseError", "Failed to update birthToday", it)
+            }
+    }
+
+    override fun isBirthInWeek(personId: String, isWeek: Boolean) {
+        personRef.child(personId).child("birthOnWeek").setValue(isWeek)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("Firebase", "birthOnWeek updated to $isWeek for personId: $personId")
+                } else {
+                    Log.e("Firebase", "Failed to update birthOnWeek", task.exception)
+                }
+            }.addOnFailureListener {
+                Log.e("FirebaseError", "Failed to update birthOnWeek", it)
+            }
+    }
 }

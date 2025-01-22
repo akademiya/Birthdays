@@ -1,6 +1,7 @@
 package com.vadym.birthday.ui.home
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.app.AlertDialog
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,8 +10,15 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Typeface
 import android.media.MediaPlayer
+import android.os.AsyncTask
 import android.os.Build
+import android.provider.Settings
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -19,26 +27,52 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.vadym.birthday.R
 import com.vadym.birthday.domain.model.Person
 import com.vadym.birthday.ui.formatterDate
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import org.json.JSONObject
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
+
+//Token Description: BirthdayApp
+//Token ID: 5yom99nxetn35ct6gso9ueqnuh
+//Access Token: unky83rp8iy58xqxpbddfh9eue
+const val TOKEN = "unky83rp8iy58xqxpbddfh9eue"
+const val MATTERMOST_CHANNEL_ID = "wbnzbw3i37r9zjq4rwhmdjzyqh"
+const val TELEGRAM_BOT_TOKEN = "8198445611:AAGfrEhnXokovFxpz92G_Qb8SxR71BZm8X8"
+const val TELEGRAM_CHAT_ID = "-1002434371811"
+const val TELEGRAM_ELEMENTARY_CHAT_ID = "-1001971214620"
+const val TELEGRAM_PRESCHOOLERS_CHAT_ID = "-1002297332287"
 
 class PersonAdapter(
     private val context: Context,
-    private var personList: List<Person>,
+//    private var personList: List<Person>,
+    private var workManager: WorkManager,
     private val onDeleteItem: (String) -> Unit,
     private val callback: (Person) -> Unit,
     private var itemTouchHelper: ItemTouchHelper?
 ) : RecyclerView.Adapter<PersonAdapter.VH>() {
+    private var personList: List<Person> = emptyList()
     private var isSoundOn = false
-    private var isItemClicked = false
-    private val songs = arrayOf(R.raw.pook_birthday, R.raw.song6)
+    private val songs = arrayOf(R.raw.song6)
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var mediaPlayer: MediaPlayer
     private var isToday = false
@@ -65,6 +99,8 @@ class PersonAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         sharedPreferences = context.getSharedPreferences("AppPreferences", MODE_PRIVATE)
         isSoundOn = sharedPreferences.getBoolean("soundSwitchState", false)
+        isToday = sharedPreferences.getBoolean("isToday", false)
+
         val randomSong = songs.random()
         mediaPlayer = MediaPlayer.create(context, randomSong)
         holder.apply {
@@ -78,11 +114,10 @@ class PersonAdapter(
                 imgCapBirthToday.visibility = View.VISIBLE
                 clapperAnimation.visibility = View.VISIBLE
                 sendNotification(currentPerson)
-                isToday = true
+//                sendBirthdayMessage(currentPerson)
             } else {
                 imgCapBirthToday.visibility = View.GONE
                 clapperAnimation.visibility = View.GONE
-                isToday = false
             }
 
             if (currentPerson.isBirthOnWeek) {
@@ -128,7 +163,7 @@ class PersonAdapter(
             }
 
             itemView.setOnLongClickListener {
-                openPersonCardDialog(currentPerson, isToday, isOnWeek)
+                openPersonCardDialog(currentPerson, currentPerson.isBirthToday, currentPerson.isBirthOnWeek)
                 true
             }
 
@@ -163,99 +198,14 @@ class PersonAdapter(
         return personList
     }
 
-    private fun sendNotification(person: Person) {
-        val sharedPreferences = context.getSharedPreferences("NotificationPrefs", MODE_PRIVATE)
-        val todayKey = "${person.personId}_${System.currentTimeMillis() / (1000 * 60 * 60 * 24)}"
-        val calendar = Calendar.getInstance()
-        val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
-        val currentMinute = calendar.get(Calendar.MINUTE)
 
-        /** Check if the notification for today is already sent */
-        if (sharedPreferences.getBoolean(todayKey, false)) {
-            return
-        }
-
-        val notificationManager = ContextCompat.getSystemService(context, NotificationManager::class.java) as NotificationManager
-
-        // Create notification channel for Android 8.0+
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                "birthday_channel",
-                "Birthday Notifications",
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                description = "Notifications for birthdays"
-            }
-            notificationManager.createNotificationChannel(channel)
-        }
-
-        val notificationIntent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-
-        val pendingIntent = PendingIntent.getActivity(
-            context,
-            person.personId.hashCode(),
-            notificationIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        sharedPreferences.edit().putBoolean(todayKey, true).apply()
-
-        val notification = NotificationCompat.Builder(context, "birthday_channel")
-            .setSmallIcon(R.drawable.cake)
-            .setContentTitle("${person.personFirstName} 🎉")
-            .setContentText("Cьогодні святкує свій ${person.age}-й День народження!")
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
-            .build()
-
-//        if (currentHour == 7) {
-
-        notificationManager.notify(person.personId.hashCode(), notification)
-//        }
-
-
-        // Get AlarmManager instance
-//        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//
-//        // Set the time for the notification (e.g., 13:20)
-//        val calendar = Calendar.getInstance().apply {
-//            timeInMillis = System.currentTimeMillis()
-//            if (get(Calendar.HOUR_OF_DAY) >= 21) { // If past 1 PM, schedule for the next day
-//                add(Calendar.DATE, 1)
-//            }
-//            set(Calendar.HOUR_OF_DAY, 16) // Set hour
-//            set(Calendar.MINUTE, 35) // Set minute
-//            set(Calendar.SECOND, 0) // Reset seconds
-//        }
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-//            // For Android 12+, check if the app can schedule exact alarms
-//            if (alarmManager.canScheduleExactAlarms()) {
-//                scheduleExactAlarm(alarmManager, calendar, person)
-//            } else {
-//                // Request the user to allow exact alarms
-//                val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-//                context.startActivity(intent)
-//
-//                // Show fallback notification explaining why exact alarms are important
-//                showFallbackNotification()
-//
-//                // Fallback: Use inexact alarm
-//                scheduleInexactAlarm(alarmManager, calendar, person)
-//            }
-//        } else {
-//            // For Android versions below 12
-//            scheduleExactAlarm(alarmManager, calendar, person)
-//        }
-    }
 
 
     private fun playSound() {
         mediaPlayer.start()
     }
+
+
 
     private fun openPersonCardDialog(currentPerson: Person, isBirthToday:Boolean, isBirthOnWeek: Boolean) {
         val inflater = LayoutInflater.from(context)
@@ -293,6 +243,7 @@ class PersonAdapter(
             subView.setOnClickListener {
                 saluteAnim.playAnimation()
                 clapperAnim.playAnimation()
+                if (isSoundOn) playSound()
             }
         } else {
             imgCapBToday.visibility = View.GONE
@@ -331,6 +282,143 @@ class PersonAdapter(
 
 
 
+    private fun sendNotification(currentPerson: Person) {
+        /** Send message only once per day - save to sharedPref */
+        val notificationPreferences = context.getSharedPreferences("NotificationPrefs", MODE_PRIVATE)
+        val todayKey = "${currentPerson.personId}_${System.currentTimeMillis() / (1000 * 60 * 60 * 24)}"
+
+        /** Check if the notification for today is already sent */
+        if (notificationPreferences.getBoolean(todayKey, false)) {
+            return
+        }
+//
+//        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//
+//        // Set the time for the notification (e.g., 13:20)
+//        val calendar = Calendar.getInstance().apply {
+////            if (get(Calendar.HOUR_OF_DAY) >= 11) { // If past 1 PM, schedule for the next day
+////                add(Calendar.DATE, 1)
+////            }
+//            set(Calendar.HOUR_OF_DAY, 11)
+//        }
+//
+//        val intent = Intent(context, BirthdayNotificationReceiver::class.java).apply {
+//            putExtra("personId", person.personId)
+//            putExtra("personFirstName", person.personFirstName)
+//            putExtra("age", person.age)
+//        }
+//
+//        alarmManager.set(
+//            AlarmManager.RTC_WAKEUP,
+//            calendar.timeInMillis,
+//            PendingIntent.getBroadcast(
+//                context,
+//                person.personId.hashCode(),
+//                intent,
+//                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//            )
+//        )
+
+        sendBirthdayMessage(currentPerson)
+        sendMessageToTelegram(currentPerson)
+
+        sharedPreferences.edit().putBoolean(todayKey, true).apply()
+
+
+        val inputData = Data.Builder()
+            .putString("personId", currentPerson.personId)
+            .putString("personFirstName", currentPerson.personFirstName)
+            .putString("personAge", currentPerson.age)
+            .build()
+
+        val notificationWork = OneTimeWorkRequestBuilder<NotificationWorker>()
+            .setInputData(inputData)
+            .build()
+
+        workManager.enqueue(notificationWork)
+
+    }
+
+    private fun sendBirthdayMessage(currentPerson: Person) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val client = OkHttpClient()
+            val url = "https://umua.org/hpwords/api/v4/posts" //channels/$MATTERMOST_CHANNEL_ID
+            val firstName = currentPerson.personFirstName
+            val lastName = currentPerson.personLastName
+            val age = currentPerson.age
+            val congratulateMessage = "\uD83C\uDF89 $firstName $lastName celebrating today $age-й ДН \uD83C\uDF82"
+
+
+            val json = JSONObject().apply {
+                put("channel_id", MATTERMOST_CHANNEL_ID)
+                put("message", congratulateMessage)
+            }
+
+            val body = RequestBody.create("application/json".toMediaTypeOrNull(), json.toString())
+
+            val request = Request.Builder()
+                .url(url)
+                .post(body)
+                .addHeader("Authorization", "Bearer $TOKEN")
+                .addHeader("Content-Type", "application/json")
+                .build()
+
+
+            try {
+                client.newCall(request).execute().use { response ->
+                    if (response.isSuccessful) {
+                        withContext(Dispatchers.Main) {
+                            Log.i("BirthdayMessage", "Message sent successfully!")
+                        }
+                    } else {
+                        withContext(Dispatchers.Main) {
+                            Log.e("BirthdayMessage", "Failed to send message: ${response.message}")
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Log.e("BirthdayMessage", "Error sending message", e)
+                }
+            }
+        }
+    }
+
+    private fun sendMessageToTelegram(currentPerson: Person) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val client = OkHttpClient()
+            val url = "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage"
+
+            val chatId = when(currentPerson.group) {
+                MainViewModel.GroupName.PRESCHOOLERS.title -> TELEGRAM_PRESCHOOLERS_CHAT_ID
+                MainViewModel.GroupName.ELEMENTARY_SCHOOL.title -> TELEGRAM_ELEMENTARY_CHAT_ID
+                else -> TELEGRAM_CHAT_ID
+            }
+
+            val json = JSONObject()
+            json.put("chat_id", chatId)
+            json.put("text", "Birthday 🎉\n${currentPerson.personFirstName} святкує свій ${currentPerson.age}-й День народження!")
+
+            val body = json.toString().toRequestBody("application/json".toMediaTypeOrNull())
+
+            val request = Request.Builder()
+                .url(url)
+                .post(body)
+                .build()
+
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) {
+                    Log.e("TELEGRAM-MESSAGE", "Failed to send message to Telegram group: ${response.code} - ${response.message}")
+                }
+            }
+        }
+    }
+
+
+    override fun onViewDetachedFromWindow(holder: VH) {
+        super.onViewDetachedFromWindow(holder)
+        mediaPlayer.release()
+    }
 
     class VH(view: View) : RecyclerView.ViewHolder(view) {
         val currFirstName = view.findViewById<TextView>(R.id.person_first_name)

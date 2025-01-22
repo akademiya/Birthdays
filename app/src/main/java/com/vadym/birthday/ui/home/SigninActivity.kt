@@ -22,7 +22,7 @@ class SigninActivity : AppCompatActivity() {
         infoPassword.setOnClickListener {
             Toast.makeText(this, "Навіщо потрібен пароль?" +
                     "\nЗаради захисту даних, якщо телефон потрапить у чужі руки." +
-                    "\nНебесний код 1 + Небесний код 7", Toast.LENGTH_LONG).show()
+                    "\nНебесний код 1 + Небесний код 5", Toast.LENGTH_LONG).show()
         }
 
         val editTexts = listOf(

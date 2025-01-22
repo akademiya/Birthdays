@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.vadym.birthday"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.vadym.birthday"
@@ -66,18 +66,30 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
     // Koin DI
-    implementation("io.insert-koin:koin-android:$koin_version")
-    implementation("io.insert-koin:koin-core:$koin_version")
-    testImplementation("io.insert-koin:koin-test-junit4:$koin_version")
+    implementation(libs.koin.android)
+    implementation(libs.koin.core)
+    testImplementation(libs.koin.test.junit4)
 
     // Firebase
-    implementation("com.google.firebase:firebase-database-ktx:20.3.0")
-    implementation("com.google.firebase:firebase-analytics-ktx:21.3.0")
-    implementation("com.google.firebase:firebase-messaging:24.0.1")
+    implementation(libs.firebase.database.ktx.v2030)
+    implementation(libs.firebase.analytics.ktx)
+    implementation(libs.firebase.messaging)
 
     // GLIDE
-    implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation(libs.glide)
 
     // Lottie Animation
-    implementation("com.airbnb.android:lottie:3.4.0")
+    implementation(libs.lottie)
+
+    // API
+    implementation(libs.okhttp)
+
+    // Work in background
+    implementation (libs.androidx.work.runtime.ktx)
+
+    // Notification DSL
+    implementation (libs.android.notification.dsl.core) // Core functionality
+    implementation (libs.android.notification.dsl.extensions) // Extensions to simplify work
+    implementation (libs.android.notification.dsl.media) // Media Notification DSL
+
 }

@@ -1,11 +1,18 @@
 [versions]
 agp = "8.7.2"
+androidNotificationDslCore = "0.2.1"
+firebaseAnalyticsKtx = "22.1.2"
+firebaseDatabaseKtxVersion = "20.3.0"
+firebaseMessaging = "24.1.0"
+glide = "4.15.1"
+koinTestJunit4 = "3.2.0"
 kotlin = "1.9.0"
 coreKtx = "1.12.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
+lottie = "3.4.0"
 material = "1.11.0"
 constraintlayout = "2.1.4"
 lifecycleLivedataKtx = "2.7.0"
@@ -15,13 +22,27 @@ navigationUiKtx = "2.7.7"
 jetbrainsKotlinJvm = "1.9.0"
 firebaseFirestoreKtx = "25.0.0"
 firebaseDatabaseKtx = "21.0.0"
+okhttp = "4.10.0"
+workRuntimeKtx = "2.10.0"
 
 [libraries]
+android-notification-dsl-core = { module = "com.github.kirich1409:android-notification-dsl-core", version.ref = "androidNotificationDslCore" }
+android-notification-dsl-extensions = { module = "com.github.kirich1409:android-notification-dsl-extensions", version.ref = "androidNotificationDslCore" }
+android-notification-dsl-media = { module = "com.github.kirich1409:android-notification-dsl-media", version.ref = "androidNotificationDslCore" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
+firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx", version.ref = "firebaseAnalyticsKtx" }
+firebase-database-ktx-v2030 = { module = "com.google.firebase:firebase-database-ktx", version.ref = "firebaseDatabaseKtxVersion" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
+glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinTestJunit4" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinTestJunit4" }
+koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koinTestJunit4" }
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
@@ -30,6 +51,7 @@ androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navi
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

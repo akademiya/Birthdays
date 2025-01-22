@@ -8,7 +8,6 @@
     android:background="@color/white"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?android:selectableItemBackground"
     tools:background="@color/white">
 
     <androidx.cardview.widget.CardView
