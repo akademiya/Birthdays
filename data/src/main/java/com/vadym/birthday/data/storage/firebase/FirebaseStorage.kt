@@ -11,7 +11,6 @@ import com.google.firebase.ktx.Firebase
 import com.vadym.birthday.data.storage.IBirthdayStorage
 import com.vadym.birthday.data.storage.IPersonStorage
 import com.vadym.birthday.data.storage.model.PersonModel
-import com.vadym.birthday.domain.model.Person
 
 private const val DB_URL = "https://birthday-7e48c-default-rtdb.europe-west1.firebasedatabase.app/"
 
@@ -64,18 +63,10 @@ class FirebaseStorage(private val context: Context) : IPersonStorage, IBirthdayS
     override fun updatePerson(personId: String, updatedFields: PersonModel) {
         val updates = mutableMapOf<String, Any?>()
 
-//        updatedFields.personId?.let { updates["personId"] = it }
         updatedFields.personPhoto?.let { updates["personPhoto"] = it }
         updatedFields.personFirstName?.let { updates["personFirstName"] = it }
         updatedFields.personLastName?.let { updates["personLastName"] = it }
         updatedFields.group?.let { updates["group"] = it }
-//        updatedFields.personDayOfBirth?.let { updates["personDayOfBirth"] = it }
-//        updatedFields.age?.let { updates["age"] = it }
-//        updatedFields.gender?.let { updates["gender"] = it }
-//        updates["isBirthToday"] = updatedFields.isBirthToday
-//        updates["isBirthOnWeek"] = updatedFields.isBirthOnWeek
-//        updates["isDevMode"] = updatedFields.isDevMode
-//        updates["position"] = updatedFields.position
 
         // Remove any null values from the map to avoid overwriting fields with null
         val nonNullUpdates = updates.filterValues { it != null }
@@ -102,25 +93,6 @@ class FirebaseStorage(private val context: Context) : IPersonStorage, IBirthdayS
                 Log.e("Firebase", "Failed to update positions", task.exception)
             }
         }
-
-
-//        val updates = updatedList.mapIndexed { index, person ->
-//            val updatesMap = mapOf(
-//                "position" to index // Update the position field
-//            )
-//            personRef.child(person.personId).updateChildren(updatesMap)
-//        }
-//
-//        // Execute all updates asynchronously
-//        updates.forEach { task ->
-//            task.addOnCompleteListener { updateTask ->
-//                if (updateTask.isSuccessful) {
-//                    Log.d("Firebase", "Update successful for ${updateTask.result}")
-//                } else {
-//                    Log.e("Firebase", "Update failed for ${updateTask.result}", updateTask.exception)
-//                }
-//            }
-//        }
     }
 
     override fun updateBirthdayData(personId: String, newAge: Int) {

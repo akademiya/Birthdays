@@ -52,15 +52,6 @@ import org.json.JSONObject
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
-//Token Description: BirthdayApp
-//Token ID: 5yom99nxetn35ct6gso9ueqnuh
-//Access Token: unky83rp8iy58xqxpbddfh9eue
-const val TOKEN = "unky83rp8iy58xqxpbddfh9eue"
-const val MATTERMOST_CHANNEL_ID = "wbnzbw3i37r9zjq4rwhmdjzyqh"
-const val TELEGRAM_BOT_TOKEN = "8198445611:AAGfrEhnXokovFxpz92G_Qb8SxR71BZm8X8"
-const val TELEGRAM_CHAT_ID = "-1002434371811"
-const val TELEGRAM_ELEMENTARY_CHAT_ID = "-1001971214620"
-const val TELEGRAM_PRESCHOOLERS_CHAT_ID = "-1002297332287"
 
 class PersonAdapter(
     private val context: Context,
@@ -114,7 +105,6 @@ class PersonAdapter(
                 imgCapBirthToday.visibility = View.VISIBLE
                 clapperAnimation.visibility = View.VISIBLE
                 sendNotification(currentPerson)
-//                sendBirthdayMessage(currentPerson)
             } else {
                 imgCapBirthToday.visibility = View.GONE
                 clapperAnimation.visibility = View.GONE
@@ -243,7 +233,9 @@ class PersonAdapter(
             subView.setOnClickListener {
                 saluteAnim.playAnimation()
                 clapperAnim.playAnimation()
-                if (isSoundOn) playSound()
+            }
+            if (isSoundOn) {
+                subView.setOnClickListener { playSound() }
             }
         } else {
             imgCapBToday.visibility = View.GONE
@@ -319,8 +311,6 @@ class PersonAdapter(
 //            )
 //        )
 
-        sendBirthdayMessage(currentPerson)
-        sendMessageToTelegram(currentPerson)
 
         sharedPreferences.edit().putBoolean(todayKey, true).apply()
 
@@ -339,80 +329,7 @@ class PersonAdapter(
 
     }
 
-    private fun sendBirthdayMessage(currentPerson: Person) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val client = OkHttpClient()
-            val url = "https://umua.org/hpwords/api/v4/posts" //channels/$MATTERMOST_CHANNEL_ID
-            val firstName = currentPerson.personFirstName
-            val lastName = currentPerson.personLastName
-            val age = currentPerson.age
-            val congratulateMessage = "\uD83C\uDF89 $firstName $lastName celebrating today $age-й ДН \uD83C\uDF82"
 
-
-            val json = JSONObject().apply {
-                put("channel_id", MATTERMOST_CHANNEL_ID)
-                put("message", congratulateMessage)
-            }
-
-            val body = RequestBody.create("application/json".toMediaTypeOrNull(), json.toString())
-
-            val request = Request.Builder()
-                .url(url)
-                .post(body)
-                .addHeader("Authorization", "Bearer $TOKEN")
-                .addHeader("Content-Type", "application/json")
-                .build()
-
-
-            try {
-                client.newCall(request).execute().use { response ->
-                    if (response.isSuccessful) {
-                        withContext(Dispatchers.Main) {
-                            Log.i("BirthdayMessage", "Message sent successfully!")
-                        }
-                    } else {
-                        withContext(Dispatchers.Main) {
-                            Log.e("BirthdayMessage", "Failed to send message: ${response.message}")
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Log.e("BirthdayMessage", "Error sending message", e)
-                }
-            }
-        }
-    }
-
-    private fun sendMessageToTelegram(currentPerson: Person) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val client = OkHttpClient()
-            val url = "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage"
-
-            val chatId = when(currentPerson.group) {
-                MainViewModel.GroupName.PRESCHOOLERS.title -> TELEGRAM_PRESCHOOLERS_CHAT_ID
-                MainViewModel.GroupName.ELEMENTARY_SCHOOL.title -> TELEGRAM_ELEMENTARY_CHAT_ID
-                else -> TELEGRAM_CHAT_ID
-            }
-
-            val json = JSONObject()
-            json.put("chat_id", chatId)
-            json.put("text", "Birthday 🎉\n${currentPerson.personFirstName} святкує свій ${currentPerson.age}-й День народження!")
-
-            val body = json.toString().toRequestBody("application/json".toMediaTypeOrNull())
-
-            val request = Request.Builder()
-                .url(url)
-                .post(body)
-                .build()
-
-            client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) {
-                    Log.e("TELEGRAM-MESSAGE", "Failed to send message to Telegram group: ${response.code} - ${response.message}")
-                }
-            }
-        }
-    }
 
 
     override fun onViewDetachedFromWindow(holder: VH) {

@@ -42,4 +42,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
 
     implementation(project(":domain"))
+
+    // API
+    implementation(libs.okhttp)
+
 }
