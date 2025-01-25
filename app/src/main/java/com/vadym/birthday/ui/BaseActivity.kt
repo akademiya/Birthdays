@@ -56,7 +56,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         val id = menuItem.itemId
         when (id) {
             R.id.nav_home -> startActivity(Intent(this, MainActivity::class.java))
-            R.id.nav_tl -> startActivity(Intent(openTelegram(this)))
+//            R.id.nav_tl -> startActivity(Intent(openTelegram(this)))
             R.id.nav_tf -> startActivity(Intent(openTfCommunity(this)))
             R.id.nav_info -> startActivity(Intent(this, InfoActivity::class.java))
             R.id.nav_share -> {
@@ -64,7 +64,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
                 val shareBody = getString(R.string.share_body)
                 sharingIntent.apply {
                     type = "text/plain"
-                    putExtra(Intent.EXTRA_SUBJECT, "Birthday")
+                    putExtra(Intent.EXTRA_SUBJECT, "BIRTHDAY")
                     putExtra(Intent.EXTRA_TEXT, shareBody + URL("https", "play.google.com", "store/apps/details?id=com.vadym.birthday"))
                 }
                 startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_by)))

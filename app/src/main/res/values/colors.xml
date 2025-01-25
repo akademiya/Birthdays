@@ -33,6 +33,7 @@
     <color name="color_text">#FFA500</color>
     <color name="color_pause">#FFA500</color>
     <color name="pink_text">#E040FB</color>
+    <color name="color_search_bg">#FFA500</color>
 
     <color name="bg_boy">#3396C8FA</color>
     <color name="bg_girl">#33FA96FA</color>
