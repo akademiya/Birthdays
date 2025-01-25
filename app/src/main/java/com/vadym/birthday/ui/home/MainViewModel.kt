@@ -172,6 +172,15 @@ class MainViewModel(
         resultLiveMutable.value = allPersons
     }
 
+    fun searchByName(query: String) {
+        val filteredList = allPersons.filter { person ->
+            person.personFirstName!!.contains(query, ignoreCase = true) ||
+                    person.personLastName!!.contains(query, ignoreCase = true)
+        }
+        resultLiveMutable.value = filteredList
+    }
+
+
     fun filterListByCategory(category: String) {
         val filteredList = when (category) {
 //            "today" -> allPersons.filter { calculateBirthdayUseCase.isTodayMyBirthday(it.personDayOfBirth.toString()) }

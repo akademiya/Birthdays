@@ -7,9 +7,15 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.app.NotificationManagerCompat
@@ -63,6 +69,31 @@ class MainActivity : BaseActivity() {
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         val rvListPerson = findViewById<RecyclerView>(R.id.rv_list_person)
+        val searchFAB = findViewById<FloatingActionButton>(R.id.search_fab)
+        val searchLayout = findViewById<LinearLayout>(R.id.search_layout)
+        val searchClose = findViewById<ImageView>(R.id.close_search)
+        val searchText = findViewById<EditText>(R.id.search_text)
+
+        searchFAB.setOnClickListener {
+            searchLayout.visibility = View.VISIBLE
+            animateFabToRow(searchFAB, searchLayout)
+        }
+
+        searchClose.setOnClickListener {
+            animateRowToFab(searchFAB, searchLayout)
+        }
+
+        showOrHideFab(rvListPerson, searchFAB)
+
+        searchText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                s?.let {
+                    vm.searchByName(it.toString())
+                }
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         rvListPerson.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         rvListPerson.setHasFixedSize(true)
@@ -120,7 +151,6 @@ class MainActivity : BaseActivity() {
 
         vm.isPersonDeleted.observe(this) { isDeleted ->
             if (isDeleted) {
-                Toast.makeText(this, "Person deleted successfully", Toast.LENGTH_SHORT).show()
                 vm.getListPerson()
             } else {
                 Toast.makeText(this, "Failed to delete person", Toast.LENGTH_SHORT).show()
@@ -197,4 +227,47 @@ class MainActivity : BaseActivity() {
         // Permissions are granted
         return true
     }
+
+    private fun animateFabToRow(searchFAB: FloatingActionButton, searchLayout: LinearLayout) {
+        searchFAB.animate()
+            .scaleX(0f)
+            .scaleY(0f)
+            .alpha(0f)
+            .setDuration(700)
+            .withStartAction {
+                searchFAB.visibility = View.GONE
+                searchLayout.visibility = View.VISIBLE
+                searchLayout.alpha = 0f
+                searchLayout.scaleX = 0f
+                searchLayout.animate().alpha(1f).scaleX(1f).setDuration(500).start()
+            }
+            .start()
+    }
+
+    private fun animateRowToFab(searchFAB: FloatingActionButton, searchLayout: LinearLayout) {
+        searchLayout.animate()
+            .alpha(0f)
+            .scaleX(0f)
+            .setDuration(500)
+            .withStartAction {
+                searchLayout.visibility = View.GONE
+                searchFAB.visibility = View.VISIBLE
+                searchFAB.animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(300).start()
+            }
+            .start()
+    }
+
+    private fun showOrHideFab(rvListPerson: RecyclerView, searchFAB: FloatingActionButton) {
+        rvListPerson.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0 && searchFAB.visibility == View.VISIBLE) {
+                    searchFAB.hide()
+                } else if (dy < 0 && searchFAB.visibility != View.VISIBLE) {
+                    searchFAB.show()
+                }
+            }
+        })
+    }
+
 }
