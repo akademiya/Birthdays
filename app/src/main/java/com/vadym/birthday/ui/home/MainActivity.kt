@@ -23,9 +23,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkManager
+import com.google.android.gms.ads.AdView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.messaging.FirebaseMessaging
 import com.vadym.birthday.R
+import com.vadym.birthday.ui.Admob
 import com.vadym.birthday.ui.BaseActivity
 import com.vadym.birthday.ui.home.MainViewModel.GroupName
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -48,6 +50,15 @@ class MainActivity : BaseActivity() {
         val versionName = packageManager.getPackageInfo(packageName, 0).versionName
         appVersion.text = "app v. $versionName"
         sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE)
+
+        val adContainer: AdView = findViewById(R.id.adView)
+
+        if (isNetworkAvailable(this)) {
+            adContainer.visibility = View.VISIBLE
+            Admob.initializeAdmob(this, adContainer)
+        } else {
+            adContainer.visibility = View.GONE
+        }
 
         toggle = ActionBarDrawerToggle(
             this, drawer, toolbar,

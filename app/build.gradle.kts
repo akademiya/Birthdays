@@ -92,4 +92,7 @@ dependencies {
     implementation (libs.android.notification.dsl.extensions) // Extensions to simplify work
     implementation (libs.android.notification.dsl.media) // Media Notification DSL
 
+    // Ads
+    implementation(libs.play.services.ads)
+
 }
