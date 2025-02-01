@@ -77,8 +77,6 @@
 
     <TextView
         android:id="@+id/person_f_name"
-        android:textSize="@dimen/text_size_name"
-        android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/cv_person_img"
@@ -89,13 +87,12 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
+        android:textSize="@dimen/text_size_name"
+        android:textStyle="bold"
         tools:text="Iren" />
 
     <TextView
         android:id="@+id/person_last_name"
-        android:textSize="@dimen/text_size_name"
-        android:textStyle="bold"
-        android:textColor="@color/text_secondary_dark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/person_f_name"
@@ -106,6 +103,9 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
+        android:textColor="@color/text_secondary_dark"
+        android:textSize="@dimen/text_size_name"
+        android:textStyle="bold"
         tools:text="Bukur" />
 
     <TextView
@@ -124,6 +124,18 @@
         android:maxLines="1"
         android:textColor="@color/color_active_age"
         tools:text="7 december 2015" />
+
+    <ImageView
+        android:id="@+id/img_zodiac"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_below="@+id/person_age"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="16dp"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/z5" />
 
     <TextView
         android:id="@+id/person_age"

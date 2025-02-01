@@ -1,24 +1,12 @@
 package com.vadym.birthday.ui.home
 
 import android.annotation.SuppressLint
-import android.app.AlarmManager
 import android.app.AlertDialog
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Typeface
 import android.media.MediaPlayer
-import android.os.AsyncTask
-import android.os.Build
-import android.provider.Settings
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.StyleSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -26,8 +14,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -39,18 +25,9 @@ import com.bumptech.glide.Glide
 import com.vadym.birthday.R
 import com.vadym.birthday.domain.model.Person
 import com.vadym.birthday.ui.formatterDate
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
+import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.concurrent.TimeUnit
+import java.util.Locale
 
 
 class PersonAdapter(
@@ -210,6 +187,7 @@ class PersonAdapter(
         val imgCakeBOnWeek = subView.findViewById<ImageView>(R.id.img_cake)
         val saluteAnim = subView.findViewById<LottieAnimationView>(R.id.salute_animation)
         val clapperAnim = subView.findViewById<LottieAnimationView>(R.id.clapper_animation)
+        val zodiac = subView.findViewById<ImageView>(R.id.img_zodiac)
 
         val color = when (currentPerson.gender) {
             "Male" -> ContextCompat.getColor(context, R.color.colorPrimaryDark)
@@ -221,11 +199,29 @@ class PersonAdapter(
         descriptionField.text = currentPerson.personLastName
         age.text = currentPerson.age
         birthDate.text = currentPerson.personDayOfBirth?.formatterDate()
+        val zodiacText = zodiacFromDate(currentPerson.personDayOfBirth.toString())
         Glide.with(context)
             .load(currentPerson.personPhoto)
             .circleCrop()
             .error(R.drawable.ic_person)
             .into(imgField)
+
+        val zodiacDrawableResId = when (zodiacText) {
+            Zodiac.ARIES -> R.drawable.z1
+            Zodiac.TAURUS -> R.drawable.z2
+            Zodiac.GEMINI -> R.drawable.z3
+            Zodiac.CANCER -> R.drawable.z4
+            Zodiac.LEO -> R.drawable.z5
+            Zodiac.VIRGO -> R.drawable.z6
+            Zodiac.LIBRA -> R.drawable.z7
+            Zodiac.SCORPIO -> R.drawable.z8
+            Zodiac.SAGITTARIUS -> R.drawable.z9
+            Zodiac.CAPRICORN -> R.drawable.z10
+            Zodiac.AQUARIUS -> R.drawable.z11
+            Zodiac.PISCES -> R.drawable.z12
+        }
+
+        zodiac.setImageResource(zodiacDrawableResId)
 
         if (isBirthToday) {
             imgCapBToday.visibility = View.VISIBLE
@@ -335,6 +331,41 @@ class PersonAdapter(
     override fun onViewDetachedFromWindow(holder: VH) {
         super.onViewDetachedFromWindow(holder)
         mediaPlayer.release()
+    }
+
+    private fun zodiacFromDate(birthDate: String): Zodiac {
+        val date = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).parse(birthDate)
+        val calendar = Calendar.getInstance().apply { time = date!! }
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val month = calendar.get(Calendar.MONTH) + 1  // Months are 0-based in Calendar
+
+        return Zodiac.getZodiac(day, month)
+    }
+
+    enum class Zodiac(val title: String, val startDate: String, val endDate: String) {
+        ARIES("Aries", "21/03", "19/04"),
+        TAURUS("Taurus", "20/04", "20/05"),
+        GEMINI("Gemini", "21/05", "20/06"),
+        CANCER("Cancer", "21/06", "22/07"),
+        LEO("Leo", "23/07", "22/08"),
+        VIRGO("Virgo", "23/08", "22/09"),
+        LIBRA("Libra", "23/09", "22/10"),
+        SCORPIO("Scorpio", "23/10", "21/11"),
+        SAGITTARIUS("Sagittarius", "22/11", "21/12"),
+        CAPRICORN("Capricorn", "22/12", "19/01"),
+        AQUARIUS("Aquarius", "20/01", "18/02"),
+        PISCES("Pisces", "19/02", "20/03");
+
+        companion object {
+            fun getZodiac(day: Int, month: Int): Zodiac {
+                return entries.firstOrNull { zodiac ->
+                    val (startDay, startMonth) = zodiac.startDate.split("/").map { it.toInt() }
+                    val (endDay, endMonth) = zodiac.endDate.split("/").map { it.toInt() }
+
+                    (month == startMonth && day >= startDay) || (month == endMonth && day <= endDay)
+                } ?: CAPRICORN
+            }
+        }
     }
 
     class VH(view: View) : RecyclerView.ViewHolder(view) {
