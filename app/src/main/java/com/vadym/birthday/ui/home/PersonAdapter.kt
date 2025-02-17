@@ -32,8 +32,7 @@ import java.util.Locale
 
 class PersonAdapter(
     private val context: Context,
-//    private var personList: List<Person>,
-    private var workManager: WorkManager,
+//    private var workManager: WorkManager,
     private val onDeleteItem: (String) -> Unit,
     private val callback: (Person) -> Unit,
     private var itemTouchHelper: ItemTouchHelper?
@@ -81,7 +80,7 @@ class PersonAdapter(
             if (currentPerson.isBirthToday) {
                 imgCapBirthToday.visibility = View.VISIBLE
                 clapperAnimation.visibility = View.VISIBLE
-                sendNotification(currentPerson)
+//                sendNotification(currentPerson)
             } else {
                 imgCapBirthToday.visibility = View.GONE
                 clapperAnimation.visibility = View.GONE
@@ -321,7 +320,7 @@ class PersonAdapter(
             .setInputData(inputData)
             .build()
 
-        workManager.enqueue(notificationWork)
+//        workManager.enqueue(notificationWork)
 
     }
 

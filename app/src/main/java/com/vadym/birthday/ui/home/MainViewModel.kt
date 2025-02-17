@@ -183,9 +183,6 @@ class MainViewModel(
 
     fun filterListByCategory(category: String) {
         val filteredList = when (category) {
-//            "today" -> allPersons.filter { calculateBirthdayUseCase.isTodayMyBirthday(it.personDayOfBirth.toString()) }
-//            "week" -> allPersons.filter { calculateBirthdayUseCase.isBirthdayInThisWeek(it.personDayOfBirth.toString()) }
-
             "today" -> allPersons.filter {
                 !it.personDayOfBirth.isNullOrEmpty() &&
                         calculateBirthdayUseCase.isTodayMyBirthday(it.personDayOfBirth!!)

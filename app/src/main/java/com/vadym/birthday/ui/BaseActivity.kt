@@ -58,8 +58,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         val id = menuItem.itemId
         when (id) {
             R.id.nav_home -> startActivity(Intent(this, MainActivity::class.java))
-//            R.id.nav_tl -> startActivity(Intent(openTelegram(this)))
-            R.id.nav_tf -> startActivity(Intent(openTfCommunity(this)))
+            R.id.nav_tf -> startActivity(Intent(openUAShimjeong()))
             R.id.nav_info -> startActivity(Intent(this, InfoActivity::class.java))
             R.id.nav_share -> {
                 val sharingIntent = Intent(Intent.ACTION_SEND)
@@ -85,39 +84,10 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         return true
     }
 
-    private fun openTelegram(context: Context): Intent? {
-        val url = "https://t.me/+uFJQivbxGdswZmMy"
-        return try {
-            context.packageManager.getPackageInfo("org.telegram.messenger", 0)
-            Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        } catch (e: Exception) {
-            Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        }
-
-    }
-
-    private fun openTfCommunity(context: Context): Intent? {
+    private fun openUAShimjeong(): Intent {
+        val packageName = "mattermost"
         val url = "https://umua.org/hpwords/channels/town-square"
-        return try {
-            Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        } catch (e: Exception) {
-            Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        }
-    }
-
-    fun sendToTelegram(text: String): String {
-        var urlString = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s"
-
-        //Add Telegram token (given Token is fake)
-        val apiToken = "22351327:bc9fca2408b773103a9fdf3fdd4d93ad"
-
-        //Add chatId (given chatId is fake)
-        val chatId = "-282423726"
-        urlString = String.format(urlString, apiToken, chatId, text)
-        val url = URL(urlString)
-        val conn = url.openConnection()
-//            val stream: InputStream = BufferedInputStream(conn.getInputStream())
-        return urlString
+        return packageManager.getLaunchIntentForPackage(packageName) ?: Intent(Intent.ACTION_VIEW, Uri.parse(url))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

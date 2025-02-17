@@ -50,6 +50,12 @@ class MainActivity : BaseActivity() {
         val versionName = packageManager.getPackageInfo(packageName, 0).versionName
         appVersion.text = "app v. $versionName"
         sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE)
+        FirebaseMessaging.getInstance().subscribeToTopic("birthdays")
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    println("Subscribe to birthday notifications FAILED!")
+                }
+            }
 
         val adContainer: AdView = findViewById(R.id.adView)
 
@@ -128,10 +134,9 @@ class MainActivity : BaseActivity() {
 
         adapter = PersonAdapter(
             context = this,
-//            personList = emptyList(),
-            WorkManager.getInstance(this),
-            { id -> vm.onRemovePersonClick(id) },
-            { person ->
+//            WorkManager.getInstance(this),
+            onDeleteItem = { id -> vm.onRemovePersonClick(id) },
+            callback = { person ->
                 vm.isBirthToday(person.personId.toString(), person.personDayOfBirth.toString())
                 vm.isBirthTodayLive.observe(this) { isToday ->
                     person.isBirthToday = isToday
@@ -207,7 +212,6 @@ class MainActivity : BaseActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 
     private fun checkNotificationPermissions(): Boolean {
         // Check if notification permissions are granted

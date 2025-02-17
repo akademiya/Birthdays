@@ -37,16 +37,19 @@ val dataModule = module {
         OpenViewToDoRepository(context = get())
     }
 
-    single<IBirthdayRepository> {
-        BirthdayRepository(firebaseStorage = get(named("firebase")))
-        MessageRepository(messageStorage = get(named("messages")))
-    }
-
     single<IBirthdayStorage>(named("firebase")) {
         FirebaseStorage(context = get())
     }
 
     single<IMessageStorage>(named("messages")) {
         MessageStorage(context = get())
+    }
+
+    single<IBirthdayRepository> {
+        BirthdayRepository(firebaseStorage = get(named("firebase")))
+    }
+
+    single {
+        MessageRepository(messageStorage = get(named("messages")))
     }
 }
