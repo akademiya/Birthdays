@@ -44,7 +44,7 @@ class MainActivity : BaseActivity() {
         super.setContentView(R.layout.view_person_list)
         firebaseMessaging = FirebaseMessaging.getInstance()
         setSupportActionBar(toolbar)
-        checkNotificationPermissions()
+//        checkNotificationPermissions()
         val headerView = navigationView.getHeaderView(0)
         appVersion = headerView.findViewById(R.id.app_version)
         val versionName = packageManager.getPackageInfo(packageName, 0).versionName
@@ -74,15 +74,15 @@ class MainActivity : BaseActivity() {
         drawer.addDrawerListener(toggle)
         toggle.syncState()
 
-        firebaseMessaging.token.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val token = task.result
-                Log.d("MainActivity", "Token: $token")
-                // Send token to server
-            } else {
-                Log.w("MainActivity", "Failed to get token")
-            }
-        }
+//        firebaseMessaging.token.addOnCompleteListener { task ->
+//            if (task.isSuccessful) {
+//                val token = task.result
+//                Log.d("MainActivity", "Token: $token")
+//                // Send token to server
+//            } else {
+//                Log.w("MainActivity", "Failed to get token")
+//            }
+//        }
 
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         val rvListPerson = findViewById<RecyclerView>(R.id.rv_list_person)
@@ -214,33 +214,35 @@ class MainActivity : BaseActivity() {
     }
 
     private fun checkNotificationPermissions(): Boolean {
-        // Check if notification permissions are granted
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val isEnabled = notificationManager.areNotificationsEnabled()
 
             if (!isEnabled) {
-                // Open the app notification settings if notifications are not enabled
-                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
-                startActivity(intent)
-                return false
+                openNotificationSettings()
             }
+            isEnabled
         } else {
             val areEnabled = NotificationManagerCompat.from(this).areNotificationsEnabled()
 
             if (!areEnabled) {
-                // Open the app notification settings if notifications are not enabled
-                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
-                startActivity(intent)
-                return false
+                openNotificationSettings()
             }
+            areEnabled
         }
+    }
 
-        // Permissions are granted
-        return true
+    private fun openNotificationSettings() {
+        try {
+            val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            startActivity(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun animateFabToRow(searchFAB: FloatingActionButton, searchLayout: LinearLayout) {

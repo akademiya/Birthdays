@@ -6,8 +6,8 @@
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
-    <permission
-        android:name="com.vadym.birthday.BIRTHDAY_NOTIFICATION_PERMISSION" />
+<!--    <permission-->
+<!--        android:name="com.vadym.birthday.BIRTHDAY_NOTIFICATION_PERMISSION" />-->
 
     <application
         android:name=".app.App"
@@ -49,18 +49,18 @@
             android:name=".ui.home.CreatePersonItemActivity">
         </activity>
 
-        <service
-            android:name=".ui.CustomFirebaseMessagingService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+<!--        <service-->
+<!--            android:name=".ui.CustomFirebaseMessagingService"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.google.firebase.MESSAGING_EVENT" />-->
+<!--            </intent-filter>-->
+<!--        </service>-->
 
-        <receiver
-            android:name=".ui.home.BirthdayNotificationReceiver"
-            android:exported="true"
-            android:permission="com.vadym.birthday.BIRTHDAY_NOTIFICATION_PERMISSION" />
+<!--        <receiver-->
+<!--            android:name=".ui.home.BirthdayNotificationReceiver"-->
+<!--            android:exported="true"-->
+<!--            android:permission="com.vadym.birthday.BIRTHDAY_NOTIFICATION_PERMISSION" />-->
     </application>
 
 </manifest>

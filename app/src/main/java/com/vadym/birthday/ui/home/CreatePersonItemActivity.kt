@@ -198,10 +198,9 @@ class CreatePersonItemActivity: BaseActivity() {
 
         vm.saveSuccessLive.observe(this) { success ->
             if (success) {
-                Toast.makeText(this, "Successful saved", Toast.LENGTH_SHORT).show()
                 finish()
             } else {
-                Toast.makeText(this, "Something wrong", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Something wrong with saving", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -215,7 +214,7 @@ class CreatePersonItemActivity: BaseActivity() {
         if (!hasFocus) {
             val editText = view as EditText
             if (editText.text.isNullOrEmpty()) {
-                editText.error = "This row cannot be empty"
+                editText.error = "This row can not be empty"
             }
         }
     }
@@ -297,8 +296,6 @@ class CreatePersonItemActivity: BaseActivity() {
     }
 
     private fun calculateAge(birthOfDate: String): String {
-//        val sdf = SimpleDateFormat("yyyyMMdd")
-//        val birthDate = sdf.parse(birthOfDate)
         val today = Calendar.getInstance()
         val birthDay = Calendar.getInstance().apply {
             time = birthOfDate.simpleFormatterDate()

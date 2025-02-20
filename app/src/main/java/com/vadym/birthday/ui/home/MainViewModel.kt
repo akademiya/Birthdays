@@ -33,14 +33,8 @@ class MainViewModel(
     private val resultLiveMutable = MutableLiveData<List<Person>>()
     val resultPersonListLive: LiveData<List<Person>> get() = resultLiveMutable
 
-    private val _filterListMutable = MutableLiveData<List<Person>>()
-    val filterPersonListLive: LiveData<List<Person>> get() = _filterListMutable
-
     private var _fabIsVisible = MutableLiveData<Int>()
     val fabIsVisible: LiveData<Int> get() = _fabIsVisible
-
-    private var _isDevMode = MutableLiveData<Boolean>()
-    val isDevMode: LiveData<Boolean> get() = _isDevMode
 
     private var _errorLive = MutableLiveData<String>()
     val errorLive: LiveData<String> = _errorLive
@@ -80,7 +74,6 @@ class MainViewModel(
     fun clickByAppV() {
         if (fabButtonVisibilityUseCase.execute()) {
             _fabIsVisible.value = View.VISIBLE
-            _isDevMode.value = true
             listPersonUseCase.execute { personList ->
                 personList.forEach { item ->
                     item.isDevMode = true
@@ -89,7 +82,6 @@ class MainViewModel(
             }
         } else {
             _fabIsVisible.value = View.GONE
-            _isDevMode.value = false
             listPersonUseCase.execute { personList ->
                 personList.forEach { item ->
                     item.isDevMode = false
@@ -134,7 +126,7 @@ class MainViewModel(
     fun onSaveButtonClick(data: Person) {
         if(!errorsCheckIn(data)) {
             _saveSuccessLive.value = savePersonDataUseCase.execute(data)
-        } else _saveSuccessLive.value = true
+        } else _saveSuccessLive.value = false
     }
 
     fun onUpdateButtonClick(data: Person) {
@@ -166,7 +158,7 @@ class MainViewModel(
 
 
 
-    fun setPersons(persons: List<Person>) {
+    private fun setPersons(persons: List<Person>) {
         allPersons.clear()
         allPersons.addAll(persons)
         resultLiveMutable.value = allPersons
