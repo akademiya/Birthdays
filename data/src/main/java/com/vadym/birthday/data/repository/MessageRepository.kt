@@ -1,6 +1,5 @@
 package com.vadym.birthday.data.repository
 
-import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -18,10 +17,25 @@ class MessageRepository(private val messageStorage: IMessageStorage) : IBirthday
 
     private val personRef: DatabaseReference = Firebase.database(DB_URL).getReference("persons")
 
+    fun getStateOfBirthday() {
+        personRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (personSnapshot in dataSnapshot.children) {
+                    val person = personSnapshot.getValue(PersonModel::class.java)
+                    if (person != null && person.isBirthToday) {
+                        messageStorage.sendMessageToMattermost(person)
+                        messageStorage.sendNotification(person)
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
     override fun isBirthToday(personId: String, isToday: Boolean) {
         getPersonById(personId) { person ->
             if (person != null && isToday) {
-//                messageStorage.sendMessageToTelegram(person)
 //                messageStorage.sendMessageToMattermost(person)
 //                messageStorage.sendNotification(person)
             }
@@ -33,7 +47,6 @@ class MessageRepository(private val messageStorage: IMessageStorage) : IBirthday
                 for (personSnapshot in dataSnapshot.children) {
                     val person = personSnapshot.getValue(PersonModel::class.java)
                     if (person != null && person.isBirthToday) {
-                        messageStorage.sendMessageToTelegram(person)
                         messageStorage.sendMessageToMattermost(person)
                         messageStorage.sendNotification(person)
                     }

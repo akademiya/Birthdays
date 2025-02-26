@@ -5,7 +5,6 @@ import android.content.Context.MODE_PRIVATE
 import android.util.Log
 import com.vadym.birthday.data.storage.IMessageStorage
 import com.vadym.birthday.data.storage.model.PersonModel
-import com.vadym.birthday.domain.model.Person
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,60 +13,19 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
 
 // MATTERMOST_TOKEN_DESCRIPTION = "BirthdayApp"
 // MATTERMOST_TOKEN_ID = "5yom99nxetn35ct6gso9ueqnuh"
 const val MATTERMOST_ACCESS_TOKEN = "unky83rp8iy58xqxpbddfh9eue"
-const val MATTERMOST_CHANNEL_ID = "wbnzbw3i37r9zjq4rwhmdjzyqh"
+const val MATTERMOST_CHANNEL_ID = "6ichyhr69fb79eb16eg5mn3fmr"
 
-const val TELEGRAM_BOT_TOKEN = "8198445611:AAGfrEhnXokovFxpz92G_Qb8SxR71BZm8X8"
-const val TELEGRAM_TEST_CHAT_ID = "-1002434371811"
-const val TELEGRAM_ELEMENTARY_CHAT_ID = "-1001971214620"
-const val TELEGRAM_PRESCHOOLERS_CHAT_ID = "-1002297332287"
 
 class MessageStorage(context: Context) : IMessageStorage {
 
     /** Send message only once per day - save to sharedPref */
     private val notificationPreferences = context.getSharedPreferences("NotificationPrefs", MODE_PRIVATE)
 
-    override fun sendMessageToTelegram(currentPerson: PersonModel) {
-        val todayKey = "tel_${currentPerson.personId}_${System.currentTimeMillis() / (1000 * 60 * 60 * 24)}"
-
-        /** Check if the notification for today is already sent */
-        if (notificationPreferences.getBoolean(todayKey, false)) {
-            return
-        }
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val client = OkHttpClient()
-            val url = "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage"
-
-            val chatId = when(currentPerson.group) {
-                GroupName.PRESCHOOLERS.title -> TELEGRAM_PRESCHOOLERS_CHAT_ID
-                GroupName.ELEMENTARY_SCHOOL.title -> TELEGRAM_ELEMENTARY_CHAT_ID
-                else -> TELEGRAM_TEST_CHAT_ID
-            }
-
-            val json = JSONObject()
-            json.put("chat_id", chatId)
-            json.put("text", "Birthday 🎉\n${currentPerson.personFirstName} святкує свій ${currentPerson.age}-й День народження!")
-
-            val body = json.toString().toRequestBody("application/json".toMediaTypeOrNull())
-
-            val request = Request.Builder()
-                .url(url)
-                .post(body)
-                .build()
-
-            client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) {
-                    Log.e("TELEGRAM-MESSAGE", "Failed to send message to Telegram group: ${response.code} - ${response.message}")
-                } else notificationPreferences.edit().putBoolean(todayKey, true).apply()
-            }
-        }
-    }
 
     override fun sendMessageToMattermost(currentPerson: PersonModel) {
         val todayKey = "mat_${currentPerson.personId}_${System.currentTimeMillis() / (1000 * 60 * 60 * 24)}"
@@ -83,7 +41,7 @@ class MessageStorage(context: Context) : IMessageStorage {
             val firstName = currentPerson.personFirstName
             val lastName = currentPerson.personLastName
             val age = currentPerson.age
-            val congratulateMessage = "\uD83C\uDF89 $firstName $lastName celebrating today $age-й ДН \uD83C\uDF82"
+            val congratulateMessage = "\uD83C\uDF89 $firstName $lastName святкує $age-й ДН \uD83C\uDF82"
 
 
             val json = JSONObject().apply {
@@ -129,6 +87,10 @@ class MessageStorage(context: Context) : IMessageStorage {
         if (notificationPreferences.getBoolean(todayKey, false)) {
             return
         }
+
+
+
+        notificationPreferences.edit().putBoolean(todayKey, true).apply()
     }
 
 

@@ -39,11 +39,11 @@ class CalculateBirthdayUseCase(private val birthdayRepository: IBirthdayReposito
         val birthDate = sdf.parse(birthOfDate)
         val today = Calendar.getInstance()
 
-        today.firstDayOfWeek = Calendar.MONDAY
+//        today.firstDayOfWeek = Calendar.MONDAY
 
         val startOfWeek = today.clone() as Calendar
-        startOfWeek.firstDayOfWeek = Calendar.SUNDAY
-        startOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
+        startOfWeek.firstDayOfWeek = Calendar.MONDAY
+        startOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
 
         val endOfWeek = today.clone() as Calendar
         endOfWeek.firstDayOfWeek = Calendar.MONDAY
