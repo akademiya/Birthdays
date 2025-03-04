@@ -48,6 +48,9 @@
         <activity
             android:name=".ui.home.CreatePersonItemActivity">
         </activity>
+        <activity
+            android:name=".ui.gift.GiftCardActivity">
+        </activity>
 
 <!--        <service-->
 <!--            android:name=".ui.CustomFirebaseMessagingService"-->
@@ -61,6 +64,18 @@
 <!--            android:name=".ui.home.BirthdayNotificationReceiver"-->
 <!--            android:exported="true"-->
 <!--            android:permission="com.vadym.birthday.BIRTHDAY_NOTIFICATION_PERMISSION" />-->
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:grantUriPermissions="true"
+            android:exported="false"
+            android:syncable="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
     </application>
 
 </manifest>

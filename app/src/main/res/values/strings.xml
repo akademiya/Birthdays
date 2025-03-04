@@ -9,9 +9,7 @@
 
     <string name="menu_home">Home</string>
 
-    <string name="menu_shop">Shop</string>
-    <string name="menu_fb">Facebook</string>
-    <string name="menu_ins">Instagram</string>
+    <string name="menu_gift">Gift card</string>
     <string name="menu_info">Info</string>
     <string name="menu_ff_group">UA Shimjeong</string>
     <string name="communicate">Communicate</string>

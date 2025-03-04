@@ -18,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.FirebaseApp
 import com.vadym.birthday.R
+import com.vadym.birthday.ui.gift.GiftCardActivity
 import com.vadym.birthday.ui.home.MainActivity
 import com.vadym.birthday.ui.info.InfoActivity
 import java.net.URL
@@ -59,6 +60,7 @@ abstract class BaseActivity : AppCompatActivity(), NavigationView.OnNavigationIt
         when (id) {
             R.id.nav_home -> startActivity(Intent(this, MainActivity::class.java))
             R.id.nav_tf -> startActivity(Intent(openUAShimjeong()))
+            R.id.nav_gift -> startActivity(Intent(this, GiftCardActivity::class.java))
             R.id.nav_info -> startActivity(Intent(this, InfoActivity::class.java))
             R.id.nav_share -> {
                 val sharingIntent = Intent(Intent.ACTION_SEND)

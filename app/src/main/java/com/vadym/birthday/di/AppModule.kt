@@ -1,5 +1,6 @@
 package com.vadym.birthday.di
 
+import com.vadym.birthday.ui.gift.GiftCardViewModel
 import com.vadym.birthday.ui.home.MainViewModel
 import com.vadym.birthday.ui.info.InfoViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -21,5 +22,9 @@ val appModule = module {
 
     viewModel<InfoViewModel>{
         InfoViewModel()
+    }
+
+    viewModel<GiftCardViewModel>{
+        GiftCardViewModel()
     }
 }
