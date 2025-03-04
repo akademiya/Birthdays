@@ -3,6 +3,7 @@ package com.vadym.birthday.domain.usecase
 import com.vadym.birthday.domain.repository.IBirthdayRepository
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 
 class CalculateBirthdayUseCase(private val birthdayRepository: IBirthdayRepository) {
     private var newAge = 0
@@ -35,15 +36,15 @@ class CalculateBirthdayUseCase(private val birthdayRepository: IBirthdayReposito
 
 
     fun isBirthdayInThisWeek(birthOfDate: String): Boolean {
-        val sdf = SimpleDateFormat("yyyyMMdd")
+        val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
         val birthDate = sdf.parse(birthOfDate)
         val today = Calendar.getInstance()
 
-//        today.firstDayOfWeek = Calendar.MONDAY
+        today.firstDayOfWeek = Calendar.MONDAY
 
         val startOfWeek = today.clone() as Calendar
-        startOfWeek.firstDayOfWeek = Calendar.MONDAY
-        startOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+        startOfWeek.firstDayOfWeek = Calendar.SUNDAY
+        startOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
 
         val endOfWeek = today.clone() as Calendar
         endOfWeek.firstDayOfWeek = Calendar.MONDAY
@@ -54,9 +55,6 @@ class CalculateBirthdayUseCase(private val birthdayRepository: IBirthdayReposito
             set(Calendar.YEAR, today.get(Calendar.YEAR))
         }
 
-        return birthDay.after(startOfWeek) &&
-                birthDay.before(endOfWeek) ||
-                birthDay.equals(startOfWeek) ||
-                birthDay.equals(endOfWeek)
+        return !birthDay.before(startOfWeek) && !birthDay.after(endOfWeek)
     }
 }
