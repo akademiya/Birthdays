@@ -16,8 +16,8 @@ android {
         applicationId = "com.vadym.birthday"
         minSdk = 24
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.3"
+        versionCode = 4
+        versionName = "1.4"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -87,10 +87,6 @@ dependencies {
     // Work in background
     implementation (libs.androidx.work.runtime.ktx)
 
-    // Notification DSL
-    implementation (libs.android.notification.dsl.core) // Core functionality
-    implementation (libs.android.notification.dsl.extensions) // Extensions to simplify work
-    implementation (libs.android.notification.dsl.media) // Media Notification DSL
 
     // Ads
     implementation(libs.play.services.ads)

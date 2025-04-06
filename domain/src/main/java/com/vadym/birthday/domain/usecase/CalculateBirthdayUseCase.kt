@@ -18,10 +18,10 @@ class CalculateBirthdayUseCase(private val birthdayRepository: IBirthdayReposito
     }
 
     fun isTodayMyBirthday(birthOfDate: String): Boolean {
-        if (birthOfDate.isNullOrEmpty()) {
+        if (birthOfDate.isEmpty()) {
             return false
         }
-        val sdf = SimpleDateFormat("yyyyMMdd")
+        val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
         val birthDate = sdf.parse(birthOfDate)
         val birthDay = Calendar.getInstance().apply { time = birthDate }
         val today = Calendar.getInstance()
@@ -40,21 +40,30 @@ class CalculateBirthdayUseCase(private val birthdayRepository: IBirthdayReposito
         val birthDate = sdf.parse(birthOfDate)
         val today = Calendar.getInstance()
 
-        today.firstDayOfWeek = Calendar.MONDAY
+        // Set start of week (Monday)
+        val startOfWeek = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+            set(Calendar.DAY_OF_WEEK, firstDayOfWeek)
+        }
 
-        val startOfWeek = today.clone() as Calendar
-        startOfWeek.firstDayOfWeek = Calendar.SUNDAY
-        startOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
-
-        val endOfWeek = today.clone() as Calendar
-        endOfWeek.firstDayOfWeek = Calendar.MONDAY
-        endOfWeek.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
+        // Set end of week (Sunday)
+        val endOfWeek = Calendar.getInstance().apply {
+            time = startOfWeek.time
+            add(Calendar.DAY_OF_WEEK, 6)
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+            set(Calendar.SECOND, 59)
+            set(Calendar.MILLISECOND, 999)
+        }
 
         val birthDay = Calendar.getInstance().apply {
             time = birthDate
             set(Calendar.YEAR, today.get(Calendar.YEAR))
         }
 
-        return !birthDay.before(startOfWeek) && !birthDay.after(endOfWeek)
+        return birthDay.time in startOfWeek.time..endOfWeek.time
     }
 }

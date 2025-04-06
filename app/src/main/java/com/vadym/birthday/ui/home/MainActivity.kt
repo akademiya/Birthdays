@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -18,7 +19,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +34,8 @@ import com.vadym.birthday.ui.Admob
 import com.vadym.birthday.ui.BaseActivity
 import com.vadym.birthday.ui.home.MainViewModel.GroupName
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
+private val PERMISSION_REQUEST_CODE = 101
 
 class MainActivity : BaseActivity() {
     private lateinit var adapter: PersonAdapter
@@ -50,12 +55,16 @@ class MainActivity : BaseActivity() {
         val versionName = packageManager.getPackageInfo(packageName, 0).versionName
         appVersion.text = "app v. $versionName"
         sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE)
-        FirebaseMessaging.getInstance().subscribeToTopic("birthdays")
-            .addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    println("Subscribe to birthday notifications FAILED!")
-                }
-            }
+//        FirebaseMessaging.getInstance().subscribeToTopic("birthdays")
+//            .addOnCompleteListener { task ->
+//                if (!task.isSuccessful) {
+//                    println("Subscribe to birthday notifications FAILED!")
+//                }
+//            }
+
+        if (!checkPermission()) {
+            requestPermission()
+        }
 
         val adContainer: AdView = findViewById(R.id.adView)
 
@@ -285,6 +294,30 @@ class MainActivity : BaseActivity() {
                 }
             }
         })
+    }
+
+    private fun checkPermission(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED
+        } else {
+            ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.READ_MEDIA_IMAGES),
+                PERMISSION_REQUEST_CODE
+            )
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                PERMISSION_REQUEST_CODE
+            )
+        }
     }
 
 }

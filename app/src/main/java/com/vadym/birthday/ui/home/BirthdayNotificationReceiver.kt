@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.kirich1409.androidnotificationdsl.notification
 import com.vadym.birthday.R
 
 class BirthdayNotificationReceiver: BroadcastReceiver() {
