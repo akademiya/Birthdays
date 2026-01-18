@@ -63,7 +63,6 @@ class FirebaseStorage(private val context: Context) : IPersonStorage, IBirthdayS
     override fun updatePerson(personId: String, updatedFields: PersonModel) {
         val updates = mutableMapOf<String, Any?>()
 
-        updatedFields.personPhoto?.let { updates["personPhoto"] = it }
         updatedFields.personFirstName?.let { updates["personFirstName"] = it }
         updatedFields.personLastName?.let { updates["personLastName"] = it }
         updatedFields.group?.let { updates["group"] = it }

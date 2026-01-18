@@ -42,11 +42,12 @@ class CalculateBirthdayUseCase(private val birthdayRepository: IBirthdayReposito
 
         // Set start of week (Monday)
         val startOfWeek = Calendar.getInstance().apply {
+            firstDayOfWeek = Calendar.MONDAY
+            set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
             set(Calendar.HOUR_OF_DAY, 0)
             set(Calendar.MINUTE, 0)
             set(Calendar.SECOND, 0)
             set(Calendar.MILLISECOND, 0)
-            set(Calendar.DAY_OF_WEEK, firstDayOfWeek)
         }
 
         // Set end of week (Sunday)

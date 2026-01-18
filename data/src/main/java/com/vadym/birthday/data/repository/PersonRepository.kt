@@ -20,7 +20,6 @@ class PersonRepository(
             saveParam.group.toString(),
             saveParam.gender.toString(),
             saveParam.personDayOfBirth,
-            saveParam.personPhoto,
             saveParam.position
         )
 
@@ -39,7 +38,6 @@ class PersonRepository(
                     group = personModel.group.toString(),
                     gender = personModel.gender.toString(),
                     personDayOfBirth = personModel.personDayOfBirth,
-                    personPhoto = personModel.personPhoto,
                     position = personModel.position
                 )
             }
@@ -52,8 +50,7 @@ class PersonRepository(
             updatedFields.personId.toString(),
             updatedFields.personFirstName,
             updatedFields.personLastName,
-            updatedFields.group,
-            updatedFields.personPhoto
+            updatedFields.group
         )
         firebaseStorage.updatePerson(personId, person)
     }

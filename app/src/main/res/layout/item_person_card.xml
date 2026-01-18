@@ -11,45 +11,6 @@
     android:foreground="?android:selectableItemBackground"
     tools:background="@color/white">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_person_img"
-        android:layout_width="@dimen/img_person_parameter"
-        android:layout_height="@dimen/img_person_parameter"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="16dp"
-        app:cardCornerRadius="40dp">
-
-        <ImageView
-            android:id="@+id/person_img"
-            android:layout_width="@dimen/img_person_parameter"
-            android:layout_height="@dimen/img_person_parameter"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_person" />
-    </androidx.cardview.widget.CardView>
-
-    <ImageView
-        android:id="@+id/img_cap"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="55dp"
-        android:rotation="12"
-        android:scaleType="centerCrop"
-        android:src="@drawable/cap"
-        android:translationZ="999dp"
-        android:visibility="gone"
-        tools:visibility="gone" />
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/clapper_animation"
-        android:layout_width="80dp"
-        android:layout_height="match_parent"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="40dp"
-        android:scaleX="-1"
-        android:translationZ="2dp"
-        android:visibility="gone"
-        app:lottie_fileName="clapper-animation.json" />
-
     <ImageView
         android:id="@+id/img_cake"
         android:layout_width="50dp"
@@ -82,7 +43,6 @@
         android:layout_marginTop="18dp"
         android:layout_marginEnd="16dp"
         android:layout_toStartOf="@+id/person_age"
-        android:layout_toEndOf="@+id/cv_person_img"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"
@@ -98,7 +58,6 @@
         android:layout_marginTop="2dp"
         android:layout_marginEnd="16dp"
         android:layout_toStartOf="@+id/person_age"
-        android:layout_toEndOf="@+id/cv_person_img"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="1"

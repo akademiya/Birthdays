@@ -62,9 +62,6 @@ class MainActivity : BaseActivity() {
 //                }
 //            }
 
-        if (!checkPermission()) {
-            requestPermission()
-        }
 
         val adContainer: AdView = findViewById(R.id.adView)
 
@@ -294,30 +291,6 @@ class MainActivity : BaseActivity() {
                 }
             }
         })
-    }
-
-    private fun checkPermission(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED
-        } else {
-            ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-        }
-    }
-
-    private fun requestPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.READ_MEDIA_IMAGES),
-                PERMISSION_REQUEST_CODE
-            )
-        } else {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
-                PERMISSION_REQUEST_CODE
-            )
-        }
     }
 
 }

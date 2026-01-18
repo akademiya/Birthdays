@@ -3,7 +3,6 @@ package com.vadym.birthday.data.storage.sharedprefs
 import android.content.Context
 import com.vadym.birthday.data.storage.IPersonStorage
 import com.vadym.birthday.data.storage.model.PersonModel
-import com.vadym.birthday.domain.model.Person
 
 class SharedPrefsPersonStorage(context: Context): IPersonStorage {
 
@@ -20,7 +19,6 @@ class SharedPrefsPersonStorage(context: Context): IPersonStorage {
         private const val KEY_GROUP = "key_group_"
         private const val KEY_GENDER = "key_gender_"
         private const val KEY_BIRTH_DAY = "key_birth_day_"
-        private const val KEY_PHOTO = "key_photo_"
     }
 
     override fun savePersonS(saveParam: PersonModel) {
@@ -33,7 +31,6 @@ class SharedPrefsPersonStorage(context: Context): IPersonStorage {
         editor.putString("$KEY_GROUP$personId", saveParam.group)
         editor.putString("$KEY_GENDER$personId", saveParam.gender)
         editor.putString("$KEY_BIRTH_DAY$personId", saveParam.personDayOfBirth)
-        editor.putString("$KEY_PHOTO$personId", saveParam.personPhoto)
 
         val personList = sharedPreferences.getStringSet(PERSON_LIST_KEY, mutableSetOf()) ?: mutableSetOf()
         personList.add(personId)
@@ -52,9 +49,8 @@ class SharedPrefsPersonStorage(context: Context): IPersonStorage {
             val group = sharedPreferences.getString("$KEY_GROUP$personId", null)
             val gender = sharedPreferences.getString("$KEY_GENDER$personId", null)
             val birthDay = sharedPreferences.getString("$KEY_BIRTH_DAY$personId", null)
-            val photo = sharedPreferences.getString("$KEY_PHOTO$personId", null)
 
-            if (firstName != null && lastName != null && age != null && group != null && gender != null && birthDay != null && photo != null) {
+            if (firstName != null && lastName != null && age != null && group != null && gender != null && birthDay != null) {
                 val person = PersonModel(
                     personId = personId,
                     personFirstName = firstName,
@@ -63,7 +59,6 @@ class SharedPrefsPersonStorage(context: Context): IPersonStorage {
                     group = group,
                     gender = gender,
                     personDayOfBirth = birthDay,
-                    personPhoto = photo,
                     position = 0
                 )
                 personList.add(person)

@@ -19,9 +19,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.airbnb.lottie.LottieAnimationView
-import com.bumptech.glide.Glide
 import com.vadym.birthday.R
 import com.vadym.birthday.domain.model.Person
 import com.vadym.birthday.ui.formatterDate
@@ -77,14 +75,9 @@ class PersonAdapter(
             currAge.text = currentPerson.age
             callback(currentPerson)
 
-            if (currentPerson.isBirthToday) {
-                imgCapBirthToday.visibility = View.VISIBLE
-                clapperAnimation.visibility = View.VISIBLE
-//                sendNotification(currentPerson)
-            } else {
-                imgCapBirthToday.visibility = View.GONE
-                clapperAnimation.visibility = View.GONE
-            }
+//            if (currentPerson.isBirthToday) {
+////                sendNotification(currentPerson)
+//            }
 
             if (currentPerson.isBirthOnWeek) {
                 val drawableRes = when {
@@ -108,14 +101,6 @@ class PersonAdapter(
                 editItemFrame.visibility = View.VISIBLE
             } else editItemFrame.visibility = View.GONE
 
-
-            Glide.with(context)
-                .load(currentPerson.personPhoto)
-                .circleCrop()
-                .error(R.drawable.ic_person)
-                .into(currPhoto)
-
-
             ivMoveItem.setOnTouchListener { _, event ->
                 if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                     itemTouchHelper?.startDrag(holder)
@@ -125,7 +110,6 @@ class PersonAdapter(
 
             itemView.setOnClickListener {
                 saluteAnimation.playAnimation()
-                clapperAnimation.playAnimation()
             }
 
             itemView.setOnLongClickListener {
@@ -148,7 +132,6 @@ class PersonAdapter(
                 itemView.setOnClickListener {
                     playSound()
                     saluteAnimation.playAnimation()
-                    clapperAnimation.playAnimation()
                 }
             }
 
@@ -179,13 +162,10 @@ class PersonAdapter(
 
         val nameField = subView.findViewById<TextView>(R.id.person_f_name)
         val descriptionField = subView.findViewById<TextView>(R.id.person_last_name)
-        val imgField = subView.findViewById<ImageView>(R.id.person_img)
         val age = subView.findViewById<TextView>(R.id.person_age)
         val birthDate = subView.findViewById<TextView>(R.id.person_birth_date)
-        val imgCapBToday = subView.findViewById<ImageView>(R.id.img_cap)
         val imgCakeBOnWeek = subView.findViewById<ImageView>(R.id.img_cake)
         val saluteAnim = subView.findViewById<LottieAnimationView>(R.id.salute_animation)
-        val clapperAnim = subView.findViewById<LottieAnimationView>(R.id.clapper_animation)
         val zodiac = subView.findViewById<ImageView>(R.id.img_zodiac)
 
         val color = when (currentPerson.gender) {
@@ -199,11 +179,6 @@ class PersonAdapter(
         age.text = currentPerson.age
         birthDate.text = currentPerson.personDayOfBirth?.formatterDate()
         val zodiacText = zodiacFromDate(currentPerson.personDayOfBirth.toString())
-        Glide.with(context)
-            .load(currentPerson.personPhoto)
-            .circleCrop()
-            .error(R.drawable.ic_person)
-            .into(imgField)
 
         val zodiacDrawableResId = when (zodiacText) {
             Zodiac.ARIES -> R.drawable.z1
@@ -223,18 +198,12 @@ class PersonAdapter(
         zodiac.setImageResource(zodiacDrawableResId)
 
         if (isBirthToday) {
-            imgCapBToday.visibility = View.VISIBLE
-            clapperAnim.visibility = View.VISIBLE
             subView.setOnClickListener {
                 saluteAnim.playAnimation()
-                clapperAnim.playAnimation()
             }
             if (isSoundOn) {
                 subView.setOnClickListener { playSound() }
             }
-        } else {
-            imgCapBToday.visibility = View.GONE
-            clapperAnim.visibility = View.GONE
         }
 
         if (isBirthOnWeek) {
@@ -250,7 +219,6 @@ class PersonAdapter(
             saluteAnim.visibility = View.VISIBLE
             subView.setOnClickListener {
                 saluteAnim.playAnimation()
-                clapperAnim.playAnimation()
             }
         } else {
             imgCakeBOnWeek.visibility = View.GONE
@@ -371,15 +339,12 @@ class PersonAdapter(
         val currFirstName = view.findViewById<TextView>(R.id.person_first_name)
         val currLastName = view.findViewById<TextView>(R.id.person_last_name)
         val currAge = view.findViewById<TextView>(R.id.person_age)
-        val currPhoto = view.findViewById<ImageView>(R.id.person_img)
         val deleteItem = view.findViewById<ImageView>(R.id.delete_item)
         val editItem = view.findViewById<ImageView>(R.id.edit_item)
         val editItemFrame = view.findViewById<FrameLayout>(R.id.edit_person_card_frame)
         val ivMoveItem = view.findViewById<ImageView>(R.id.iv_move_item)
 
-        val imgCapBirthToday = view.findViewById<ImageView>(R.id.img_cap)
         val imgCakeBirthOnWeek = view.findViewById<ImageView>(R.id.img_cake)
         val saluteAnimation = view.findViewById<LottieAnimationView>(R.id.salute_animation)
-        val clapperAnimation = view.findViewById<LottieAnimationView>(R.id.clapper_animation)
     }
 }

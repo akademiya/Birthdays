@@ -8,53 +8,13 @@
     android:background="@color/white"
     android:clickable="true"
     android:focusable="true"
+    android:paddingTop="20dp"
     tools:background="@color/white">
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_person_img"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:cardCornerRadius="80dp">
-
-        <ImageView
-            android:id="@+id/person_img"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_person" />
-    </androidx.cardview.widget.CardView>
-
-    <ImageView
-        android:id="@+id/img_cap"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:layout_marginStart="115dp"
-        android:rotation="12"
-        android:scaleType="centerCrop"
-        android:src="@drawable/cap"
-        android:translationZ="999dp"
-        android:visibility="gone"
-        tools:visibility="visible" />
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/clapper_animation"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="60dp"
-        android:scaleX="-1"
-        android:translationZ="2dp"
-        android:visibility="gone"
-        app:lottie_fileName="clapper-animation.json"
-        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/img_cake"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_below="@+id/cv_person_img"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="18dp"
         android:scaleType="centerCrop"
@@ -66,7 +26,6 @@
         android:id="@+id/salute_animation"
         android:layout_width="110dp"
         android:layout_height="110dp"
-        android:layout_below="@+id/cv_person_img"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="-10dp"
         android:translationZ="999dp"
@@ -79,9 +38,8 @@
         android:id="@+id/person_f_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cv_person_img"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="6dp"
         android:layout_marginEnd="16dp"
         android:layout_toStartOf="@+id/person_age"
         android:ellipsize="end"
@@ -140,7 +98,6 @@
     <TextView
         android:id="@+id/person_age"
         style="@style/TextStyle.Age"
-        android:layout_below="@+id/cv_person_img"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="38dp"
